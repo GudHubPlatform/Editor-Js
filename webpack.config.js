@@ -1,4 +1,5 @@
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import UglifyJsPlugin from "uglifyjs-webpack-plugin";
 
 export default {
     experiments: {
@@ -41,5 +42,10 @@ export default {
         new MiniCssExtractPlugin({
             filename: 'style.css'
         })
-    ]
+    ],
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin()
+        ]
+    }
 };
