@@ -1,20 +1,21 @@
-import grapesjs from "grapesjs";
-import './../node_modules/grapesjs/dist/css/grapes.min.css';
+import './js/editorjs-webcomponent.js';
+import edjsHTML from 'editorjs-html';
+
 import './scss/style.scss';
 
-export default class GrapesHTMLEditorData {
+export default class EditorjsData {
     getTemplate() {
         var fieldTemplate = {
           constructor: 'file',
-          name: 'Grapes Class',
+          name: 'EditorJS',
           icon: 'code_editor',
-          type: 'grapes_class',
+          type: 'editorjs',
           model: {
             'field_id': 0,
-            'field_name': 'Grapes Class',
+            'field_name': 'EditorJS',
             'field_value': '',
             'data_id': 0,
-            'data_type': 'grapes_class',
+            'data_type': 'editorjs',
             'file_name': '',
             data_model: {
               images_field_id: '',
@@ -26,7 +27,15 @@ export default class GrapesHTMLEditorData {
                   show_field_name: 1,
                   show_field: 1
                 }
-              }]
+              }, {
+								src: 'table',
+								id: 'icon',
+								settings:{
+									editable: 0,
+									show_field_name: 0,
+									show_field: 1
+								}
+							}]
             }
           }
         };
@@ -36,25 +45,43 @@ export default class GrapesHTMLEditorData {
   
       /*------------------------------- ACTION INTERPRETATION --------------------------------------*/
   
-      getInterpretation(value, fieldValue, appId) {
+      getInterpretation(value, appId, itemId, field_model) {
   
         return [{
           id: 'default',
           name: 'Default',
           content: ()=>
-            '<grapes-html-editor gh-model="field_model.field_value" app-id="{{appId}}" item-id="{{itemId}}" field-model="field_model" mode="{{field_model.data_model.code_mode}}"></grapes-html-editor>'
+            '<editor-js app-id="{{appId}}" item-id="{{itemId}}" field-id="{{field_model.field_id}}" field-value="{{field_model.field_value}}"></editor-js>'
         },{
-                  id: 'web',
-                  name: 'Web',
+                  id: 'Html',
+                  name: 'html',
                   content: async () => {
-                      let file = await gudhub.downloadFileFromString(appId, fieldValue);
-                      return file.data;
+                      let document = await gudhub.getDocument({
+                        app_id: appId,
+                        item_id: itemId,
+                        element_id: field_model.field_id
+                      });
+                      const edjsParser = edjsHTML();
+                      let html = edjsParser.parse(JSON.parse(document.data));
+                      return html;
                   }
               },{
           id:'value',
           name: 'Value',
-          content: () => value
-        }];
+          content: async () => {
+            let document = await gudhub.getDocument({
+              app_id: appId,
+              item_id: itemId,
+              element_id: field_model.field_id
+            });
+            return document.data;
+          }
+        },           {
+          id: 'icon',
+          name: 'Icon',
+          content: ()=> 
+            '<span gh-icon="code_editor 0fb5ff 45px none"></span>'
+        },];
       }
   
       /*------------------------------- WINDOW HTML TEMPLATE --------------------------------------*/
@@ -74,20 +101,7 @@ export default class GrapesHTMLEditorData {
           type: 'general_setting',
           icon: 'menu',
           columns_list: [
-            [{
-              type: 'ghElement',
-              property: 'data_model.images_field_id',
-              data_model: function (fieldModel) {
-                return {
-                  data_model: {
-                    app_id: fieldModel.app_id
-                  },
-                  field_name: 'Field for images',
-                  name_space: 'field_for_images',
-                  data_type: 'field'
-                };
-              }
-            }]]
+            []]
         }];
   
         return settingTemplate;
@@ -97,23 +111,4 @@ export default class GrapesHTMLEditorData {
       runAction(scope){
         return '';
       }
-}
-
-class GrapesHTMLEditor extends HTMLElement {
-    constructor() {
-        super();
-    }
-
-    connectedCallback() {
-        this.innerHTML = '<div class="grapes-container"></div>';
-        const container = this.querySelector('.grapes-container');
-
-        const editor = grapesjs.init({
-            container
-        });
-    }
-}
-
-if(!window.customElements.get('grapes-html-editor')) {
-    window.customElements.define('grapes-html-editor', GrapesHTMLEditor);
 }
