@@ -20,15 +20,21 @@ class EditorJS extends HTMLElement {
     this.fieldValue = this.getAttribute('field-value');
   }
 
-  connectedCallback() {
-    this.innerHTML = '<div id="editorjs" class="editorjs"></div>';
-
-    setTimeout(() => {
-      this.getAttributes();
-      this.init();
-    }, 0);
+  static get observedAttributes() {
+    return ['app-id'];
   }
 
+  attributeChangedCallback(name, oldValue, newValue) {
+    if(name == 'app-id') {
+      this.innerHTML = '<div id="editorjs" class="editorjs"></div>';
+
+      setTimeout(() => {
+        this.getAttributes();
+        this.init();
+      }, 0);
+    }
+  }
+  
   async init() {
     const self = this;
 
@@ -95,7 +101,7 @@ class EditorJS extends HTMLElement {
       item_id: this.itemId,
       element_id: this.fieldId
     });
-    
+
     if(file) {
       return JSON.parse(file.data);
     } else {
