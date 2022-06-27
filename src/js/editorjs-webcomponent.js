@@ -25,7 +25,7 @@ class EditorJS extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if(name == 'app-id') {
+    if(name == 'app-id' && newValue.indexOf('{{') == -1) {
       this.innerHTML = '<div id="editorjs" class="editorjs"></div>';
 
       setTimeout(() => {
@@ -34,7 +34,7 @@ class EditorJS extends HTMLElement {
       }, 0);
     }
   }
-  
+
   async init() {
     const self = this;
 
