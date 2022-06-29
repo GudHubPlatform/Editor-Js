@@ -5,6 +5,7 @@ import Table from '@editorjs/table';
 import List from '@editorjs/list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
+import CodeMirror from 'editorjs-codemirror';
 
 class EditorJS extends HTMLElement {
   constructor() {
@@ -81,6 +82,9 @@ class EditorJS extends HTMLElement {
         },
         embed: {
           class: Embed
+        },
+        code: {
+          class: CodeMirror
         },
         image: {
           class: Image,
