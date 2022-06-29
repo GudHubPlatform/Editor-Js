@@ -28,7 +28,12 @@ class EditorJS extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name == 'app-id' && newValue.indexOf('{{') == -1) {
-      this.innerHTML = '<div id="editorjs" class="editorjs"></div>';
+      this.innerHTML = /*html*/`
+      <div id="editorjs" class="editorjs"></div>
+      <div class="editorjs__saving">
+        <span>Saving...</span>
+      </div>
+      `;
 
       setTimeout(() => {
         this.getAttributes();
@@ -120,6 +125,8 @@ class EditorJS extends HTMLElement {
 
   async save(data) {
 
+    this.toggleSavingPopup();
+
     await this.checkIfImageDeleted();
 
     await gudhub.createDocument({
@@ -128,6 +135,9 @@ class EditorJS extends HTMLElement {
       element_id: this.fieldId,
       data: JSON.stringify(data)
     });
+
+    this.toggleSavingPopup();
+
   }
 
   checkIfImageDeleted() {
@@ -155,6 +165,15 @@ class EditorJS extends HTMLElement {
         resolve(true);
       }
     });
+  }
+
+  toggleSavingPopup() {
+    let popup = this.querySelector('.editorjs__saving');
+    if(popup.classList.contains('saving')) {
+      popup.classList.remove('saving');
+    } else {
+      popup.classList.add('saving');
+    }
   }
 
 }
