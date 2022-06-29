@@ -11,6 +11,8 @@ class EditorJS extends HTMLElement {
     this.itemId;
     this.fieldId;
     this.fieldValue;
+    this.previousBlocksCount;
+    this.uploadedImages;
   }
 
   getAttributes() {
@@ -25,7 +27,7 @@ class EditorJS extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if(name == 'app-id' && newValue.indexOf('{{') == -1) {
+    if (name == 'app-id' && newValue.indexOf('{{') == -1) {
       this.innerHTML = '<div id="editorjs" class="editorjs"></div>';
 
       setTimeout(() => {
@@ -48,7 +50,7 @@ class EditorJS extends HTMLElement {
           class: Header,
           config: {
             placeholder: 'Enter a header',
-            levels: [1,2,3,4,5]
+            levels: [1, 2, 3, 4, 5]
           }
         },
         table: {
@@ -75,7 +77,8 @@ class EditorJS extends HTMLElement {
                     app_id: self.appId,
                     item_id: self.itemId,
                     field_id: self.fieldId
-                  })
+                  });
+                  self.uploadedImages.push(uploaded.file_id);
                   resolve({ success: 1, file: uploaded });
                 });
               }
@@ -86,7 +89,7 @@ class EditorJS extends HTMLElement {
     });
 
     this.addEventListener('keydown', async (e) => {
-      if(e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+      if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
         let data = await this.editor.save();
         this.save(data);
@@ -102,7 +105,9 @@ class EditorJS extends HTMLElement {
       element_id: this.fieldId
     });
 
-    if(file) {
+    if (file) {
+      this.previousBlocksCount = JSON.parse(file.data).blocks.length;
+      this.uploadedImages = JSON.parse(file.data).blocks.map(block => block.type === 'image' ? block.data.file.file_id : false).filter(block => block !== false);
       return JSON.parse(file.data);
     } else {
       return '';
@@ -110,6 +115,9 @@ class EditorJS extends HTMLElement {
   }
 
   async save(data) {
+
+    await this.checkIfImageDeleted();
+
     await gudhub.createDocument({
       app_id: this.appId,
       item_id: this.itemId,
@@ -118,8 +126,35 @@ class EditorJS extends HTMLElement {
     });
   }
 
+  checkIfImageDeleted() {
+    return new Promise(async (resolve) => {
+      const self = this;
+      let data = await this.editor.save();
+      let currentUploadedImages = data.blocks.map(block => block.type === 'image' ? block.data.file.file_id : false).filter(block => block !== false);
+
+      let deletedImages = this.uploadedImages.filter(id => !currentUploadedImages.includes(id));
+
+      let promises = [];
+
+      deletedImages.forEach(image => {
+        promises.push(new Promise(async (resolve) => {
+          await gudhub.deleteFile(self.appId, image);
+          resolve(true);
+        }));
+      });
+
+      if (promises.length > 0) {
+        Promise.all(promises).then(() => {
+          resolve(true);
+        });
+      } else {
+        resolve(true);
+      }
+    });
+  }
+
 }
 
-if(!window.customElements.get('editor-js')) {
-    window.customElements.define('editor-js', EditorJS);
+if (!window.customElements.get('editor-js')) {
+  window.customElements.define('editor-js', EditorJS);
 }
