@@ -119,6 +119,9 @@ class EditorJS extends HTMLElement {
         e.preventDefault();
         this.save();
       }
+      if(e.keyCode == 13) {
+        this.save();
+      }
     }, false);
 
     this.addListeners();
