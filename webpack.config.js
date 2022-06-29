@@ -8,7 +8,11 @@ export default {
     optimization: {
         minimize: false,
     },
-    mode: 'production',
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
     entry: {
         main: './src/entry.js',
     },
