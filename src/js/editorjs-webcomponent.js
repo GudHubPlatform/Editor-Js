@@ -100,8 +100,7 @@ class EditorJS extends HTMLElement {
     this.addEventListener('keydown', async (e) => {
       if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
-        let data = await this.editor.save();
-        this.save(data);
+        this.save();
       }
     }, false);
 
@@ -125,11 +124,13 @@ class EditorJS extends HTMLElement {
     }
   }
 
-  async save(data) {
+  async save() {
 
     this.toggleSavingPopup();
 
     await this.checkIfImageDeleted();
+
+    let data = await this.editor.save();
 
     await gudhub.createDocument({
       app_id: this.appId,
