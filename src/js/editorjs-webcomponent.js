@@ -104,6 +104,8 @@ class EditorJS extends HTMLElement {
         this.save(data);
       }
     }, false);
+
+    this.addListeners();
   }
 
   async load() {
@@ -138,6 +140,20 @@ class EditorJS extends HTMLElement {
 
     this.toggleSavingPopup();
 
+  }
+
+  addListeners() {
+    this.addEventListener('click', () => {
+      window.addEventListener('click', listener, false);
+    });
+
+    let listener = (e) => {
+      let path = e.composedPath();
+      if(!path.find(item => item == this)) {
+        window.removeEventListener('click', listener, false);
+        this.save();
+      }
+    }
   }
 
   checkIfImageDeleted() {
