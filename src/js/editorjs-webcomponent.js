@@ -11,8 +11,8 @@ class EditorJS extends HTMLElement {
     this.itemId;
     this.fieldId;
     this.fieldValue;
-    this.previousBlocksCount;
-    this.uploadedImages;
+    this.previousBlocksCount = 0;
+    this.uploadedImages = [];
   }
 
   getAttributes() {
@@ -40,7 +40,11 @@ class EditorJS extends HTMLElement {
   async init() {
     const self = this;
 
-    let savedData = await this.load();
+    let savedData = null;
+
+    if(this.appId && this.itemId && this.fieldId) {
+      savedData = await this.load();
+    }
 
     this.editor = new editorjs({
       holder: 'editorjs',
