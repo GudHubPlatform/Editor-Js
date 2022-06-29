@@ -2,6 +2,9 @@ import editorjs from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
 import Table from '@editorjs/table';
+import List from '@editorjs/list';
+import Checklist from '@editorjs/checklist';
+import Embed from '@editorjs/embed';
 
 class EditorJS extends HTMLElement {
   constructor() {
@@ -64,6 +67,20 @@ class EditorJS extends HTMLElement {
         },
         table: {
           class: Table
+        },
+        list: {
+          class: List,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'unordered'
+          }
+        },
+        checklist: {
+          class: Checklist,
+          inlineToolbar: true,
+        },
+        embed: {
+          class: Embed
         },
         image: {
           class: Image,
