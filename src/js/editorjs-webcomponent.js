@@ -7,6 +7,8 @@ import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
 
+/********************* EDITOR JS WEB COMPONENT CREATING *********************/
+
 class EditorJS extends HTMLElement {
   constructor() {
     super();
@@ -19,6 +21,9 @@ class EditorJS extends HTMLElement {
     this.uploadedImages = [];
   }
 
+  /********************* GET ATTRIBUTES *********************/
+  // Getting attributes from component's data attributes
+
   getAttributes() {
     this.appId = this.getAttribute('app-id');
     this.itemId = this.getAttribute('item-id');
@@ -26,9 +31,17 @@ class EditorJS extends HTMLElement {
     this.fieldValue = this.getAttribute('field-value');
   }
 
+  /********************* OBSERVED ATTRIBUTES *********************/
+  // Adding listeners to component's data attributes
+
   static get observedAttributes() {
     return ['app-id'];
   }
+
+  /********************* ATTRIBUTE CHANGED CALLBACK*********************/
+  // We init editor only after attributes change
+  // We are doing it, instead of connedctedCallback to get right data
+  // Usgin connectedCallback we are always receiving not ready data like this - {{appId}}
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name == 'app-id' && newValue.indexOf('{{') == -1) {
@@ -46,6 +59,10 @@ class EditorJS extends HTMLElement {
       }, 0);
     }
   }
+
+  /********************* INIT *********************/
+  // Checks if document exists for this field, if yes - download it and render in editor.js
+  // Then adding listeners for editor saving
 
   async init() {
     const self = this;
@@ -91,6 +108,9 @@ class EditorJS extends HTMLElement {
           class: Image,
           config: {
             uploader: {
+
+              /* CUSTOM IMAGE LOADER */
+              
               uploadByFile(file) {
                 return new Promise(async (resolve) => {
                   const toBase64 = file => new Promise((resolve, reject) => {
@@ -119,6 +139,8 @@ class EditorJS extends HTMLElement {
       }
     });
 
+    // Adding listeners on Ctrl + S and on Enter to save the editor content
+
     this.addEventListener('keydown', async (e) => {
       if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
@@ -129,8 +151,13 @@ class EditorJS extends HTMLElement {
       }
     }, false);
 
+    // Adding listeners to save editor content on click outside
+
     this.addListeners();
   }
+
+  /********************* LOAD *********************/
+  // Just loading document based on address (appId, itemId, fieldId)
 
   async load() {
 
@@ -141,13 +168,17 @@ class EditorJS extends HTMLElement {
     });
 
     if (file) {
+      // Saving blocks count
       this.previousBlocksCount = JSON.parse(file.data).blocks.length;
+      // Saving count of image blocks
       this.uploadedImages = JSON.parse(file.data).blocks.map(block => block.type === 'image' ? block.data.file.file_id : false).filter(block => block !== false);
       return JSON.parse(file.data);
     } else {
       return '';
     }
   }
+
+  /********************* SAVE *********************/
 
   async save() {
 
@@ -168,6 +199,9 @@ class EditorJS extends HTMLElement {
 
   }
 
+  /********************* INIT PIPE SERVICE *********************/
+  // On pipe service emit we download new data and render it in editor.js
+
   initPipeService() {
     gudhub.on('gh_document_insert_one', { app_id: this.appId, item_id: this.itemId, element_id: this.fieldId }, async () => {
       this.toggleSavingPopup();
@@ -184,6 +218,9 @@ class EditorJS extends HTMLElement {
     })
   }
 
+  /********************* ADD LISTENERS *********************/
+  // Need to save editor when click outside editor.js
+
   addListeners() {
     this.addEventListener('click', () => {
       window.addEventListener('click', listener, false);
@@ -197,6 +234,9 @@ class EditorJS extends HTMLElement {
       }
     }
   }
+
+  /********************* CHECK IF IMAGE DELETED *********************/
+  // Need to check if image block was deleted from edtior, and then send request to server to delete image file, than was deleted fro editor
 
   checkIfImageDeleted() {
     return new Promise(async (resolve) => {
@@ -224,6 +264,8 @@ class EditorJS extends HTMLElement {
       }
     });
   }
+
+  /********************* TOGGLE SAVING POPUP *********************/
 
   toggleSavingPopup() {
     let popup = this.querySelector('.editorjs__saving');

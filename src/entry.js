@@ -3,6 +3,8 @@ import edjsHTML from 'editorjs-html';
 
 import './scss/style.scss';
 
+/******************** DATA TYPE EXPORT ********************/
+
 export default class EditorjsData {
     getTemplate() {
         var fieldTemplate = {
