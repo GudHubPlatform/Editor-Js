@@ -42,6 +42,7 @@ class EditorJS extends HTMLElement {
       setTimeout(() => {
         this.getAttributes();
         this.init();
+        this.initPipeService();
       }, 0);
     }
   }
@@ -165,6 +166,22 @@ class EditorJS extends HTMLElement {
 
     this.toggleSavingPopup();
 
+  }
+
+  initPipeService() {
+    gudhub.on('gh_document_insert_one', { app_id: this.appId, item_id: this.itemId, element_id: this.fieldId }, async () => {
+      this.toggleSavingPopup();
+
+      let file = await gudhub.getDocument({
+        app_id: this.appId,
+        item_id: this.itemId,
+        element_id: this.fieldId
+      });
+
+      this.editor.render(JSON.parse(file.data));
+
+      this.toggleSavingPopup();
+    })
   }
 
   addListeners() {
