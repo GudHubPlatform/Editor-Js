@@ -188,12 +188,17 @@ class EditorJS extends HTMLElement {
 
     let data = await this.editor.save();
 
-    await gudhub.createDocument({
+    let document = await gudhub.createDocument({
       app_id: this.appId,
       item_id: this.itemId,
       element_id: this.fieldId,
       data: JSON.stringify(data)
     });
+
+    if(!this.fieldValue) {
+      await gudhub.setFieldValue(this.appId, this.itemId, this.fieldId, document._id);
+      this.fieldValue = document._id;
+    }
 
     this.toggleSavingPopup();
 
