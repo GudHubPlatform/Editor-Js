@@ -8,7 +8,7 @@ import './scss/style.scss';
 export default class EditorjsData {
     getTemplate() {
         var fieldTemplate = {
-          constructor: 'file',
+          constructor: 'document',
           name: 'EditorJS',
           icon: 'code_editor',
           type: 'editorjs',
