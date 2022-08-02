@@ -6,6 +6,8 @@ import List from '@editorjs/list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
+import Faq from './editorjs-faq.js';
+import HowTo from './editorjs-howto.js';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 
@@ -59,7 +61,6 @@ class EditorJS extends HTMLElement {
       }, 0);
     }
   }
-
   /********************* INIT *********************/
   // Checks if document exists for this field, if yes - download it and render in editor.js
   // Then adding listeners for editor saving
@@ -76,6 +77,8 @@ class EditorJS extends HTMLElement {
     this.editor = new editorjs({
       holder: 'editorjs',
       data: savedData,
+      readOnly: false,
+      autofocus: true,
       tools: {
         header: {
           class: Header,
@@ -83,6 +86,17 @@ class EditorJS extends HTMLElement {
             placeholder: 'Enter a header',
             levels: [1, 2, 3, 4, 5]
           }
+        },
+        faq: {
+          class: Faq,
+          inlineToolbar: true,
+          config: {
+            placeholder: 'Enter a question'
+          }
+        },
+        howTo: {
+          class: HowTo,
+          inlineToolbar: true
         },
         table: {
           class: Table

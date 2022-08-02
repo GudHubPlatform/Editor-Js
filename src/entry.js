@@ -1,5 +1,7 @@
 import './js/editorjs-webcomponent.js';
 import edjsHTML from 'editorjs-html';
+import {parseFaq} from  './js/parserExtenders.js';
+import {parseHowTo} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
 
@@ -55,16 +57,20 @@ export default class EditorjsData {
       content: () =>
         '<editor-js app-id="{{appId}}" item-id="{{itemId}}" field-id="{{field_model.field_id}}" field-value="{{field_model.field_value}}"></editor-js>'
     }, {
-      id: 'Html',
-      name: 'html',
+      id: 'html',
+      name: 'Html',
       content: async () => {
         let document = await gudhub.getDocument({
           app_id: appId,
           item_id: itemId,
           element_id: field_model.field_id
         });
-        const edjsParser = edjsHTML();
+        const edjsParser = edjsHTML({
+          faq: parseFaq,
+          howTo: parseHowTo
+        });
         let html = edjsParser.parse(JSON.parse(document.data));
+        console.log(html)
         return html;
       }
     }, {
