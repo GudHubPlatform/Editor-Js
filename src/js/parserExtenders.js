@@ -41,7 +41,6 @@ export const parseFaq = (block) => {
 
 
 export const parseHowTo = (block) => {
-    console.log(block)
     let html_template = '';
 
     let mainTitle = block.data.mainTitle;

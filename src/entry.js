@@ -70,7 +70,6 @@ export default class EditorjsData {
           howTo: parseHowTo
         });
         let html = edjsParser.parse(JSON.parse(document.data));
-        console.log(html)
         return html;
       }
     }, {

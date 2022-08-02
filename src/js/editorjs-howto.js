@@ -185,7 +185,7 @@ export default class HowTo {
         }
         let content_list = [];
         let saved_content = blockContent.querySelectorAll('.step_bottom span');
-        console.log(saved_content)
+        
         for (let i = 0; i < saved_content.length; i++){
             content_list.push(saved_content[i].innerHTML)
         }
