@@ -75,3 +75,17 @@ export const parseHowTo = (block) => {
         ${html_template}
     </div>`;
 } 
+
+
+export const parseCustomImage = (block) => {
+    
+    let html_template = '';
+    
+    let image = /*html*/`
+    <img src=${block.data.file.url} alt=${block.data.caption} title=${block.data.title}>
+    `
+    
+    html_template += image;
+    
+    return html_template;
+} 

@@ -2,6 +2,7 @@ import './js/editorjs-webcomponent.js';
 import edjsHTML from 'editorjs-html';
 import {parseFaq} from  './js/parserExtenders.js';
 import {parseHowTo} from  './js/parserExtenders.js';
+import {parseCustomImage} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
 
@@ -66,11 +67,16 @@ export default class EditorjsData {
           element_id: field_model.field_id
         });
         const edjsParser = edjsHTML({
-          faq: parseFaq,
-          howTo: parseHowTo
+          faq: parseFaq, 
+          howTo: parseHowTo,
+          customImage: parseCustomImage
         });
+
         let html = edjsParser.parse(JSON.parse(document.data));
-        return html;
+        /* Variable html return array. This reduce remove commas, by transforming array to the string.  */
+        return html.reduce((prev, current) => {
+          return prev + current
+        }, '');
       }
     }, {
       id: 'value',

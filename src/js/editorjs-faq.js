@@ -10,7 +10,7 @@ export default class Faq {
     }
     render() {
         const uniqueClass = this.classNameGenerator();
-
+        /* Create parts of main block and set attributes  */
         let faqPage = document.createElement('div');
         faqPage.classList.add('faq_page');
         faqPage.setAttribute("itemscope", "");
@@ -23,7 +23,7 @@ export default class Faq {
         copyButtonWrapper.appendChild(copyButton)
         faqPage.prepend(copyButtonWrapper);
         
-
+        /* If we have saved data we paste values to right places, if we don`t have a saved date we paste placeholders */
         if(this.data.saved_question){
 
             let get_question = this.data.saved_question;
@@ -51,7 +51,7 @@ export default class Faq {
                 answer.innerHTML = /*html*/ `<p contenteditable = "true" placeholder="answer" itemprop="text">${input_answer_data}</p>`;
     
                 question.appendChild(answer)
-                
+                /* Call method with an arguments. This method will collect all the blocks together */
                 this.addItem(uniqueClass, faqPage, question)
             };
         }else{
@@ -76,12 +76,13 @@ export default class Faq {
             newAnswer.innerHTML = /*html*/ `<p contenteditable = "true" placeholder="answer" itemprop="text">${input_answer_data}</p>`;
             
             newQuestion.appendChild(newAnswer)
+            /* Call method with an arguments. This method will collect all the blocks together */
             this.addItem(this.classNameGenerator(), faqPage, newQuestion)
         }
 
 
         
-        
+        /* Set action for copyButton. This action will add one more item */
         
         copyButton.addEventListener('click', () => {
             let newQuestion = document.createElement('div');
@@ -120,7 +121,7 @@ export default class Faq {
         
         return faqPage;
     }
-
+    /* This method collect all the blocks together and return it */
     addItem(uniqueClass, faqPage, question){
         let faq_wrapper = document.createElement('div');
         faq_wrapper.classList.add('faq_wrapper');
@@ -135,6 +136,8 @@ export default class Faq {
         removeButtonWrapper.classList.add('removeButtonWrapper');
         let removeButton = document.createElement('div');
         removeButton.classList.add('removeButton');
+        
+        /* Add action for removeButton. This action will be remove current item */
 
         removeButton.addEventListener('click', (el) => {
             el.target.parentElement.parentElement.remove();
@@ -158,6 +161,7 @@ export default class Faq {
     }
 
     save(blockContent) {
+        /* Save our data like as arrays */
         let script = /*html*/
             `
                 <script>

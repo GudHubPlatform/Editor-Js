@@ -9,6 +9,7 @@ export default class HowTo {
         };
     }
     render() {
+        /* Create parts of main block and set attributes  */
         let howTo = document.createElement('div');
         howTo.setAttribute('itemscope', '');
         howTo.setAttribute('itemtype', 'https://schema.org/HowTo');
@@ -38,7 +39,8 @@ export default class HowTo {
        
 
      
-        
+        /* Set action for copyButton. This action will add one more item */
+
         copyButton.addEventListener('click', () => {
             
             let stepTopHeading = document.createElement('h3');
@@ -58,6 +60,8 @@ export default class HowTo {
         let subTitleText = this.data.mainSubtitle ? this.data.mainSubtitle : 'Subtitle';
         title.innerText = titleText;
         subtitle.innerText = subTitleText;
+
+        /* If we have saved data we paste values to right places, if we don`t have a saved date we paste placeholders */
 
         if(this.data.heading_list){
 
@@ -79,7 +83,7 @@ export default class HowTo {
                 stepBottomText.innerHTML = input_content_data;
                 
                 
-                
+                /* Call method with an arguments. This method will collect all the blocks together */
                 this.addItem(howTo, stepTopHeading, stepBottomText, q);
             };
         }else{
@@ -94,6 +98,7 @@ export default class HowTo {
             stepBottomText.innerHTML = 'Content';
             
             let q = 0;
+            /* Call method with an arguments. This method will collect all the blocks together */
             this.addItem(howTo, stepTopHeading, stepBottomText, q);
             
         }
@@ -107,7 +112,7 @@ export default class HowTo {
         
         return howTo;
     }
-
+/* This method collect all the blocks together and return it */
     addItem(howTo, stepTopHeading, stepBottomText, q){
         
         let step = document.createElement('div');
@@ -129,6 +134,7 @@ export default class HowTo {
         stepTopCount.classList.add('step_count')
         let stepTopCountNumber = document.createElement('span');
 
+        /* Generating right number of step */
         if (typeof q == 'number'){
             stepTopCountNumber.innerText = q+1;
         }else{
@@ -157,7 +163,9 @@ export default class HowTo {
         removeButtonWrapper.classList.add('removeButtonWrapper');
         let removeButton = document.createElement('div');
         removeButton.classList.add('removeButton');
-
+        
+        /* Add action for removeButton. This action will be remove current item */
+        
         removeButton.addEventListener('click', (el) => {
             el.target.parentElement.parentElement.remove();
             let allSteps = document.querySelectorAll('.step');
@@ -175,6 +183,7 @@ export default class HowTo {
     }
 
     save(blockContent) {
+        /* Save our data like as arrays */
         let mainTitle = blockContent.querySelector('h2').textContent;
         let mainSubtitle = blockContent.querySelector('.subtitle').textContent;
         
