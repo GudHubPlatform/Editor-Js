@@ -9,6 +9,7 @@ import CodeMirror from 'editorjs-codemirror';
 import Faq from './editorjs-faq.js';
 import HowTo from './editorjs-howto.js';
 import CustomImage from './editorjs-image.js';
+import EditorJsColumns from '@calumk/editorjs-columns';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 
@@ -95,10 +96,82 @@ class EditorJS extends HTMLElement {
             placeholder: 'Enter a question'
           }
         },
+        editorJsColumns: {
+          class: EditorJsColumns,
+          config:{
+            tools : {
+              header: {
+                class: Header,
+                config: {
+                  placeholder: 'Enter a header',
+                  levels: [1, 2, 3, 4, 5]
+                }
+              },
+              faq: {
+                class: Faq,
+                inlineToolbar: true,
+                config: {
+                  placeholder: 'Enter a question'
+                }
+              },
+              
+              howTo: {
+                class: HowTo,
+                inlineToolbar: true
+              },
+              
+              customImage: {
+                class: CustomImage,
+                config: {
+                  captionPlaceholder: 'alt',
+                  uploader: {
+      
+                    /* CUSTOM IMAGE LOADER */
+                    
+                    uploadByFile(file) {
+                      return new Promise(async (resolve) => {
+                        const toBase64 = file => new Promise((resolve, reject) => {
+                          const reader = new FileReader();
+                          reader.readAsDataURL(file);
+                          reader.onload = () => resolve(reader.result);
+                          reader.onerror = error => reject(error);
+                        });
+                        let fileBase64 = await toBase64(file);
+                        let uploaded = await gudhub.uploadFileFromString({
+                          source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
+                          format: 'base64',
+                          file_name: file.name,
+                          extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
+                          app_id: self.appId,
+                          item_id: self.itemId,
+                          field_id: self.fieldId
+                        });
+                        self.uploadedImages.push(uploaded.file_id);
+                        resolve({ success: 1, file: uploaded });
+                      });
+                    }
+                  }
+                }
+              },
+              table: {
+                class: Table
+              },
+              checklist: {
+                class: Checklist,
+                inlineToolbar: true,
+              },
+              embed: {
+                class: Embed
+              }
+            }
+          }
+        },
+        
         howTo: {
           class: HowTo,
           inlineToolbar: true
         },
+        
         customImage: {
           class: CustomImage,
           config: {
@@ -151,38 +224,6 @@ class EditorJS extends HTMLElement {
         },
         code: {
           class: CodeMirror
-        },
-        image: {
-          class: Image,
-          config: {
-            uploader: {
-
-              /* CUSTOM IMAGE LOADER */
-              
-              uploadByFile(file) {
-                return new Promise(async (resolve) => {
-                  const toBase64 = file => new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
-                  });
-                  let fileBase64 = await toBase64(file);
-                  let uploaded = await gudhub.uploadFileFromString({
-                    source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
-                    format: 'base64',
-                    file_name: file.name,
-                    extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
-                    app_id: self.appId,
-                    item_id: self.itemId,
-                    field_id: self.fieldId
-                  });
-                  self.uploadedImages.push(uploaded.file_id);
-                  resolve({ success: 1, file: uploaded });
-                });
-              }
-            }
-          }
         }
       }
     });

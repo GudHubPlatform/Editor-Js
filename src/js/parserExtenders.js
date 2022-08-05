@@ -76,6 +76,28 @@ export const parseHowTo = (block) => {
     </div>`;
 } 
 
+export const parseTable = (block) => {
+
+    let html_template = '';
+    let template = '';
+    
+    let dataTable = block.data.content;
+    
+    dataTable.forEach(tr => {
+        let row = '';
+        tr.forEach(td => {
+            let tdElement = /*html*/`<td>${td}</td>`
+            
+            row += tdElement;
+        })
+        template = /*html*/`<tr class="row">${row}</tr>`
+        html_template += template;
+    });
+    return /*html*/`
+    <table class="editorjs_parse_table">
+        ${html_template}
+    </table>`;
+} 
 
 export const parseCustomImage = (block) => {
     
@@ -86,6 +108,101 @@ export const parseCustomImage = (block) => {
     `
     
     html_template += image;
+    
+    return html_template;
+} 
+
+export const parseEditorJsColumns = (block) => {
+    
+    let columns = block.data.cols;
+    let html_template = '';
+    let mainColumnWrapper = '';
+    /* We have object with a data of columns. So we need to iterate through the elements of this object */
+    columns.forEach(column => {
+
+        let blocks = column.blocks;
+        let columnWrap = '';
+        /* Now we have an object with data of a column. Now we need to iterate this elements */
+        blocks.forEach(block => {
+            let type = block.type;
+            let template = '';
+            /* Check a type of data and starting right parser */
+            switch(type){
+                case 'paragraph':
+                    template = /*html*/`
+                    <p>${block.data.text}</p>
+                    `
+                    break;
+                    
+                case 'header':
+                    template = /*html*/`
+                        <h${block.data.level}>${block.data.text}</h${block.data.level}>
+                    `
+                    break;
+
+                case 'faq':
+                    template = parseFaq(block)
+                    break;
+                    
+                case 'howTo':
+                    template = parseHowTo(block)
+                
+                    break;
+                case 'customImage':
+                    template = parseCustomImage(block)
+                    
+                    break;
+                case 'table':
+                    template = parseTable(block)
+                    break;
+
+                case 'checklist':
+                    let checkList = block.data.items;
+
+                    checkList.forEach(item => {
+                        if(item.checked){
+                            template += /*html*/`
+                            <div class="cdx-checklist__item cdx-checklist__item--checked">
+                                <span class="cdx-checklist__item-checkbox"></span>
+                                <div class="cdx-checklist__item-text" contenteditable="true">${item.text}</div>
+                            </div>
+                            `                        
+                            
+                        }else{
+                            template += /*html*/`
+                            <div class="cdx-checklist__item">
+                                <span class="cdx-checklist__item-checkbox"></span>
+                                <div class="cdx-checklist__item-text" contenteditable="true">${item.text}</div>
+                            </div>
+                            `                        
+                        }
+                        
+                    });
+                    break;
+                
+                default:
+                    console.log('Unsupported data type')
+            }
+            columnWrap += template
+        });
+
+        let realWrapper = /*html*/`
+        <div class="columnWrapper">${columnWrap}</div>
+        `;
+        
+        mainColumnWrapper += realWrapper;
+        /* Count the amount of columns and set right class. It`s need to set correcting styles */
+        if(columns.length === 2){
+            html_template = /*html*/`
+            <div class="mainColumnWrapper twoColumns">${mainColumnWrapper}</div>
+            `
+        }else if(columns.length === 3){
+            html_template = /*html*/`
+            <div class="mainColumnWrapper threeColumns">${mainColumnWrapper}</div>
+            `
+        }
+        
+    });
     
     return html_template;
 } 

@@ -3,6 +3,8 @@ import edjsHTML from 'editorjs-html';
 import {parseFaq} from  './js/parserExtenders.js';
 import {parseHowTo} from  './js/parserExtenders.js';
 import {parseCustomImage} from  './js/parserExtenders.js';
+import {parseEditorJsColumns} from  './js/parserExtenders.js';
+import {parseTable} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
 
@@ -69,7 +71,9 @@ export default class EditorjsData {
         const edjsParser = edjsHTML({
           faq: parseFaq, 
           howTo: parseHowTo,
-          customImage: parseCustomImage
+          customImage: parseCustomImage,
+          editorJsColumns: parseEditorJsColumns,
+          table: parseTable,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));

@@ -318,3 +318,32 @@ editor-js {
     outline: none;
     width: 100%;
 }
+
+
+.mainColumnWrapper{
+    display: flex;
+    &>div{
+        margin-right: 5px;
+        &:last-child{
+            margin-right: 0;
+        }
+    }
+}
+
+
+table.editorjs_parse_table{
+    border-collapse: initial;
+    border-spacing: 5px;
+}
+.mainColumnWrapper.twoColumns .columnWrapper{
+    width: 50%;
+}
+.mainColumnWrapper.threeColumns .columnWrapper{
+    width: 33%;
+}
+
+@media screen and (max-width: 900px) {
+    .mainColumnWrapper{
+        flex-wrap: wrap;
+    }
+}
