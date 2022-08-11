@@ -5,8 +5,10 @@ import {parseHowTo} from  './js/parserExtenders.js';
 import {parseCustomImage} from  './js/parserExtenders.js';
 import {parseEditorJsColumns} from  './js/parserExtenders.js';
 import {parseTable} from  './js/parserExtenders.js';
+import {parseHTMLViewer} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
+
 
 /******************** DATA TYPE EXPORT ********************/
 
@@ -74,6 +76,7 @@ export default class EditorjsData {
           customImage: parseCustomImage,
           editorJsColumns: parseEditorJsColumns,
           table: parseTable,
+          htmlViewer: parseHTMLViewer,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));

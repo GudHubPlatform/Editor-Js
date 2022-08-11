@@ -112,6 +112,11 @@ export const parseCustomImage = (block) => {
     return html_template;
 } 
 
+export const parseHTMLViewer = (block) => {
+    let newCode = block.data.template.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', '');
+    return newCode;
+} 
+
 export const parseEditorJsColumns = (block) => {
     
     let columns = block.data.cols;

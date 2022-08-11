@@ -1,6 +1,5 @@
 import editorjs from '@editorjs/editorjs';
 import Header from '@editorjs/header';
-import Image from '@editorjs/image';
 import Table from '@editorjs/table';
 import List from '@editorjs/list';
 import Checklist from '@editorjs/checklist';
@@ -10,6 +9,7 @@ import Faq from './editorjs-faq.js';
 import HowTo from './editorjs-howto.js';
 import CustomImage from './editorjs-image.js';
 import EditorJsColumns from '@calumk/editorjs-columns';
+import HTMLViewer from './editorjs-htmlViewer.js';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 
@@ -41,7 +41,9 @@ class EditorJS extends HTMLElement {
   static get observedAttributes() {
     return ['app-id'];
   }
-
+  static get enableLineBreaks() {
+    return true
+  }
   /********************* ATTRIBUTE CHANGED CALLBACK*********************/
   // We init editor only after attributes change
   // We are doing it, instead of connedctedCallback to get right data
@@ -95,6 +97,9 @@ class EditorJS extends HTMLElement {
           config: {
             placeholder: 'Enter a question'
           }
+        },
+        htmlViewer: {
+          class: HTMLViewer,
         },
         editorJsColumns: {
           class: EditorJsColumns,
@@ -223,7 +228,10 @@ class EditorJS extends HTMLElement {
           class: Embed
         },
         code: {
-          class: CodeMirror
+          class: CodeMirror,
+          config:{
+            mode: "HTML"
+          }
         }
       }
     });
@@ -235,9 +243,9 @@ class EditorJS extends HTMLElement {
         e.preventDefault();
         this.save();
       }
-      if(e.keyCode == 13) {
-        this.save();
-      }
+      // if(e.keyCode == 13) {
+      //   this.save();
+      // }
     }, false);
 
     // Adding listeners to save editor content on click outside
@@ -374,4 +382,4 @@ class EditorJS extends HTMLElement {
 
 if (!window.customElements.get('editor-js')) {
   window.customElements.define('editor-js', EditorJS);
-}
+} 
