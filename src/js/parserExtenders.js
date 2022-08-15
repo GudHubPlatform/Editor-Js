@@ -1,10 +1,8 @@
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
-// import {basicSetup, EditorView} from "codemirror"
-// import {html} from "@codemirror/lang-html"
-// import editorjs from '@editorjs/editorjs';
-// import CodeBox from '@bomdi/codebox';
-// import CodeMirror from 'editorjs-codemirror';
+import javascript from 'highlight.js/lib/languages/javascript.js';
+import css from 'highlight.js/lib/languages/css.js';
+
 export const parseFaq = (block) => {
     let html_template = '';
 
@@ -221,35 +219,34 @@ export const parseHTMLViewer = (block) => {
     return newCode;
 } 
 export const parseCodeMirror = (block) => {
-    console.log(block)
+    
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;
 
+    /* Formatting source data from entity number symbols to reserved by html symbols(&gt; it`s a great then and = '>') */
     let newC = codeDataText.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"');
 
     let div = document.createElement('div');
-    div.classList.add("code")
     div.innerText = newC
     let type = '';
     let res = '';
+    /* Check language and do right parsing, highlighting */
     switch(codeDataType){
         case 'HTML':
            type = 'html'
-           console.log("html")
-           res = `<div class="language-${type} code">\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n</div>`
+           /* In case HTML no "hljs.registerLanguage('html', html)" because html it`s a default language in highlight.js */
+           res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`
            break;
         case 'Javascript':
             type = 'javascript'
-            console.log("js")
-            res = `<div class="language-${type} code">\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n</div>`
+            hljs.registerLanguage('javascript', javascript);
+            res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`
             break;
-        case 'CSS':
-            type = 'css'
-            console.log("css")
+            case 'CSS':
+                type = 'css'
+                hljs.registerLanguage('css', css);
+                res = `\n${div.innerHTML.replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`
             break;
-        default:
-            console.log('und')
-            break
             
     }
     
@@ -258,8 +255,6 @@ export const parseCodeMirror = (block) => {
     let highlighting = hljs.highlightAuto(res).value
 
     let output = highlighting;
-    // let output = highlighting.slice(highlighting.indexOf('language-html code&quot;</span>&gt;') + 36, -48);
-
+    /* Insert our output data in a wrapper. because we need to link style white-space:pre-wrap to this block */
     return `<div class="codemirror-wrapper">${output}</div>`;
-    // return "&lt;div&gt;<br>	&nbsp;&nbsp;&nbsp;&nbsp;asdasdasdasdasdasd&lt;br&gt;&lt;/div&gt;";
 } 

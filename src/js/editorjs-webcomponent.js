@@ -228,22 +228,7 @@ class EditorJS extends HTMLElement {
           class: Embed
         },
         code: {
-          class: CodeMirror,
-          config:{
-            languages: [
-              {
-                name: 'Shell',
-                mode: "application/x-sh"
-            }, {
-                name: 'JSX',
-                mode: "text/typescript-jsx"
-            }, 
-              {
-                name: 'HTML',
-                mode: "text/html"
-              }
-            ]
-          },
+          class: CodeMirror
         }
       }
     });
