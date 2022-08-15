@@ -221,21 +221,44 @@ export const parseHTMLViewer = (block) => {
     return newCode;
 } 
 export const parseCodeMirror = (block) => {
-    
+    console.log(block)
+    let codeDataType = block.data.name;
     let codeDataText = block.data.text;
 
     let newC = codeDataText.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"');
 
     let div = document.createElement('div');
     div.classList.add("code")
-    div.classList.add("language-html")
     div.innerText = newC
+    let type = '';
+    let res = '';
+    switch(codeDataType){
+        case 'HTML':
+           type = 'html'
+           console.log("html")
+           res = `<div class="language-${type} code">\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n</div>`
+           break;
+        case 'Javascript':
+            type = 'javascript'
+            console.log("js")
+            res = `<div class="language-${type} code">\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n</div>`
+            break;
+        case 'CSS':
+            type = 'css'
+            console.log("css")
+            break;
+        default:
+            console.log('und')
+            break
+            
+    }
+    
 
-    let res = `<div class="language-html code">\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n</div>`
     
     let highlighting = hljs.highlightAuto(res).value
 
-    let output = highlighting.slice(highlighting.indexOf('language-html code&quot;</span>&gt;') + 36, -48);
+    let output = highlighting;
+    // let output = highlighting.slice(highlighting.indexOf('language-html code&quot;</span>&gt;') + 36, -48);
 
     return `<div class="codemirror-wrapper">${output}</div>`;
     // return "&lt;div&gt;<br>	&nbsp;&nbsp;&nbsp;&nbsp;asdasdasdasdasdasd&lt;br&gt;&lt;/div&gt;";
