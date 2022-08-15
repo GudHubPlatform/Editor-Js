@@ -230,8 +230,20 @@ class EditorJS extends HTMLElement {
         code: {
           class: CodeMirror,
           config:{
-            mode: "HTML"
-          }
+            languages: [
+              {
+                name: 'Shell',
+                mode: "application/x-sh"
+            }, {
+                name: 'JSX',
+                mode: "text/typescript-jsx"
+            }, 
+              {
+                name: 'HTML',
+                mode: "text/html"
+              }
+            ]
+          },
         }
       }
     });

@@ -1,3 +1,10 @@
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
+// import {basicSetup, EditorView} from "codemirror"
+// import {html} from "@codemirror/lang-html"
+// import editorjs from '@editorjs/editorjs';
+// import CodeBox from '@bomdi/codebox';
+// import CodeMirror from 'editorjs-codemirror';
 export const parseFaq = (block) => {
     let html_template = '';
 
@@ -112,10 +119,7 @@ export const parseCustomImage = (block) => {
     return html_template;
 } 
 
-export const parseHTMLViewer = (block) => {
-    let newCode = block.data.template.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', '');
-    return newCode;
-} 
+
 
 export const parseEditorJsColumns = (block) => {
     
@@ -210,4 +214,29 @@ export const parseEditorJsColumns = (block) => {
     });
     
     return html_template;
+} 
+
+export const parseHTMLViewer = (block) => {
+    let newCode = block.data.template.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', '');
+    return newCode;
+} 
+export const parseCodeMirror = (block) => {
+    
+    let codeDataText = block.data.text;
+
+    let newC = codeDataText.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"');
+
+    let div = document.createElement('div');
+    div.classList.add("code")
+    div.classList.add("language-html")
+    div.innerText = newC
+
+    let res = `<div class="language-html code">\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n</div>`
+    
+    let highlighting = hljs.highlightAuto(res).value
+
+    let output = highlighting.slice(highlighting.indexOf('language-html code&quot;</span>&gt;') + 36, -48);
+
+    return `<div class="codemirror-wrapper">${output}</div>`;
+    // return "&lt;div&gt;<br>	&nbsp;&nbsp;&nbsp;&nbsp;asdasdasdasdasdasd&lt;br&gt;&lt;/div&gt;";
 } 

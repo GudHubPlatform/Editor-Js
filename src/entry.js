@@ -6,8 +6,11 @@ import {parseCustomImage} from  './js/parserExtenders.js';
 import {parseEditorJsColumns} from  './js/parserExtenders.js';
 import {parseTable} from  './js/parserExtenders.js';
 import {parseHTMLViewer} from  './js/parserExtenders.js';
+import {parseCodeMirror} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
+
+
 
 
 /******************** DATA TYPE EXPORT ********************/
@@ -77,9 +80,11 @@ export default class EditorjsData {
           editorJsColumns: parseEditorJsColumns,
           table: parseTable,
           htmlViewer: parseHTMLViewer,
+          code: parseCodeMirror,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));
+        console.log(html)
         /* Variable html return array. This reduce remove commas, by transforming array to the string.  */
         return html.reduce((prev, current) => {
           return prev + current
