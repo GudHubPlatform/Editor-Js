@@ -11,6 +11,7 @@ import CustomImage from './editorjs-image.js';
 import EditorJsColumns from '@calumk/editorjs-columns';
 import HTMLViewer from './editorjs-htmlViewer.js';
 import LinkTool from './editorjs-inlineToolLink.js';
+import SetTextColor from './editorjs-inlineToolColor.js';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 
@@ -84,10 +85,13 @@ class EditorJS extends HTMLElement {
       data: savedData,
       readOnly: false,
       autofocus: true,
-      inlineToolbar: ['bold', 'italic', 'linkTool'],
+      inlineToolbar: ['bold', 'italic', 'linkTool', 'setTextColor'],
       tools: {
         linkTool: {
           class: LinkTool,
+        },
+        setTextColor: {
+          class: SetTextColor,
         },
         header: {
           class: Header,

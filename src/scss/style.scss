@@ -399,6 +399,9 @@ table.editorjs_parse_table{
 .ce-inline-toolbar__actions .linkWrapper{
     padding: 5px;
 }
+.ce-inline-toolbar__actions input[type="color"]{
+    padding: 0;
+}
 .ce-inline-toolbar__actions .linkWrapper .checkboxesWrapper{
     display: flex;
     justify-content: space-between;
