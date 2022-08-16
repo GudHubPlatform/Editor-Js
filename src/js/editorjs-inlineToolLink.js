@@ -76,7 +76,11 @@ export default class LinkTool {
         const aLink = this.api.selection.findParentTag(this.tag);
         const text = range.extractContents();
         
-        aLink.remove();
+        aLink ? aLink.removeAttribute('target') : null;
+        aLink ? aLink.removeAttribute('rel') : null;
+        aLink ? aLink.removeAttribute('href') : null;
+        
+        aLink ? aLink.remove() : null;
         
         range.insertNode(text);
     }
