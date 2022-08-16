@@ -395,3 +395,24 @@ table.editorjs_parse_table{
 .codemirror-wrapper{
     white-space: pre-wrap;
 }
+
+.ce-inline-toolbar__actions .linkWrapper{
+    padding: 5px;
+}
+.ce-inline-toolbar__actions .linkWrapper .checkboxesWrapper{
+    display: flex;
+    justify-content: space-between;
+    max-width: 300px;
+    font-weight: 600;
+    margin-top: 5px;
+    input{
+        margin-left: 5px;
+    }
+    &>div{
+        div{
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+        }
+    }
+}

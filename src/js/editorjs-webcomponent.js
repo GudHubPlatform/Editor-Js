@@ -10,6 +10,7 @@ import HowTo from './editorjs-howto.js';
 import CustomImage from './editorjs-image.js';
 import EditorJsColumns from '@calumk/editorjs-columns';
 import HTMLViewer from './editorjs-htmlViewer.js';
+import LinkTool from './editorjs-inlineToolLink.js';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 
@@ -83,12 +84,18 @@ class EditorJS extends HTMLElement {
       data: savedData,
       readOnly: false,
       autofocus: true,
+      inlineToolbar: ['bold', 'italic', 'linkTool'],
       tools: {
+        linkTool: {
+          class: LinkTool,
+        },
         header: {
           class: Header,
+          inlineToolbar: true,
           config: {
             placeholder: 'Enter a header',
-            levels: [1, 2, 3, 4, 5]
+            levels: [1, 2, 3, 4, 5],
+            
           }
         },
         faq: {
@@ -240,9 +247,9 @@ class EditorJS extends HTMLElement {
         e.preventDefault();
         this.save();
       }
-      // if(e.keyCode == 13) {
-      //   this.save();
-      // }
+      if(e.keyCode == 13) {
+        this.save();
+      }
     }, false);
 
     // Adding listeners to save editor content on click outside
