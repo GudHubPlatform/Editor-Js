@@ -12,6 +12,7 @@ import EditorJsColumns from '@calumk/editorjs-columns';
 import HTMLViewer from './editorjs-htmlViewer.js';
 import LinkTool from './editorjs-inlineToolLink.js';
 import SetTextColor from './editorjs-inlineToolColor.js';
+import ProsCons from './editorjs-prosCons.js';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 
@@ -104,6 +105,13 @@ class EditorJS extends HTMLElement {
         },
         faq: {
           class: Faq,
+          inlineToolbar: true,
+          config: {
+            placeholder: 'Enter a question'
+          }
+        },
+        prosCons: {
+          class: ProsCons,
           inlineToolbar: true,
           config: {
             placeholder: 'Enter a question'
