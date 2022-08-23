@@ -57,7 +57,7 @@ export default class EditorjsData {
 
   /*------------------------------- ACTION INTERPRETATION --------------------------------------*/
 
-  getInterpretation(value, appId, itemId, field_model) {
+  getInterpretation(gudhub, value, appId, itemId, field_model) {
 
     return [{
       id: 'default',
