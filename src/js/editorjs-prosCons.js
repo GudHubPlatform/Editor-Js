@@ -11,122 +11,155 @@ export default class ProsCons {
     render() {
         const uniqueClass = this.classNameGenerator();
         /* Create parts of main block and set attributes  */
+        /* productPage is a wrapper */
         let productPage = document.createElement('div');
         productPage.classList.add('productPage');
 
-        let copyButtonWrapperPros = document.createElement('div');
-        copyButtonWrapperPros.classList.add('copyButtonWrapperPros');
-        let copyButtonPros = document.createElement('div');
-        copyButtonPros.classList.add('copyButtonPros');
-        copyButtonWrapperPros.appendChild(copyButtonPros)
+        let addButtonWrapperPros = document.createElement('div');
+        addButtonWrapperPros.classList.add('addButtonWrapperPros');
+        let addButtonPros = document.createElement('div');
+        addButtonPros.classList.add('addButtonPros');
+        addButtonPros.textContent = '+';
+        addButtonWrapperPros.appendChild(addButtonPros)
         
-        let copyButtonWrapperCons = document.createElement('div');
-        copyButtonWrapperCons.classList.add('copyButtonWrapperCons');
-        let copyButtonCons = document.createElement('div');
-        copyButtonCons.classList.add('copyButtonCons');
-        copyButtonWrapperCons.appendChild(copyButtonCons)
+        let addButtonWrapperCons = document.createElement('div');
+        addButtonWrapperCons.classList.add('addButtonWrapperCons');
+        let addButtonCons = document.createElement('div');
+        addButtonCons.classList.add('addButtonCons');
+        addButtonWrapperCons.appendChild(addButtonCons)
         
-        
+        /* product is a name of product */
+        let productFlexWrapper = document.createElement('div');
+        productFlexWrapper.classList.add('productFlexWrapper');
+        let productSpan = document.createElement('span');
+        productSpan.innerText = "Name of Product:";
+
         let product = document.createElement('div');
         product.classList.add('product');
         product.setAttribute('contenteditable', true);
-        product.innerText = "Product";
+        product.innerText = this.data.product ? this.data.product : "Product";
+        
+        
+        /* author is a name of author */
+        let authorFlexWrapper = document.createElement('div');
+        authorFlexWrapper.classList.add('authorFlexWrapper');
+        let authorSpan = document.createElement('span');
+        authorSpan.innerText = "Author`s Name:";
 
         let author = document.createElement('div');
         author.classList.add('author');
         author.setAttribute('contenteditable', true);
-        author.innerText = "Author";
-        productPage.appendChild(product);
-        productPage.appendChild(author);
+        author.innerText = this.data.author ? this.data.author : "Author";
+
+        productFlexWrapper.appendChild(productSpan);
+        productFlexWrapper.appendChild(product);
+        productPage.appendChild(productFlexWrapper);
+
+        authorFlexWrapper.appendChild(authorSpan);
+        authorFlexWrapper.appendChild(author);
+        productPage.appendChild(authorFlexWrapper);
+        
         let reviews = document.createElement('div');
         reviews.classList.add('reviews')
         
         /* If we have saved data we paste values to right places, if we don`t have a saved date we paste placeholders */
-        if(this.data){
-            console.log(this.data)
-            let getAuthor = this.data.author;
-            let getProduct = this.data.product;
-            let getConses = this.data.cons_list;
-            let getProses = this.data.pros_list;
-
-            product.innerText = getProduct;
-            author.innerText = getAuthor;
-
-            getConses.forEach(cons => {
+        let newPros = document.createElement('div');
+        newPros.classList.add('pros');
+        if ( this.data.pros_list ){
+            console.log(this.data.pros_list)
+            for(let p = 0; p < this.data.pros_list.length; p++){
                 
-            });
-        }else{
-            let newPros = document.createElement('div');
-            newPros.classList.add('pros');
+                let input_pros_data = this.data.pros_list[p];
+                let prosFlex = document.createElement('div');
+                prosFlex.classList.add('pros_flex_wrapper');
+                newPros.appendChild(prosFlex);
+                prosFlex.innerHTML = /*html*/ `
+                <div contenteditable = "true">+</div>
+                <div contenteditable = "true" class="pros_value">${input_pros_data}</div>
+                `;
+                
+                
+                newPros.appendChild(addButtonWrapperPros);
+                
+                let removeButtonWrapper = document.createElement('div');
+                removeButtonWrapper.classList.add('removeButtonWrapper');
+                let removeButton = document.createElement('div');
+                removeButton.classList.add('removeButton');
+                
+                /* Add action for removeButton. This action will be remove current item */
+                
+                /* this remove button for first item of pros */
+                removeButton.addEventListener('click', (el) => {
+                    console.log('remove1')
+                    if(document.querySelectorAll('.productPage .pros_flex_wrapper').length > 1){
+                        el.target.parentElement.parentElement.remove();
+                        let allSteps = document.querySelectorAll('.step');
+                        for (let step = 0; step < allSteps.length; step++){
+                            allSteps[step].querySelector('.step_count span').innerText = step + 1;
+                        }
+                    }
+                })
+                removeButtonWrapper.appendChild(removeButton);
+                prosFlex.appendChild(removeButtonWrapper);
+            }
             
-            let newCons = document.createElement('div');
-            newCons.classList.add('cons');
+            reviews.appendChild(newPros)
+            /* Call method with an arguments. This method will collect all the blocks together */
+            this.addFirstItemPros(this.classNameGenerator(), productPage, reviews, newPros)
+        }
+        let newCons = document.createElement('div');
+        newCons.classList.add('cons');
+        if ( this.data.cons_list ){
+            console.log(this.data.cons_list)
             
-            let input_pros_data = 'Pros';
-            let prosFlex = document.createElement('div');
-            prosFlex.classList.add('pros_flex_wrapper');
-            newPros.appendChild(prosFlex);
-            prosFlex.innerHTML = /*html*/ `
-            <div contenteditable = "true">+</div>
-            <div contenteditable = "true" class="pros_value">${input_pros_data}</div>
-            `;
-            
+            for( let c = 0; c < this.data.cons_list.length; c++){
+
             let consFlex = document.createElement('div');
             consFlex.classList.add('cons_flex_wrapper');
             newCons.appendChild(consFlex);
-            let input_cons_data = 'Cons';
+            let input_cons_data = this.data.cons_list[c];
             consFlex.innerHTML = /*html*/ `
-               <div contenteditable = "true">+</div>
+               <div contenteditable = "true">-</div>
                <div contenteditable = "true" class="cons_value">${input_cons_data}</div>
             `;
             
-            reviews.appendChild(newPros)
-            reviews.appendChild(newCons)
             
-            newPros.appendChild(copyButtonWrapperPros);
-            newCons.appendChild(copyButtonWrapperCons);
-            let removeButtonWrapper = document.createElement('div');
-        removeButtonWrapper.classList.add('removeButtonWrapper');
-        let removeButton = document.createElement('div');
-        removeButton.classList.add('removeButton');
-        
-        /* Add action for removeButton. This action will be remove current item */
-
-        removeButton.addEventListener('click', (el) => {
-            el.target.parentElement.parentElement.remove();
-            let allSteps = document.querySelectorAll('.step');
-            for (let step = 0; step < allSteps.length; step++){
-                allSteps[step].querySelector('.step_count span').innerText = step + 1;
-            }
-        })
-        removeButtonWrapper.appendChild(removeButton);
-        prosFlex.appendChild(removeButtonWrapper);
+            newCons.appendChild(addButtonWrapperCons);
+            
             let removeButtonWrapperCons = document.createElement('div');
             removeButtonWrapperCons.classList.add('removeButtonWrapper');
-        let removeButtonCons = document.createElement('div');
-        removeButtonCons.classList.add('removeButton');
-        
-        /* Add action for removeButton. This action will be remove current item */
-
-        removeButtonCons.addEventListener('click', (el) => {
-            el.target.parentElement.parentElement.remove();
-            let allSteps = document.querySelectorAll('.step');
-            for (let step = 0; step < allSteps.length; step++){
-                allSteps[step].querySelector('.step_count span').innerText = step + 1;
+            let removeButtonCons = document.createElement('div');
+            removeButtonCons.classList.add('removeButton');
+            
+            /* Add action for removeButton. This action will be remove current item */
+            
+            /* this remove button for first item of cons */
+            removeButtonCons.addEventListener('click', (el) => {
+                console.log('removeCons2')
+                if(document.querySelectorAll('.productPage .cons_flex_wrapper').length > 1){
+                    el.target.parentElement.parentElement.remove();
+                    let allSteps = document.querySelectorAll('.step');
+                    for (let step = 0; step < allSteps.length; step++){
+                        allSteps[step].querySelector('.step_count span').innerText = step + 1;
+                    }
+                }
+            })
+            removeButtonWrapperCons.appendChild(removeButtonCons);
+            consFlex.appendChild(removeButtonWrapperCons);
             }
-        })
-        removeButtonWrapperCons.appendChild(removeButtonCons);
-        prosFlex.appendChild(removeButtonWrapperCons);
-        consFlex.appendChild(removeButtonWrapperCons);
+            reviews.appendChild(newCons)
             /* Call method with an arguments. This method will collect all the blocks together */
-            this.addItem(this.classNameGenerator(), productPage, reviews, newPros, newCons)
+            this.addFirstItemCons(this.classNameGenerator(), productPage, reviews, newCons)
         }
+           
 
 
         
         /* Set action for copyButton. This action will add one more item */
         
-        copyButtonPros.addEventListener('click', () => {
+        /* this add button for pros */
+        addButtonPros.addEventListener('click', () => {
+            console.log('addPros3')
             let copyPros = document.createElement('div');
             copyPros.classList.add('pros_flex_wrapper');
             
@@ -138,19 +171,61 @@ export default class ProsCons {
             `;
             this.addItemPros(this.classNameGenerator(), productPage, copyPros, newPros)
         })
-        copyButtonCons.addEventListener('click', () => {
+
+        addButtonCons.addEventListener('click', () => {
+
+            /* this add button for cons */
+            console.log('addCons4')
             let copyCons = document.createElement('div');
             copyCons.classList.add('cons_flex_wrapper');
             
             
             let input_cons_data = 'cons';
             copyCons.innerHTML = /*html*/ `
-                <div contenteditable = "true">+</div>
+                <div contenteditable = "true">-</div>
                 <div contenteditable = "true" class="cons_value">${input_cons_data}</div>
             `;
             this.addItemCons(this.classNameGenerator(), productPage, copyCons, newCons)
         })
         
+        let checkboxWrapper = document.createElement('div');
+        checkboxWrapper.classList.add('checkboxWrapper');
+        
+        let checkboxWrapperProduct = document.createElement('div');
+        checkboxWrapperProduct.classList.add('checkboxWrapperProduct');
+
+        let productLabel = document.createElement('label');
+        productLabel.setAttribute('for', 'productCheck');
+        productLabel.textContent = 'Show Name Of Product';
+        let productCheck = document.createElement('input');
+        productCheck.setAttribute('id', 'productCheck');
+        productCheck.setAttribute('type', 'checkbox');
+        
+        this.data.showProduct ? productCheck.setAttribute('checked', '') : null;
+        
+        checkboxWrapperProduct.appendChild(productCheck);
+        checkboxWrapperProduct.appendChild(productLabel);
+        
+        let checkboxWrapperAuthor = document.createElement('div');
+        checkboxWrapperAuthor.classList.add('checkboxWrapperAuthor');
+        
+        let authorLabel = document.createElement('label');
+        authorLabel.setAttribute('for', 'authorCheck');
+        authorLabel.textContent = 'Show Name Of Author';
+        let authorCheck = document.createElement('input');
+        authorCheck.setAttribute('id', 'authorCheck');
+        authorCheck.setAttribute('type', 'checkbox');
+        
+        this.data.showAuthor ? authorCheck.setAttribute('checked', '') : null;
+        
+        checkboxWrapperAuthor.appendChild(authorCheck);
+        checkboxWrapperAuthor.appendChild(authorLabel);
+        
+        checkboxWrapper.appendChild(checkboxWrapperProduct);
+        checkboxWrapper.appendChild(checkboxWrapperAuthor);
+        
+        productPage.appendChild(checkboxWrapper);
+
         return productPage;
     }
     /* This method collect all the blocks together and return it */
@@ -164,13 +239,16 @@ export default class ProsCons {
         /* Add action for removeButton. This action will be remove current item */
     
         removeButton.addEventListener('click', (el) => {
+
+            /* this remove button for new items of pros */
+            console.log('remove5')
+            if(document.querySelectorAll('.productPage .pros_flex_wrapper').length > 1){
             el.target.parentElement.parentElement.remove();
             let allSteps = document.querySelectorAll('.step');
             for (let step = 0; step < allSteps.length; step++){
                 allSteps[step].querySelector('.step_count span').innerText = step + 1;
-            }
+            }}
         })
-        console.log(copyPros)
         removeButtonWrapper.appendChild(removeButton)
         copyPros.appendChild(removeButtonWrapper)
         newPros.appendChild(copyPros)
@@ -185,21 +263,36 @@ export default class ProsCons {
         removeButton.classList.add('removeButton');
         
         /* Add action for removeButton. This action will be remove current item */
-    
+        
         removeButton.addEventListener('click', (el) => {
-            el.target.parentElement.parentElement.remove();
-            let allSteps = document.querySelectorAll('.step');
-            for (let step = 0; step < allSteps.length; step++){
-                allSteps[step].querySelector('.step_count span').innerText = step + 1;
+
+            /* this remove button for new items of cons */
+            console.log('remove6')
+            if(document.querySelectorAll('.productPage .cons_flex_wrapper').length > 1){
+
+                el.target.parentElement.parentElement.remove();
+                let allSteps = document.querySelectorAll('.step');
+                for (let step = 0; step < allSteps.length; step++){
+                    allSteps[step].querySelector('.step_count span').innerText = step + 1;
+                }
             }
         })
-        console.log(copyCons)
         removeButtonWrapper.appendChild(removeButton)
         copyCons.appendChild(removeButtonWrapper)
         newCons.appendChild(copyCons)
 
     }
-    addItem(uniqueClass, productPage, reviews, newPros, newCons){
+    addFirstItemPros(uniqueClass, productPage, reviews, newPros){
+        let proscons_wrapper = document.createElement('div');
+        proscons_wrapper.classList.add('proscons_wrapper');
+        proscons_wrapper.classList.add(`proscons_unique-${uniqueClass}`);
+        
+        proscons_wrapper.appendChild(reviews);
+        productPage.appendChild(proscons_wrapper);
+        
+        return productPage
+    }
+    addFirstItemCons(uniqueClass, productPage, reviews, newCons){
         let proscons_wrapper = document.createElement('div');
         proscons_wrapper.classList.add('proscons_wrapper');
         proscons_wrapper.classList.add(`proscons_unique-${uniqueClass}`);
@@ -220,6 +313,9 @@ export default class ProsCons {
         let product = blockContent.querySelector('.product').innerText
         let author = blockContent.querySelector('.author').innerText
         
+        let showProduct = blockContent.querySelector('#productCheck').checked;
+        let showAuthor = blockContent.querySelector('#authorCheck').checked;
+
         let pros_list = [];
         let saved_proses = blockContent.querySelectorAll('.pros_value');
 
@@ -239,7 +335,9 @@ export default class ProsCons {
             product,
             author,
             pros_list,
-            cons_list
+            cons_list,
+            showAuthor,
+            showProduct
         }
     }
 }

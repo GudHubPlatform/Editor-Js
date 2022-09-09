@@ -7,6 +7,7 @@ import {parseEditorJsColumns} from  './js/parserExtenders.js';
 import {parseTable} from  './js/parserExtenders.js';
 import {parseHTMLViewer} from  './js/parserExtenders.js';
 import {parseCodeMirror} from  './js/parserExtenders.js';
+import {parseProsCons} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
 
@@ -81,6 +82,7 @@ export default class EditorjsData {
           table: parseTable,
           htmlViewer: parseHTMLViewer,
           code: parseCodeMirror,
+          prosCons: parseProsCons,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));

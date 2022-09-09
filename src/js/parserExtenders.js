@@ -222,10 +222,10 @@ export const parseCodeMirror = (block) => {
     
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;
-
+    
     /* Formatting source data from entity number symbols to reserved by html symbols(&gt; it`s a great then and = '>') */
     let newC = codeDataText.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"');
-
+    
     let div = document.createElement('div');
     div.innerText = newC
     let type = '';
@@ -233,28 +233,34 @@ export const parseCodeMirror = (block) => {
     /* Check language and do right parsing, highlighting */
     switch(codeDataType){
         case 'HTML':
-           type = 'html'
-           /* In case HTML no "hljs.registerLanguage('html', html)" because html it`s a default language in highlight.js */
-           res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`
-           break;
+            type = 'html'
+            /* In case HTML no "hljs.registerLanguage('html', html)" because html it`s a default language in highlight.js */
+            res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`
+            break;
         case 'Javascript':
             type = 'javascript'
             hljs.registerLanguage('javascript', javascript);
             res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`
             break;
-            case 'CSS':
-                type = 'css'
-                hljs.registerLanguage('css', css);
-                res = `\n${div.innerHTML.replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`
+        case 'CSS':
+            type = 'css'
+            hljs.registerLanguage('css', css);
+            res = `\n${div.innerHTML.replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`
             break;
             
     }
-    
-
-    
+            
+            
+            
     let highlighting = hljs.highlightAuto(res).value
-
+    
     let output = highlighting;
     /* Insert our output data in a wrapper. because we need to link style white-space:pre-wrap to this block */
     return `<div class="codemirror-wrapper">${output}</div>`;
+} 
+
+export const parseProsCons = (block) => {
+    console.log(block)
+    let newCode = block;
+    return newCode;
 } 
