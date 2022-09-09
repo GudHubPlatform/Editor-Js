@@ -260,7 +260,51 @@ export const parseCodeMirror = (block) => {
 } 
 
 export const parseProsCons = (block) => {
-    console.log(block)
-    let newCode = block;
+    let template = '';
+    let templateTop = /* html */`
+        <div itemtype="https://schema.org/Product" itemscope>
+            <meta itemprop="name" content="${block.data.product}" />
+            ${block.data.showProduct ? `<div>${block.data.product}</div>` : ''}
+            <div itemprop="review" itemtype="https://schema.org/Review" itemscope>
+                <div itemprop="author" itemtype="https://schema.org/Person" itemscope>
+                    <meta itemprop="name" content="${block.data.author}" />
+                    ${block.data.showAuthor ? `<div>${block.data.author}</div>` : ''}
+                </div>
+                <div itemprop="positiveNotes" itemtype="https://schema.org/ItemList" itemscope>
+                <div>Pros:</div>
+    `;
+
+    let templatePros = '';
+    for( let pros = 0; pros < block.data.pros_list.length; pros++){
+        templatePros += /* html */`
+            <div itemprop="itemListElement" itemtype="https://schema.org/ListItem" itemscope>
+                <meta itemprop="position" content="${pros + 1}" />
+                <span>${pros + 1}</span>
+                <meta itemprop="name" content="${block.data.pros_list[pros]}" />
+                <span>${block.data.pros_list[pros]}</span>
+            </div>
+        `;
+    }
+    
+    
+    let templateCons = '';
+    for( let cons = 0; cons < block.data.cons_list.length; cons++){
+        templateCons += /* html */`
+            <div itemprop="itemListElement" itemtype="https://schema.org/ListItem" itemscope>
+                <meta itemprop="position" content="${cons + 1}" />
+                <span>${cons + 1}</span>
+                <meta itemprop="name" content="${block.data.cons_list[cons]}" />
+                <span>${block.data.cons_list[cons]}</span>
+            </div>
+        `;
+    }
+
+    template += templateTop;
+    template += templatePros;
+    template += `</div> <div itemprop="negativeNotes" itemtype="https://schema.org/ItemList" itemscope> <div>Cons:</div`;
+    template += templateCons;
+    template += `</div></div></div>`;
+
+    let newCode = template;
     return newCode;
 } 
