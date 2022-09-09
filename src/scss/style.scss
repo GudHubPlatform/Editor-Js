@@ -65,7 +65,7 @@
     top: calc(50% - 12px);
     left: 24px;
     background-repeat: no-repeat;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z'/%3E%3C/svg%3E");
     &:hover{
         transform: scale(1.02);
     }    
@@ -244,38 +244,6 @@ editor-js {
         align-items: center;
         padding: 10px;
         cursor: pointer;
-        // &>div{
-        //     cursor: pointer;
-        //     position: relative;
-        //     top: -3px;
-        //     left: -4px;
-        //     transition: all 0.2s ease;
-        //     display: block;
-        //     width: 30px;
-        //     height: 30px;
-        //     z-index: 10;
-        //     border-radius: 8px;
-        //     &::after{
-        //         content:'';
-        //         position: absolute;
-        //         top: calc(50% - 5px);
-        //         left: calc(50% - 1px);
-        //         width: 2px;
-        //         height: 14px;
-        //         background-color: #000;
-        //         transition: all .2s ease;
-        //     }
-        //     &::before{
-        //         content:'';
-        //         background-color: #000;
-        //         position: absolute;
-        //         top: calc(50% + 1px);
-        //         left: calc(50% - 7px);
-        //         width: 14px;
-        //         height: 2px;
-        //         transition: all .2s ease;
-        //     }
-        // }
     }
 
     h3{
@@ -286,8 +254,6 @@ editor-js {
         margin: 0;
     }
     .step{
-        // border: 1px solid #a7a7a7;
-        // border-radius: 8px;
         margin: 10px 0;
         position: relative;
         .step_bottom{
@@ -301,21 +267,6 @@ editor-js {
                 opacity: 1;
                 max-height: 700px;
                 margin: 10px;
-            }
-            .top{
-                // &>div{  
-                //     &::after{
-                //         content:'';
-                //         position: absolute;
-                //         top: calc(50% - 5px);
-                //         left: calc(50% - 1px);
-                //         width: 2px;
-                //         height: 14px;
-                //         transform: rotate(90deg);
-                //         background-color: #000;
-                //         transition: all .2s ease;
-                //     }
-                // }
             }
         }
     }
@@ -561,7 +512,7 @@ table.editorjs_parse_table{
         top: calc(50% - 12px);
         left: 24px;
         background-repeat: no-repeat;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z'/%3E%3C/svg%3E");
         &:hover{
             transform: scale(1.02);
         }    

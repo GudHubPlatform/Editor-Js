@@ -48,7 +48,7 @@ export default class HowTo {
             stepBottomText.innerHTML = 'Content';
             
             let q = 'new'
-            this.addItem(howTo, stepTopHeading, stepBottomText, q)
+            this.addItem(howToList, stepTopHeading, stepBottomText, q)
         })
         let titleText = this.data.mainTitle ? this.data.mainTitle : 'Title';
         let subTitleText = this.data.mainSubtitle ? this.data.mainSubtitle : 'Subtitle';
@@ -56,7 +56,8 @@ export default class HowTo {
         subtitle.innerText = subTitleText;
 
         /* If we have saved data we paste values to right places, if we don`t have a saved date we paste placeholders */
-
+        let howToList = document.createElement('div');
+        howToList.classList.add('howToList');
         if(this.data.heading_list){
 
             let get_heading = this.data.heading_list;
@@ -76,7 +77,7 @@ export default class HowTo {
                 
                 
                 /* Call method with an arguments. This method will collect all the blocks together */
-                this.addItem(howTo, stepTopHeading, stepBottomText, q);
+                this.addItem(howToList, stepTopHeading, stepBottomText, q);
             };
         }else{
             let stepTopHeading = document.createElement('h3');
@@ -89,10 +90,10 @@ export default class HowTo {
             
             let q = 0;
             /* Call method with an arguments. This method will collect all the blocks together */
-            this.addItem(howTo, stepTopHeading, stepBottomText, q);
+            this.addItem(howToList, stepTopHeading, stepBottomText, q);
             
         }
-        
+        howTo.appendChild(howToList);
         return howTo;
     }
 /* This method collect all the blocks together and return it */
@@ -116,7 +117,7 @@ export default class HowTo {
         if (typeof q == 'number'){
             stepTopCountNumber.innerText = q+1;
         }else{
-            stepTopCountNumber.innerText = document.querySelectorAll('.step').length + 1;
+            stepTopCountNumber.innerText = howTo.querySelectorAll('.step').length + 1;
         }
 
         let stepBottom = document.createElement('div');
