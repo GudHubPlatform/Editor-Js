@@ -106,6 +106,43 @@ export default class ProsCons {
             reviews.appendChild(newPros)
             /* Call method with an arguments. This method will collect all the blocks together */
             this.addFirstItemPros(this.classNameGenerator(), productPage, reviews, newPros)
+        }else{
+            let input_pros_data = "Pros";
+            let prosFlex = document.createElement('div');
+            prosFlex.classList.add('pros_flex_wrapper');
+            newPros.appendChild(prosFlex);
+            prosFlex.innerHTML = /*html*/ `
+            <div contenteditable = "true">+</div>
+            <div contenteditable = "true" class="pros_value">${input_pros_data}</div>
+            `;
+            
+            
+            newPros.appendChild(addButtonWrapperPros);
+            
+            let removeButtonWrapper = document.createElement('div');
+            removeButtonWrapper.classList.add('removeButtonWrapper');
+            let removeButton = document.createElement('div');
+            removeButton.classList.add('removeButton');
+            
+            /* Add action for removeButton. This action will be remove current item */
+            
+            /* this remove button for first item of pros */
+            removeButton.addEventListener('click', (el) => {
+                console.log('remove1')
+                if(document.querySelectorAll('.productPage .pros_flex_wrapper').length > 1){
+                    el.target.parentElement.parentElement.remove();
+                    let allSteps = document.querySelectorAll('.step');
+                    for (let step = 0; step < allSteps.length; step++){
+                        allSteps[step].querySelector('.step_count span').innerText = step + 1;
+                    }
+                }
+            })
+            removeButtonWrapper.appendChild(removeButton);
+            prosFlex.appendChild(removeButtonWrapper);
+            
+            reviews.appendChild(newPros)
+            /* Call method with an arguments. This method will collect all the blocks together */
+            this.addFirstItemPros(this.classNameGenerator(), productPage, reviews, newPros)
         }
         let newCons = document.createElement('div');
         newCons.classList.add('cons');
@@ -147,6 +184,42 @@ export default class ProsCons {
             removeButtonWrapperCons.appendChild(removeButtonCons);
             consFlex.appendChild(removeButtonWrapperCons);
             }
+            reviews.appendChild(newCons)
+            /* Call method with an arguments. This method will collect all the blocks together */
+            this.addFirstItemCons(this.classNameGenerator(), productPage, reviews, newCons)
+        }else{
+            let consFlex = document.createElement('div');
+            consFlex.classList.add('cons_flex_wrapper');
+            newCons.appendChild(consFlex);
+            let input_cons_data = "Cons";
+            consFlex.innerHTML = /*html*/ `
+               <div contenteditable = "true">-</div>
+               <div contenteditable = "true" class="cons_value">${input_cons_data}</div>
+            `;
+            
+            
+            newCons.appendChild(addButtonWrapperCons);
+            
+            let removeButtonWrapperCons = document.createElement('div');
+            removeButtonWrapperCons.classList.add('removeButtonWrapper');
+            let removeButtonCons = document.createElement('div');
+            removeButtonCons.classList.add('removeButton');
+            
+            /* Add action for removeButton. This action will be remove current item */
+            
+            /* this remove button for first item of cons */
+            removeButtonCons.addEventListener('click', (el) => {
+                console.log('removeCons2')
+                if(document.querySelectorAll('.productPage .cons_flex_wrapper').length > 1){
+                    el.target.parentElement.parentElement.remove();
+                    let allSteps = document.querySelectorAll('.step');
+                    for (let step = 0; step < allSteps.length; step++){
+                        allSteps[step].querySelector('.step_count span').innerText = step + 1;
+                    }
+                }
+            })
+            removeButtonWrapperCons.appendChild(removeButtonCons);
+            consFlex.appendChild(removeButtonWrapperCons);
             reviews.appendChild(newCons)
             /* Call method with an arguments. This method will collect all the blocks together */
             this.addFirstItemCons(this.classNameGenerator(), productPage, reviews, newCons)

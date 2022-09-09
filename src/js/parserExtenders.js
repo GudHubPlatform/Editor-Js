@@ -1,7 +1,7 @@
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
-import javascript from 'highlight.js/lib/languages/javascript.js';
-import css from 'highlight.js/lib/languages/css.js';
+import javascript from 'highlight.js/lib/languages/javascript';
+import css from 'highlight.js/lib/languages/css';
 
 export const parseFaq = (block) => {
     let html_template = '';
@@ -162,29 +162,9 @@ export const parseEditorJsColumns = (block) => {
                 case 'table':
                     template = parseTable(block)
                     break;
-
+                    
                 case 'checklist':
-                    let checkList = block.data.items;
-
-                    checkList.forEach(item => {
-                        if(item.checked){
-                            template += /*html*/`
-                            <div class="cdx-checklist__item cdx-checklist__item--checked">
-                                <span class="cdx-checklist__item-checkbox"></span>
-                                <div class="cdx-checklist__item-text" contenteditable="true">${item.text}</div>
-                            </div>
-                            `                        
-                            
-                        }else{
-                            template += /*html*/`
-                            <div class="cdx-checklist__item">
-                                <span class="cdx-checklist__item-checkbox"></span>
-                                <div class="cdx-checklist__item-text" contenteditable="true">${item.text}</div>
-                            </div>
-                            `                        
-                        }
-                        
-                    });
+                    template = checklist(block)    
                     break;
                 
                 default:
@@ -214,12 +194,37 @@ export const parseEditorJsColumns = (block) => {
     return html_template;
 } 
 
+export const checklist = (block) => {
+    let checkList = block.data.items;
+    let template ='';
+    checkList.forEach(item => {
+        if(item.checked){
+            template += /*html*/`
+            <div class="cdx-checklist__item cdx-checklist__item--checked">
+                <span class="cdx-checklist__item-checkbox"></span>
+                <div class="cdx-checklist__item-text" contenteditable="true">${item.text}</div>
+            </div>
+            `                        
+            
+        }else{
+            template += /*html*/`
+            <div class="cdx-checklist__item">
+                <span class="cdx-checklist__item-checkbox"></span>
+                <div class="cdx-checklist__item-text" contenteditable="true">${item.text}</div>
+            </div>
+            `                        
+        }
+        
+    });
+    return template;
+} 
+
 export const parseHTMLViewer = (block) => {
     let newCode = block.data.template.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', '');
     return newCode;
 } 
 export const parseCodeMirror = (block) => {
-    
+    console.log(block)
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;
     
@@ -233,26 +238,24 @@ export const parseCodeMirror = (block) => {
     /* Check language and do right parsing, highlighting */
     switch(codeDataType){
         case 'HTML':
-            type = 'html'
+            type = 'html';
             /* In case HTML no "hljs.registerLanguage('html', html)" because html it`s a default language in highlight.js */
-            res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`
+            res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`;
             break;
-        case 'Javascript':
-            type = 'javascript'
+        case 'javascript':
+            type = 'javascript';
             hljs.registerLanguage('javascript', javascript);
-            res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`
+            res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
             break;
         case 'CSS':
-            type = 'css'
+            type = 'css';
             hljs.registerLanguage('css', css);
-            res = `\n${div.innerHTML.replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`
+            res = `\n${div.innerHTML.replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
             break;
             
     }
             
-            
-            
-    let highlighting = hljs.highlightAuto(res).value
+    let highlighting = hljs.highlightAuto(res).value;
     
     let output = highlighting;
     /* Insert our output data in a wrapper. because we need to link style white-space:pre-wrap to this block */

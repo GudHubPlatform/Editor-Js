@@ -98,7 +98,35 @@ editor-js {
 }
 
 .editorjs {
+    .ce-editorjsColumns_wrapper{
+        border: 1px solid #747474;
+        padding: 10px;
+        .ce-editorjsColumns_col.editorjs_col_0{
+            border-right: 1px solid #747474;
+        }
+    }
+    padding-bottom: 50px;
+    .ce-toolbar__actions{
+        bottom: -22px;
+    }
+    .ce-toolbar__content{
+        height: 20px;
+    }
+    .ce-block__content{
+        margin: 0;
+    }
+    .CodeMirror{
+        min-height: 70px !important;
+        height: min-content !important;
+        .CodeMirror-scroll{
+            min-height: 70px !important;
+        }
+    }
+    .codex-editor__redactor{
+        padding-bottom: 0 !important;
+        margin-bottom: 20px;
 
+    }
     &__saving {
         display: flex;
         align-items: center;
@@ -421,7 +449,7 @@ table.editorjs_parse_table{
 }
 
 .productPage{
-    border: 1px solid rgb(255, 139, 6);
+    margin-top: 5px;
     .removeButton{
         height: 60px;
     }
@@ -554,5 +582,11 @@ table.editorjs_parse_table{
             letter-spacing: -0.5px;
             margin-right: 3px;
         }
+    }
+    .checkboxWrapper{
+        margin-top: 15px;
+    }
+    .checkboxWrapperProduct, .checkboxWrapperAuthor {
+        margin: 4px;
     }
 }
