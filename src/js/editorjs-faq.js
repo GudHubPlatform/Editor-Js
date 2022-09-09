@@ -13,8 +13,6 @@ export default class Faq {
         /* Create parts of main block and set attributes  */
         let faqPage = document.createElement('div');
         faqPage.classList.add('faq_page');
-        faqPage.setAttribute("itemscope", "");
-        faqPage.setAttribute("itemtype", "https://schema.org/FAQPage");
 
         let copyButtonWrapper = document.createElement('div');
         copyButtonWrapper.classList.add('copyButtonWrapper');
@@ -35,20 +33,17 @@ export default class Faq {
                 
                 let answer = document.createElement('div');
                 answer.classList.add('faq_answer');
-                answer.setAttribute("itemscope", "");
-                answer.setAttribute("itemprop", "acceptedAnswer");
-                answer.setAttribute("itemtype", "https://schema.org/Answer");
                 
                 let input_question_data = this.data && get_question[q] ? get_question[q] : 'Question';
                 question.innerHTML = /*html*/ `
                     <div class="question_flex_wrapper">
-                        <h3 contenteditable = "true" placeholder="question" itemprop="name">${input_question_data}</h3>
+                        <h3 contenteditable = "true" placeholder="question">${input_question_data}</h3>
                         <div class="arrow" onclick="openFaq(event)"></div>
                     </div>
                 `;
     
                 let input_answer_data = this.data && get_answer[q] ? get_answer[q] : 'Answer';
-                answer.innerHTML = /*html*/ `<p contenteditable = "true" placeholder="answer" itemprop="text">${input_answer_data}</p>`;
+                answer.innerHTML = /*html*/ `<p contenteditable = "true" placeholder="answer">${input_answer_data}</p>`;
     
                 question.appendChild(answer)
                 /* Call method with an arguments. This method will collect all the blocks together */
@@ -60,20 +55,17 @@ export default class Faq {
             
             let newAnswer = document.createElement('div');
             newAnswer.classList.add('faq_answer');
-            newAnswer.setAttribute("itemscope", "");
-            newAnswer.setAttribute("itemprop", "acceptedAnswer");
-            newAnswer.setAttribute("itemtype", "https://schema.org/Answer");
             
             let input_question_data = 'Question';
             newQuestion.innerHTML = /*html*/ `
             <div class="question_flex_wrapper">
-            <h3 contenteditable = "true" placeholder="question" itemprop="name">${input_question_data}</h3>
+            <h3 contenteditable = "true" placeholder="question">${input_question_data}</h3>
             <div class="arrow" onclick="openFaq(event)"></div>
             </div>
             `;
             
             let input_answer_data = 'Answer';
-            newAnswer.innerHTML = /*html*/ `<p contenteditable = "true" placeholder="answer" itemprop="text">${input_answer_data}</p>`;
+            newAnswer.innerHTML = /*html*/ `<p contenteditable = "true" placeholder="answer">${input_answer_data}</p>`;
             
             newQuestion.appendChild(newAnswer)
             /* Call method with an arguments. This method will collect all the blocks together */
@@ -90,20 +82,17 @@ export default class Faq {
             
             let newAnswer = document.createElement('div');
             newAnswer.classList.add('faq_answer');
-            newAnswer.setAttribute("itemscope", "");
-            newAnswer.setAttribute("itemprop", "acceptedAnswer");
-            newAnswer.setAttribute("itemtype", "https://schema.org/Answer");
             
             let input_question_data = 'Question';
             newQuestion.innerHTML = /*html*/ `
             <div class="question_flex_wrapper">
-                <h3 contenteditable = "true" placeholder="question" itemprop="name">${input_question_data}</h3>
+                <h3 contenteditable = "true" placeholder="question">${input_question_data}</h3>
                 <div class="arrow" onclick="openFaq(event)"></div>
             </div>
             `;
             
             let input_answer_data = 'Answer';
-            newAnswer.innerHTML = /*html*/ `<p contenteditable = "true" placeholder="answer" itemprop="text">${input_answer_data}</p>`;
+            newAnswer.innerHTML = /*html*/ `<p contenteditable = "true" placeholder="answer">${input_answer_data}</p>`;
             
             newQuestion.appendChild(newAnswer)
             this.addItem(this.classNameGenerator(), faqPage, newQuestion)
@@ -127,10 +116,6 @@ export default class Faq {
         faq_wrapper.classList.add('faq_wrapper');
         faq_wrapper.classList.add('open');
         faq_wrapper.classList.add(`faq_unique-${uniqueClass}`);
-        
-        faq_wrapper.setAttribute("itemscope", "");
-        faq_wrapper.setAttribute("itemprop", "mainEntity");
-        faq_wrapper.setAttribute("itemtype", "https://schema.org/Question");
 
         let removeButtonWrapper = document.createElement('div');
         removeButtonWrapper.classList.add('removeButtonWrapper');

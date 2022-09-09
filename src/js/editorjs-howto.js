@@ -11,16 +11,12 @@ export default class HowTo {
     render() {
         /* Create parts of main block and set attributes  */
         let howTo = document.createElement('div');
-        howTo.setAttribute('itemscope', '');
-        howTo.setAttribute('itemtype', 'https://schema.org/HowTo');
         howTo.classList.add('howTo');
         
         let title = document.createElement('h2');
-        title.setAttribute('itemprop','name');
         title.setAttribute('contenteditable','true');
         
         let subtitle = document.createElement('p');
-        subtitle.setAttribute('itemprop','name');
         subtitle.setAttribute('contenteditable','true');
         subtitle.classList.add('subtitle');
         
@@ -44,12 +40,10 @@ export default class HowTo {
         copyButton.addEventListener('click', () => {
             
             let stepTopHeading = document.createElement('h3');
-            stepTopHeading.setAttribute('itemprop','name');
             stepTopHeading.setAttribute('contenteditable','true');
             stepTopHeading.innerText = 'Heading';
             
             let stepBottomText = document.createElement('span');
-            stepBottomText.setAttribute('itemprop', 'text');
             stepBottomText.setAttribute('contenteditable','true');
             stepBottomText.innerHTML = 'Content';
             
@@ -70,13 +64,11 @@ export default class HowTo {
             
             for(let q = 0; q < get_heading.length; q++){
                 let stepTopHeading = document.createElement('h3');
-                stepTopHeading.setAttribute('itemprop','name');
                 stepTopHeading.setAttribute('contenteditable','true');
                 let input_heading_data = this.data && get_heading[q] ? get_heading[q] : 'Heading';
                 stepTopHeading.innerHTML = input_heading_data;
                 
                 let stepBottomText = document.createElement('span');
-                stepBottomText.setAttribute('itemprop', 'text');
                 stepBottomText.setAttribute('contenteditable','true');
                 
                 let input_content_data = this.data && get_content[q] ? get_content[q] : 'Content';
@@ -88,12 +80,10 @@ export default class HowTo {
             };
         }else{
             let stepTopHeading = document.createElement('h3');
-            stepTopHeading.setAttribute('itemprop','name');
             stepTopHeading.setAttribute('contenteditable','true');
             stepTopHeading.innerHTML = 'Heading';
             
             let stepBottomText = document.createElement('span');
-            stepBottomText.setAttribute('itemprop', 'text');
             stepBottomText.setAttribute('contenteditable','true');
             stepBottomText.innerHTML = 'Content';
             
@@ -102,13 +92,6 @@ export default class HowTo {
             this.addItem(howTo, stepTopHeading, stepBottomText, q);
             
         }
-        // let scriptHowTo = document.createElement('script');
-        // scriptHowTo.innerHTML =  /*javascript*/`
-        //     function openHowTo(event) {
-        //         event.target.parentElement.parentElement.classList.toggle('open');
-        //     }
-        // `;
-        // document.body.appendChild(scriptHowTo);
         
         return howTo;
     }
@@ -116,18 +99,13 @@ export default class HowTo {
     addItem(howTo, stepTopHeading, stepBottomText, q){
         
         let step = document.createElement('div');
-        step.setAttribute('itemscope', '');
-        step.setAttribute('itemprop', 'step');
         step.classList.add('step');
         step.classList.add('open');
-        step.setAttribute('itemtype', 'https://schema.org/HowToStep');
         
         let stepTop = document.createElement('div');
         stepTop.classList.add('top');
         
         let stepTopIcon = document.createElement('div');
-        // stepTopIcon.setAttribute('onclick','openHowTo(event)')
-        
         
         let stepTopCount = document.createElement('span');
         stepTopCount.innerText = 'Step';
@@ -142,10 +120,7 @@ export default class HowTo {
         }
 
         let stepBottom = document.createElement('div');
-        stepBottom.setAttribute('itemscope','');
-        stepBottom.setAttribute('itemprop','itemListElement');
         stepBottom.classList.add('step_bottom');
-        stepBottom.setAttribute('itemtype','https://schema.org/HowToDirection');
         
         stepTop.appendChild(stepTopIcon);
         
