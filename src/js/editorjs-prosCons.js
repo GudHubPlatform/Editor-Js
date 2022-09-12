@@ -66,7 +66,6 @@ export default class ProsCons {
         let newPros = document.createElement('div');
         newPros.classList.add('pros');
         if ( this.data.pros_list ){
-            console.log(this.data.pros_list)
             for(let p = 0; p < this.data.pros_list.length; p++){
                 
                 let input_pros_data = this.data.pros_list[p];
@@ -90,7 +89,6 @@ export default class ProsCons {
                 
                 /* this remove button for first item of pros */
                 removeButton.addEventListener('click', (el) => {
-                    console.log('remove1')
                     if(document.querySelectorAll('.productPage .pros_flex_wrapper').length > 1){
                         el.target.parentElement.parentElement.remove();
                         let allSteps = document.querySelectorAll('.step');
@@ -128,7 +126,6 @@ export default class ProsCons {
             
             /* this remove button for first item of pros */
             removeButton.addEventListener('click', (el) => {
-                console.log('remove1')
                 if(document.querySelectorAll('.productPage .pros_flex_wrapper').length > 1){
                     el.target.parentElement.parentElement.remove();
                     let allSteps = document.querySelectorAll('.step');
@@ -147,7 +144,6 @@ export default class ProsCons {
         let newCons = document.createElement('div');
         newCons.classList.add('cons');
         if ( this.data.cons_list ){
-            console.log(this.data.cons_list)
             
             for( let c = 0; c < this.data.cons_list.length; c++){
 
@@ -172,7 +168,6 @@ export default class ProsCons {
             
             /* this remove button for first item of cons */
             removeButtonCons.addEventListener('click', (el) => {
-                console.log('removeCons2')
                 if(document.querySelectorAll('.productPage .cons_flex_wrapper').length > 1){
                     el.target.parentElement.parentElement.remove();
                     let allSteps = document.querySelectorAll('.step');
@@ -209,7 +204,6 @@ export default class ProsCons {
             
             /* this remove button for first item of cons */
             removeButtonCons.addEventListener('click', (el) => {
-                console.log('removeCons2')
                 if(document.querySelectorAll('.productPage .cons_flex_wrapper').length > 1){
                     el.target.parentElement.parentElement.remove();
                     let allSteps = document.querySelectorAll('.step');
@@ -232,7 +226,6 @@ export default class ProsCons {
         
         /* this add button for pros */
         addButtonPros.addEventListener('click', () => {
-            console.log('addPros3')
             let copyPros = document.createElement('div');
             copyPros.classList.add('pros_flex_wrapper');
             
@@ -248,7 +241,6 @@ export default class ProsCons {
         addButtonCons.addEventListener('click', () => {
 
             /* this add button for cons */
-            console.log('addCons4')
             let copyCons = document.createElement('div');
             copyCons.classList.add('cons_flex_wrapper');
             
@@ -314,7 +306,6 @@ export default class ProsCons {
         removeButton.addEventListener('click', (el) => {
 
             /* this remove button for new items of pros */
-            console.log('remove5')
             if(document.querySelectorAll('.productPage .pros_flex_wrapper').length > 1){
             el.target.parentElement.parentElement.remove();
             let allSteps = document.querySelectorAll('.step');
@@ -340,7 +331,6 @@ export default class ProsCons {
         removeButton.addEventListener('click', (el) => {
 
             /* this remove button for new items of cons */
-            console.log('remove6')
             if(document.querySelectorAll('.productPage .cons_flex_wrapper').length > 1){
 
                 el.target.parentElement.parentElement.remove();
@@ -382,7 +372,6 @@ export default class ProsCons {
 
     save(blockContent) {
         /* Save our data like as arrays */
-        console.log(blockContent)
         let product = blockContent.querySelector('.product').innerText
         let author = blockContent.querySelector('.author').innerText
         

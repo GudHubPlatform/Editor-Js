@@ -148,7 +148,7 @@ class EditorJS extends HTMLElement {
               customImage: {
                 class: CustomImage,
                 config: {
-                  captionPlaceholder: 'alt',
+                  captionPlaceholder: 'Alt',
                   uploader: {
       
                     /* CUSTOM IMAGE LOADER */
@@ -200,7 +200,7 @@ class EditorJS extends HTMLElement {
         customImage: {
           class: CustomImage,
           config: {
-            captionPlaceholder: 'alt',
+            captionPlaceholder: 'Alt',
             uploader: {
 
               /* CUSTOM IMAGE LOADER */
@@ -291,7 +291,7 @@ class EditorJS extends HTMLElement {
       // Saving blocks count
       this.previousBlocksCount = JSON.parse(file.data).blocks.length;
       // Saving count of image blocks
-      this.uploadedImages = JSON.parse(file.data).blocks.map(block => block.type === 'image' ? block.data.file.file_id : false).filter(block => block !== false);
+      this.uploadedImages = JSON.parse(file.data).blocks.map(block => block.type === 'customImage' ? block.data.file.file_id : false).filter(block => block !== false);
       return JSON.parse(file.data);
     } else {
       return '';
@@ -367,7 +367,7 @@ class EditorJS extends HTMLElement {
     return new Promise(async (resolve) => {
       const self = this;
       let data = await this.editor.save();
-      let currentUploadedImages = data.blocks.map(block => block.type === 'image' ? block.data.file.file_id : false).filter(block => block !== false);
+      let currentUploadedImages = data.blocks.map(block => block.type === 'customImage' ? block.data.file.file_id : false).filter(block => block !== false);
 
       let deletedImages = this.uploadedImages.filter(id => !currentUploadedImages.includes(id));
 

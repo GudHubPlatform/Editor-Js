@@ -107,9 +107,8 @@ export const parseTable = (block) => {
 export const parseCustomImage = (block) => {
     
     let html_template = '';
-    
     let image = /*html*/`
-    <img src=${block.data.file.url} alt=${block.data.caption} title=${block.data.title}>
+    <img src="${block.data.file.url}" alt="${block.data.caption}" title="${block.data.title}">
     `
     
     html_template += image;
@@ -224,7 +223,6 @@ export const parseHTMLViewer = (block) => {
     return newCode;
 } 
 export const parseCodeMirror = (block) => {
-    console.log(block)
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;
     
