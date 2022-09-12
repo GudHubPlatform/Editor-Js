@@ -13,8 +13,7 @@ import HTMLViewer from './editorjs-htmlViewer.js';
 import LinkTool from './editorjs-inlineToolLink.js';
 import SetTextColor from './editorjs-inlineToolColor.js';
 import ProsCons from './editorjs-prosCons.js';
-import * as dracula from 'editorjs-codemirror/node_modules/codemirror/theme/dracula.css';
-import 'editorjs-codemirror/node_modules/codemirror/theme/dracula.css';
+import 'codemirror/theme/dracula.css';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 
