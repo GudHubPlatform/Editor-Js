@@ -145,7 +145,7 @@ class EditorJS extends HTMLElement {
                 inlineToolbar: true
               },
               
-              customImage: {
+              image: {
                 class: CustomImage,
                 config: {
                   captionPlaceholder: 'Alt',
@@ -197,7 +197,7 @@ class EditorJS extends HTMLElement {
           inlineToolbar: true
         },
         
-        customImage: {
+        image: {
           class: CustomImage,
           config: {
             captionPlaceholder: 'Alt',
