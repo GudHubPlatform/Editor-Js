@@ -258,7 +258,12 @@ class EditorJS extends HTMLElement {
         }
       }
     });
-
+    this.addEventListener('paste', function(e) {
+      e.preventDefault();
+      console.log('pastepastepastepaste')
+      let formattingText = e.target.innerText.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      e.target.innerHTML = formattingText;
+    });
     // Adding listeners on Ctrl + S and on Enter to save the editor content
 
     this.addEventListener('keydown', async (e) => {
