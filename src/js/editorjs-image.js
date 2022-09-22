@@ -20,14 +20,17 @@ export default class CustomImage extends Image  {
         
         /* Check if we have in saved data element "title" if yes paste this value, if no paste placeholder "Title" */
         let imageItems = document.querySelectorAll('.image-tool');
+        
         for (let item = 0; item < imageItems.length; item++){
+            
             imageItems[item].classList.add('custom-image');
-            imageItems[item].appendChild(block)
+            if(!imageItems[item].querySelector('.image_title')){
+                imageItems[item].appendChild(block)
+            }
             let titleText = this.savedData.data.title ? this.savedData.data.title : "Title"
             block.innerText = titleText;
         }
     }
-
     save() {
         console.log(this._data.file.file_id)
         const caption = this.ui.nodes.caption;
@@ -42,10 +45,10 @@ export default class CustomImage extends Image  {
             /* Editor js save this type of data separately from each other, so we need to save title to right block. This checking we do by file id for each element */
             imageBlocks.forEach(block => {
                 const image = block.querySelector('img');
+                
                 if (image !== null){
                     const src = image.getAttribute('src');
                     const imageId = src.substring(src.lastIndexOf('/') + 1, src.lastIndexOf('.'));
-                    
                     if(Number(imageId) === this._data.file.file_id) {
                         rightBlock = block;
                     }
@@ -53,11 +56,11 @@ export default class CustomImage extends Image  {
                     rightBlock = document;
                 }
             });
+        }
+        if(rightBlock.querySelector('.image_title')){
             const titleElement = rightBlock.querySelector('.image_title');
             this._data.title = titleElement.innerText;
         }
-
-
 
         return this.data;
       }

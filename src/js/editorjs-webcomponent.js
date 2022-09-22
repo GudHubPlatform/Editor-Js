@@ -260,7 +260,6 @@ class EditorJS extends HTMLElement {
     });
     this.addEventListener('paste', function(e) {
       e.preventDefault();
-      console.log('pastepastepastepaste')
       let formattingText = e.target.innerText.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
       e.target.innerHTML = formattingText;
     });
@@ -285,7 +284,6 @@ class EditorJS extends HTMLElement {
   // Just loading document based on address (appId, itemId, fieldId)
 
   async load() {
-
     let file = await gudhub.getDocument({
       app_id: this.appId,
       item_id: this.itemId,
@@ -296,6 +294,7 @@ class EditorJS extends HTMLElement {
       // Saving blocks count
       this.previousBlocksCount = JSON.parse(file.data).blocks.length;
       // Saving count of image blocks
+      
       this.uploadedImages = JSON.parse(file.data).blocks.map(block => block.type === 'image' ? block.data.file.file_id : false).filter(block => block !== false);
       return JSON.parse(file.data);
     } else {
@@ -373,14 +372,17 @@ class EditorJS extends HTMLElement {
       const self = this;
       let data = await this.editor.save();
       let currentUploadedImages = data.blocks.map(block => block.type === 'image' ? block.data.file.file_id : false).filter(block => block !== false);
-
+      
       let deletedImages = this.uploadedImages.filter(id => !currentUploadedImages.includes(id));
 
       let promises = [];
 
       deletedImages.forEach(image => {
         promises.push(new Promise(async (resolve) => {
-          await gudhub.deleteFile(self.appId, image);
+          let isFileExist = await gudhub.getFile(self.appId, image);
+          if( isFileExist ){
+            await gudhub.deleteFile(self.appId, image);
+          }
           resolve(true);
         }));
       });
