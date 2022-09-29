@@ -62,7 +62,7 @@ class EditorJS extends HTMLElement {
 
     if (name == 'app-id' && newValue.indexOf('{{') == -1) {
       this.innerHTML = /*html*/`
-      <div id="editorjs${uniq}" class="editorjs editorjs${this.ghFieldId} container${this.ghContainerId}"></div>
+      <div id="editorjs${uniq}" class="editorjs"></div>
       <div class="editorjs__saving">
         <span>Saving...</span>
       </div>
@@ -87,7 +87,7 @@ class EditorJS extends HTMLElement {
     if(this.appId && this.itemId && this.fieldId) {
       savedData = await this.load();
     }
-    
+
     this.editor = new editorjs({
       holder: `editorjs${id}`,
       data: savedData,
