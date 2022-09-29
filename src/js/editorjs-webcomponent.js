@@ -27,6 +27,7 @@ class EditorJS extends HTMLElement {
     this.fieldValue;
     this.previousBlocksCount = 0;
     this.uploadedImages = [];
+    this.countEd = 0;
   }
 
   /********************* GET ATTRIBUTES *********************/
@@ -54,9 +55,14 @@ class EditorJS extends HTMLElement {
   // Usgin connectedCallback we are always receiving not ready data like this - {{appId}}
 
   attributeChangedCallback(name, oldValue, newValue) {
+    let count_of_editors = document.querySelectorAll('editor-js');
+    this.countEd = count_of_editors;
+    
+    let uniq = Date.now().toString(32);
+
     if (name == 'app-id' && newValue.indexOf('{{') == -1) {
       this.innerHTML = /*html*/`
-      <div id="editorjs" class="editorjs"></div>
+      <div id="editorjs${uniq}" class="editorjs"></div>
       <div class="editorjs__saving">
         <span>Saving...</span>
       </div>
@@ -64,7 +70,7 @@ class EditorJS extends HTMLElement {
 
       setTimeout(() => {
         this.getAttributes();
-        this.init();
+        this.init(uniq);
         this.initPipeService();
       }, 0);
     }
@@ -73,17 +79,17 @@ class EditorJS extends HTMLElement {
   // Checks if document exists for this field, if yes - download it and render in editor.js
   // Then adding listeners for editor saving
 
-  async init() {
+  async init(id) {
     const self = this;
 
     let savedData = null;
-
+    
     if(this.appId && this.itemId && this.fieldId) {
       savedData = await this.load();
     }
 
     this.editor = new editorjs({
-      holder: 'editorjs',
+      holder: `editorjs${id}`,
       data: savedData,
       readOnly: false,
       autofocus: true,
