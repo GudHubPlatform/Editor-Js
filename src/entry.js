@@ -78,7 +78,7 @@ export default class EditorjsData {
         const edjsParser = edjsHTML({
           faq: parseFaq, 
           howTo: parseHowTo,
-          customImage: parseCustomImage,
+          image: parseCustomImage,
           editorJsColumns: parseEditorJsColumns,
           table: parseTable,
           htmlViewer: parseHTMLViewer,

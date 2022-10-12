@@ -17,6 +17,10 @@ export default class CustomImage extends Image  {
         let block = document.createElement('div');
         block.setAttribute('contenteditable', true);
         block.classList.add('image_title');
+
+        let blockUrl = document.createElement('div');
+        blockUrl.setAttribute('contenteditable', true);
+        blockUrl.classList.add('image_url');
         
         /* Check if we have in saved data element "title" if yes paste this value, if no paste placeholder "Title" */
         let imageItems = document.querySelectorAll('.image-tool');
@@ -25,13 +29,18 @@ export default class CustomImage extends Image  {
             
             imageItems[item].classList.add('custom-image');
             if(!imageItems[item].querySelector('.image_title')){
+                imageItems[item].appendChild(blockUrl)
                 imageItems[item].appendChild(block)
             }
             let titleText = this.savedData.data.title ? this.savedData.data.title : "Title"
+            let urlText = this.savedData.data.url ? this.savedData.data.url : "URL"
             block.innerText = titleText;
+            blockUrl.innerText = urlText;
         }
     }
     save() {
+        console.log(1)
+        console.log(this)
         console.log(this._data.file.file_id)
         const caption = this.ui.nodes.caption;
         
@@ -60,6 +69,10 @@ export default class CustomImage extends Image  {
         if(rightBlock.querySelector('.image_title')){
             const titleElement = rightBlock.querySelector('.image_title');
             this._data.title = titleElement.innerText;
+        }
+        if(rightBlock.querySelector('.image_url')){
+            const urlElement = rightBlock.querySelector('.image_url');
+            this._data.url = urlElement.innerText;
         }
 
         return this.data;
