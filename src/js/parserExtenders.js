@@ -105,10 +105,9 @@ export const parseTable = (block) => {
 } 
 
 export const parseCustomImage = (block) => {
-    
     let html_template = '';
     let image = /*html*/`
-    <img src="${block.data.file.url}" alt="${block.data.caption}" title="${block.data.title}">
+    <img src="${block.data.file.url}" alt="${block.data.caption}" title="${block.data.title}" data-url="${block.data.url}">
     `
     
     html_template += image;
