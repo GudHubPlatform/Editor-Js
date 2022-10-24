@@ -276,9 +276,9 @@ class EditorJS extends HTMLElement {
         e.preventDefault();
         this.save();
       }
-      if(e.keyCode == 13) {
-        this.save();
-      }
+      // if(e.keyCode == 13) {
+      //   this.save();
+      // }
     }, false);
 
     // Adding listeners to save editor content on click outside
