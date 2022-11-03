@@ -237,7 +237,8 @@ class EditorJS extends HTMLElement {
           }
         },
         table: {
-          class: Table
+          class: Table,
+          inlineToolbar: true,
         },
         list: {
           class: List,
