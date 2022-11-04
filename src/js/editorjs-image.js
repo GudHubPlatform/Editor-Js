@@ -47,21 +47,20 @@ export default class CustomImage extends Image  {
         
         let rightBlock;
         if (imageBlocks !== null){
-
             /* Editor js save this type of data separately from each other, so we need to save title to right block. This checking we do by file id for each element */
-            imageBlocks.forEach(block => {
-                const image = block.querySelector('img');
+            for ( let item = 0; item < imageBlocks.length; item++ ) {
+                const image = imageBlocks[item].querySelector('img');
                 
                 if (image !== null){
                     const src = image.getAttribute('src');
                     const imageId = src.substring(src.lastIndexOf('/') + 1, src.lastIndexOf('.'));
                     if(Number(imageId) === this._data.file.file_id) {
-                        rightBlock = block;
+                        rightBlock = imageBlocks[item];
                     }
                 }else{
                     rightBlock = document;
                 }
-            });
+            }
         }
         if(rightBlock.querySelector('.image_title')){
             const titleElement = rightBlock.querySelector('.image_title');
@@ -71,7 +70,6 @@ export default class CustomImage extends Image  {
             const urlElement = rightBlock.querySelector('.image_url');
             this._data.url = urlElement.innerText;
         }
-
         return this.data;
       }
 }

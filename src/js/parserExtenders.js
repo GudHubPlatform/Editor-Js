@@ -60,7 +60,7 @@ export const parseHowTo = (block) => {
             <div itemscope="" itemprop="step" class="step open" itemtype="https://schema.org/HowToStep">
                 <div class="top">
                     <span class="step_count">
-                        Step<span>${q+1}</span>
+                        Step<span>${q + 1}</span>
                     </span>
                     <h3 itemprop="name">${heading_list[q]}</h3>
                 </div>
@@ -79,32 +79,32 @@ export const parseHowTo = (block) => {
         <p itemprop="name" class="subtitle">${mainSubtitle}</p>
         ${html_template}
     </div>`;
-} 
+}
 
 export const parseTable = (block) => {
 
     let html_template = '';
     let template = '';
-    
+
     let headings = block.data.withHeadings;
-    
+
     let dataTable = block.data.content;
     let tr = headings ? 1 : 0;
-    if ( tr === 1 ) {
+    if (tr === 1) {
         let headRow = '';
-        for ( let td = 0; td < dataTable[0].length; td++ ) {
+        for (let td = 0; td < dataTable[0].length; td++) {
             let tdElement = /*html*/`<th>${dataTable[0][td]}</th>`
-            
+
             headRow += tdElement;
         }
         template = /*html*/`<tr class="head_row row">${headRow}</tr>`
         html_template += template;
     }
-     for ( tr; tr < dataTable.length; tr++){
+    for (tr; tr < dataTable.length; tr++) {
         let row = '';
-        for ( let td = 0; td < dataTable[tr].length; td++ ) {
+        for (let td = 0; td < dataTable[tr].length; td++) {
             let tdElement = /*html*/`<td>${dataTable[tr][td]}</td>`
-            
+
             row += tdElement;
         }
         template = /*html*/`<tr class="row">${row}</tr>`
@@ -114,162 +114,160 @@ export const parseTable = (block) => {
     <table class="editorjs_parse_table">
         ${html_template}
     </table>`;
-} 
+}
 
 export const parseCustomImage = (block) => {
     let html_template = '';
     let image = /*html*/`
     <img src="${block.data.file.url}" alt="${block.data.caption}" title="${block.data.title}" data-url="${block.data.url}">
     `
-    
+
     html_template += image;
-    
+
     return html_template;
-} 
+}
 
 
 
 export const parseEditorJsColumns = (block) => {
-    
+
     let columns = block.data.cols;
     let html_template = '';
     let mainColumnWrapper = '';
     /* We have object with a data of columns. So we need to iterate through the elements of this object */
-    columns.forEach(column => {
-
-        let blocks = column.blocks;
+    for (let column = 0; column < columns.length; column++) {
+        let blocks = columns[column].blocks;
         let columnWrap = '';
         /* Now we have an object with data of a column. Now we need to iterate this elements */
-        blocks.forEach(block => {
-            let type = block.type;
+        for ( let item = 0; item < blocks.length; item++ ) {
+            let type = blocks[item].type;
             let template = '';
             /* Check a type of data and starting right parser */
-            switch(type){
+            switch (type) {
                 case 'paragraph':
                     template = /*html*/`
-                    <p>${block.data.text}</p>
+                    <p>${blocks[item].data.text}</p>
                     `
                     break;
-                    
+
                 case 'header':
                     template = /*html*/`
-                        <h${block.data.level}>${block.data.text}</h${block.data.level}>
+                        <h${blocks[item].data.level}>${blocks[item].data.text}</h${blocks[item].data.level}>
                     `
                     break;
 
                 case 'faq':
-                    template = parseFaq(block)
+                    template = parseFaq(blocks[item])
                     break;
-                    
+
                 case 'howTo':
-                    template = parseHowTo(block)
-                
+                    template = parseHowTo(blocks[item])
+
                     break;
-                case 'customImage':
-                    template = parseCustomImage(block)
-                    
+                case 'image':
+                    template = parseCustomImage(blocks[item])
+
                     break;
                 case 'table':
-                    template = parseTable(block)
+                    template = parseTable(blocks[item])
                     break;
-                    
+
                 case 'checklist':
-                    template = checklist(block)    
+                    template = checklist(blocks[item])
                     break;
-                
+
                 default:
                     console.log('Unsupported data type')
             }
             columnWrap += template
-        });
+        }
 
         let realWrapper = /*html*/`
-        <div class="columnWrapper">${columnWrap}</div>
+            <div class="columnWrapper">${columnWrap}</div>
         `;
-        
+
         mainColumnWrapper += realWrapper;
         /* Count the amount of columns and set right class. It`s need to set correcting styles */
-        if(columns.length === 2){
+        if (columns.length === 2) {
             html_template = /*html*/`
             <div class="mainColumnWrapper twoColumns">${mainColumnWrapper}</div>
             `
-        }else if(columns.length === 3){
+        } else if (columns.length === 3) {
             html_template = /*html*/`
             <div class="mainColumnWrapper threeColumns">${mainColumnWrapper}</div>
             `
         }
-        
-    });
-    
+    }
+
     return html_template;
-} 
+}
 
 export const checklist = (block) => {
     let checkList = block.data.items;
-    let template ='';
+    let template = '';
     checkList.forEach(item => {
-        if(item.checked){
+        if (item.checked) {
             template += /*html*/`
             <div class="cdx-checklist__item cdx-checklist__item--checked">
                 <span class="cdx-checklist__item-checkbox"></span>
                 <div class="cdx-checklist__item-text" contenteditable="true">${item.text}</div>
             </div>
-            `                        
-            
-        }else{
+            `
+
+        } else {
             template += /*html*/`
             <div class="cdx-checklist__item">
                 <span class="cdx-checklist__item-checkbox"></span>
                 <div class="cdx-checklist__item-text" contenteditable="true">${item.text}</div>
             </div>
-            `                        
+            `
         }
-        
+
     });
     return template;
-} 
+}
 
 export const parseHTMLViewer = (block) => {
-    let newCode = block.data.template.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', '');
+    let newCode = block.data.template.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', '');
     return newCode;
-} 
+}
 export const parseCodeMirror = (block) => {
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;
-    
+
     /* Formatting source data from entity number symbols to reserved by html symbols(&gt; it`s a great then and = '>') */
-    let newC = codeDataText.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"');
-    
+    let newC = codeDataText.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"');
+
     let div = document.createElement('div');
     div.innerText = newC
     let type = '';
     let res = '';
     /* Check language and do right parsing, highlighting */
-    switch(codeDataType){
+    switch (codeDataType) {
         case 'HTML':
             type = 'html';
             /* In case HTML no "hljs.registerLanguage('html', html)" because html it`s a default language in highlight.js */
-            res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`;
+            res = `\n${div.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`;
             break;
         case 'javascript':
             type = 'javascript';
             hljs.registerLanguage('javascript', javascript);
-            res = `\n${div.innerHTML.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
+            res = `\n${div.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
             break;
         case 'CSS':
             type = 'css';
             hljs.registerLanguage('css', css);
             res = `\n${div.innerHTML.replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
             break;
-            
+
     }
-            
+
     let highlighting = hljs.highlightAuto(res).value;
-    
+
     let output = highlighting;
     /* Insert our output data in a wrapper. because we need to link style white-space:pre-wrap to this block */
     return `<div class="codemirror-wrapper">${output}</div>`;
-} 
+}
 
 export const parseProsCons = (block) => {
     let template = '';
@@ -287,7 +285,7 @@ export const parseProsCons = (block) => {
     `;
 
     let templatePros = '';
-    for( let pros = 0; pros < block.data.pros_list.length; pros++){
+    for (let pros = 0; pros < block.data.pros_list.length; pros++) {
         templatePros += /* html */`
             <div itemprop="itemListElement" itemtype="https://schema.org/ListItem" itemscope>
                 <meta itemprop="position" content="${pros + 1}" />
@@ -297,10 +295,10 @@ export const parseProsCons = (block) => {
             </div>
         `;
     }
-    
-    
+
+
     let templateCons = '';
-    for( let cons = 0; cons < block.data.cons_list.length; cons++){
+    for (let cons = 0; cons < block.data.cons_list.length; cons++) {
         templateCons += /* html */`
             <div itemprop="itemListElement" itemtype="https://schema.org/ListItem" itemscope>
                 <meta itemprop="position" content="${cons + 1}" />

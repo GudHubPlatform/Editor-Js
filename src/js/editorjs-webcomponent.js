@@ -158,7 +158,6 @@ class EditorJS extends HTMLElement {
                   uploader: {
       
                     /* CUSTOM IMAGE LOADER */
-                    
                     uploadByFile(file) {
                       return new Promise(async (resolve) => {
                         const toBase64 = file => new Promise((resolve, reject) => {
