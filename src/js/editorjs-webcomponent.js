@@ -239,6 +239,9 @@ class EditorJS extends HTMLElement {
         table: {
           class: Table,
           inlineToolbar: true,
+          data: {
+            "withHeadings": true
+          }
         },
         list: {
           class: List,

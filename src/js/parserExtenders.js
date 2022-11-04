@@ -86,18 +86,30 @@ export const parseTable = (block) => {
     let html_template = '';
     let template = '';
     
-    let dataTable = block.data.content;
+    let headings = block.data.withHeadings;
     
-    dataTable.forEach(tr => {
+    let dataTable = block.data.content;
+    let tr = headings ? 1 : 0;
+    if ( tr === 1 ) {
+        let headRow = '';
+        for ( let td = 0; td < dataTable[0].length; td++ ) {
+            let tdElement = /*html*/`<th>${dataTable[0][td]}</th>`
+            
+            headRow += tdElement;
+        }
+        template = /*html*/`<tr class="head_row row">${headRow}</tr>`
+        html_template += template;
+    }
+     for ( tr; tr < dataTable.length; tr++){
         let row = '';
-        tr.forEach(td => {
-            let tdElement = /*html*/`<td>${td}</td>`
+        for ( let td = 0; td < dataTable[tr].length; td++ ) {
+            let tdElement = /*html*/`<td>${dataTable[tr][td]}</td>`
             
             row += tdElement;
-        })
+        }
         template = /*html*/`<tr class="row">${row}</tr>`
         html_template += template;
-    });
+    }
     return /*html*/`
     <table class="editorjs_parse_table">
         ${html_template}
