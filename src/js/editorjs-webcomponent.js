@@ -88,6 +88,109 @@ class EditorJS extends HTMLElement {
       savedData = await this.load();
     }
 
+    const allTools = {
+      linkTool: {
+        class: LinkTool,
+      },
+      setTextColor: {
+        class: SetTextColor,
+      },
+      header: {
+        class: Header,
+        inlineToolbar: true,
+        config: {
+          placeholder: 'Enter a header',
+          levels: [1, 2, 3, 4, 5],
+          
+        }
+      },
+      faq: {
+        class: Faq,
+        inlineToolbar: true,
+        config: {
+          placeholder: 'Enter a question'
+        }
+      },
+      prosCons: {
+        class: ProsCons,
+        inlineToolbar: true,
+        config: {
+          placeholder: 'Enter a question'
+        }
+      },
+      htmlViewer: {
+        class: HTMLViewer,
+      },
+      howTo: {
+        class: HowTo,
+        inlineToolbar: true
+      },
+      
+      image: {
+        class: CustomImage,
+        config: {
+          captionPlaceholder: 'Alt',
+          uploader: {
+
+            /* CUSTOM IMAGE LOADER */
+            
+            uploadByFile(file) {
+              return new Promise(async (resolve) => {
+                const toBase64 = file => new Promise((resolve, reject) => {
+                  const reader = new FileReader();
+                  reader.readAsDataURL(file);
+                  reader.onload = () => resolve(reader.result);
+                  reader.onerror = error => reject(error);
+                });
+                let fileBase64 = await toBase64(file);
+                let uploaded = await gudhub.uploadFileFromString({
+                  source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
+                  format: 'base64',
+                  file_name: file.name,
+                  extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
+                  app_id: self.appId,
+                  item_id: self.itemId,
+                  field_id: self.fieldId
+                });
+                self.uploadedImages.push(uploaded.file_id);
+                resolve({ success: 1, file: uploaded });
+              });
+            }
+          }
+        }
+      },
+      table: {
+        class: Table,
+        inlineToolbar: true,
+        data: {
+          "withHeadings": true
+        }
+      },
+      list: {
+        class: List,
+        inlineToolbar: true,
+        config: {
+          defaultStyle: 'unordered'
+        }
+      },
+      checklist: {
+        class: Checklist,
+        inlineToolbar: true,
+      },
+      embed: {
+        class: Embed
+      },
+      code: {
+        class: CodeMirror,
+        config: {
+          codeMirrorConfig: {
+              line: true,
+              theme: 'dracula'
+          }
+        }
+      }
+    }
+
     this.editor = new editorjs({
       holder: `editorjs${id}`,
       data: savedData,
@@ -95,177 +198,14 @@ class EditorJS extends HTMLElement {
       autofocus: true,
       inlineToolbar: ['bold', 'italic', 'linkTool', 'setTextColor'],
       tools: {
-        linkTool: {
-          class: LinkTool,
-        },
-        setTextColor: {
-          class: SetTextColor,
-        },
-        header: {
-          class: Header,
-          inlineToolbar: true,
-          config: {
-            placeholder: 'Enter a header',
-            levels: [1, 2, 3, 4, 5],
-            
-          }
-        },
-        faq: {
-          class: Faq,
-          inlineToolbar: true,
-          config: {
-            placeholder: 'Enter a question'
-          }
-        },
-        prosCons: {
-          class: ProsCons,
-          inlineToolbar: true,
-          config: {
-            placeholder: 'Enter a question'
-          }
-        },
-        htmlViewer: {
-          class: HTMLViewer,
-        },
+        ...allTools,
         editorJsColumns: {
           class: EditorJsColumns,
           config:{
-            tools : {
-              header: {
-                class: Header,
-                config: {
-                  placeholder: 'Enter a header',
-                  levels: [1, 2, 3, 4, 5]
-                }
-              },
-              faq: {
-                class: Faq,
-                inlineToolbar: true,
-                config: {
-                  placeholder: 'Enter a question'
-                }
-              },
-              
-              howTo: {
-                class: HowTo,
-                inlineToolbar: true
-              },
-              
-              image: {
-                class: CustomImage,
-                config: {
-                  captionPlaceholder: 'Alt',
-                  uploader: {
-      
-                    /* CUSTOM IMAGE LOADER */
-                    uploadByFile(file) {
-                      return new Promise(async (resolve) => {
-                        const toBase64 = file => new Promise((resolve, reject) => {
-                          const reader = new FileReader();
-                          reader.readAsDataURL(file);
-                          reader.onload = () => resolve(reader.result);
-                          reader.onerror = error => reject(error);
-                        });
-                        let fileBase64 = await toBase64(file);
-                        let uploaded = await gudhub.uploadFileFromString({
-                          source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
-                          format: 'base64',
-                          file_name: file.name,
-                          extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
-                          app_id: self.appId,
-                          item_id: self.itemId,
-                          field_id: self.fieldId
-                        });
-                        self.uploadedImages.push(uploaded.file_id);
-                        resolve({ success: 1, file: uploaded });
-                      });
-                    }
-                  }
-                }
-              },
-              table: {
-                class: Table
-              },
-              checklist: {
-                class: Checklist,
-                inlineToolbar: true,
-              },
-              embed: {
-                class: Embed
-              }
-            }
+            tools : allTools
           }
         },
-        
-        howTo: {
-          class: HowTo,
-          inlineToolbar: true
-        },
-        
-        image: {
-          class: CustomImage,
-          config: {
-            captionPlaceholder: 'Alt',
-            uploader: {
-
-              /* CUSTOM IMAGE LOADER */
-              
-              uploadByFile(file) {
-                return new Promise(async (resolve) => {
-                  const toBase64 = file => new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
-                  });
-                  let fileBase64 = await toBase64(file);
-                  let uploaded = await gudhub.uploadFileFromString({
-                    source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
-                    format: 'base64',
-                    file_name: file.name,
-                    extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
-                    app_id: self.appId,
-                    item_id: self.itemId,
-                    field_id: self.fieldId
-                  });
-                  self.uploadedImages.push(uploaded.file_id);
-                  resolve({ success: 1, file: uploaded });
-                });
-              }
-            }
-          }
-        },
-        table: {
-          class: Table,
-          inlineToolbar: true,
-          data: {
-            "withHeadings": true
-          }
-        },
-        list: {
-          class: List,
-          inlineToolbar: true,
-          config: {
-            defaultStyle: 'unordered'
-          }
-        },
-        checklist: {
-          class: Checklist,
-          inlineToolbar: true,
-        },
-        embed: {
-          class: Embed
-        },
-        code: {
-          class: CodeMirror,
-          config: {
-            codeMirrorConfig: {
-                line: true,
-                theme: 'dracula'
-            }
-          }
-        }
-      }
+      },
     });
     this.addEventListener('paste', function(e) {
       e.preventDefault();
