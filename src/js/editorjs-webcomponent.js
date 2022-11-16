@@ -193,6 +193,7 @@ class EditorJS extends HTMLElement {
 
     this.editor = new editorjs({
       holder: `editorjs${id}`,
+      logLevel: 'ERROR',
       data: savedData,
       readOnly: false,
       autofocus: true,
