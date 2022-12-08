@@ -88,7 +88,6 @@ export default class LinkTool {
     
     checkState() {
         const aLink = this.api.selection.findParentTag(this.tag);
-        
         this.state = !!aLink;
       
         if (this.state) {
@@ -173,7 +172,7 @@ export default class LinkTool {
             aLink.getAttribute('rel').includes('nofollow') ? this.nofollow.setAttribute('checked','') : null;
         }
         
-
+        
         this.linkWrapper.onchange = (event) => {
             let attr = event.target.attributes.name.value;
             let href = event.target.classList.contains('hrefInput') ? event.target.value : aLink.getAttribute('href');
@@ -182,6 +181,29 @@ export default class LinkTool {
             return res
           
         };
+        let linkInput = this.linkWrapper.querySelector('.hrefInput');
+
+        let allow = true;
+        linkInput.addEventListener('focus', () => {
+            linkInput.addEventListener('keydown', (e) => {
+                if ( e.ctrlKey && e.key == 'v') {
+                    if ( allow ) {
+                        allow = false
+                        navigator.clipboard
+                        .readText()
+                        .then(
+                            (clipText) => {
+                                console.log(e.target.selectionStart)
+                                linkInput.value = linkInput.value.substr(0, e.target.selectionStart) + clipText + linkInput.value.substr(e.target.selectionStart);
+                                setTimeout(() => {
+                                    allow = true
+                                }, 500);
+                            }
+                        );
+                    }
+                }
+            })
+        })
         this.linkWrapper.hidden = false;
     }
     
@@ -190,7 +212,6 @@ export default class LinkTool {
         this.linkWrapper.hidden = true;
     }
     addAttributes(aLink, attr, href){
-
         if (href){
             if (href.includes('http://') || href.includes('https://')){
             aLink.setAttribute('href', href);
