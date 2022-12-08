@@ -193,7 +193,6 @@ export default class LinkTool {
                         .readText()
                         .then(
                             (clipText) => {
-                                console.log(e.target.selectionStart)
                                 linkInput.value = linkInput.value.substr(0, e.target.selectionStart) + clipText + linkInput.value.substr(e.target.selectionStart);
                                 setTimeout(() => {
                                     allow = true
