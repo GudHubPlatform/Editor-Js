@@ -186,7 +186,7 @@ export default class LinkTool {
         let allow = true;
         linkInput.addEventListener('focus', () => {
             linkInput.addEventListener('keydown', (e) => {
-                if ( e.ctrlKey && e.key == 'v') {
+                if ( (navigator.userAgentData.platform == "Mac" ? e.metaKey : e.ctrlKey) && e.key == 'v') {
                     if ( allow ) {
                         allow = false
                         navigator.clipboard
