@@ -231,6 +231,13 @@ export const parseHTMLViewer = (block) => {
     let newCode = block.data.template.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', '');
     return newCode;
 }
+export const parseMultiLevelList = (block) => {
+    let data = block.data.html;
+    let wrapperElement = block.data.wrapperTag;
+    let newCode = document.createElement(wrapperElement);
+    newCode.innerHTML = data.replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll('&#47;', '/')
+    return newCode.outerHTML;
+}
 export const parseCodeMirror = (block) => {
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;

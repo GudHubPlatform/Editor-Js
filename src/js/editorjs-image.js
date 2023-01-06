@@ -70,7 +70,6 @@ export default class CustomImage extends Image  {
     }
 
     save() {
-        console.log(this)
         const caption = this.ui.nodes.caption;
         
         this._data.caption = caption.innerHTML;
