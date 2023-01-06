@@ -194,6 +194,7 @@ export default class LinkTool {
                         .then(
                             (clipText) => {
                                 linkInput.value = linkInput.value.substr(0, e.target.selectionStart) + clipText + linkInput.value.substr(e.target.selectionStart);
+                                this.addAttributes(aLink, false, e.target.value)
                                 setTimeout(() => {
                                     allow = true
                                 }, 500);
@@ -218,43 +219,44 @@ export default class LinkTool {
                 aLink.setAttribute('href', `https://${href}`);
             }
         }
-        
-        switch(attr){
-            case "blank":
-                if(aLink.getAttribute('target') == '_blank'){
-                    aLink.removeAttribute('target');
-                }else{
-                    aLink.setAttribute('target', '_blank')
-                }
-                break
-            /* Make a right queue in array of rel values */
-            case "noreferrer":
-                this.listOfRel.find((listItem) => listItem === attr) ? this.listOfRel.splice(this.listOfRel.indexOf(attr), 1) : this.listOfRel.splice(0, 0, attr);
-                break
-            case "noopener":
-                if(this.listOfRel.find((listItem) => listItem === attr)){
-                    this.listOfRel.splice(this.listOfRel.indexOf(attr), 1)
-                }else{
-                    if(this.listOfRel.length == 1 && this.listOfRel[0] == 'nofollow') {
-                        this.listOfRel.splice(0, 0, attr);
+        if (attr) {
+            switch(attr){
+                case "blank":
+                    if(aLink.getAttribute('target') == '_blank'){
+                        aLink.removeAttribute('target');
                     }else{
-                        this.listOfRel.splice(1, 0, attr);
+                        aLink.setAttribute('target', '_blank')
                     }
-                }
-                break
-            case "nofollow":
-                this.listOfRel.find((listItem) => listItem === attr) ? this.listOfRel.splice(this.listOfRel.indexOf(attr), 1) : this.listOfRel.splice(2, 0, attr);
-                break
+                    break
+                /* Make a right queue in array of rel values */
+                case "noreferrer":
+                    this.listOfRel.find((listItem) => listItem === attr) ? this.listOfRel.splice(this.listOfRel.indexOf(attr), 1) : this.listOfRel.splice(0, 0, attr);
+                    break
+                case "noopener":
+                    if(this.listOfRel.find((listItem) => listItem === attr)){
+                        this.listOfRel.splice(this.listOfRel.indexOf(attr), 1)
+                    }else{
+                        if(this.listOfRel.length == 1 && this.listOfRel[0] == 'nofollow') {
+                            this.listOfRel.splice(0, 0, attr);
+                        }else{
+                            this.listOfRel.splice(1, 0, attr);
+                        }
+                    }
+                    break
+                case "nofollow":
+                    this.listOfRel.find((listItem) => listItem === attr) ? this.listOfRel.splice(this.listOfRel.indexOf(attr), 1) : this.listOfRel.splice(2, 0, attr);
+                    break
+            }
+            let relStr = '';
+            this.listOfRel.forEach(item => {
+                relStr += item + ' '
+            });
+            aLink.setAttribute('rel', relStr.slice(0, -1))
+            if (aLink.getAttribute('rel') == ''){
+                aLink.removeAttribute('rel')
+            }
         }
-        let relStr = '';
-        this.listOfRel.forEach(item => {
-            relStr += item + ' '
-        });
-        aLink.setAttribute('rel', relStr.slice(0, -1))
 
-        if (aLink.getAttribute('rel') == ''){
-            aLink.removeAttribute('rel')
-        }
         return aLink
     }
 }
