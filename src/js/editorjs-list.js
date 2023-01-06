@@ -15,70 +15,76 @@ export default class List extends NestedList  {
     async rendered () {
         console.log(this)
         let allEditorBlocks = document.querySelectorAll('.ce-block');
+        console.log(allEditorBlocks)
         let wrapperClass = `.${this.nodes.wrapper.className.replaceAll(' ', '.')}`;
         for (let block = 0; block < allEditorBlocks.length; block++) {
+            console.log(allEditorBlocks[block])
             let self = allEditorBlocks[block];
-            self.querySelector('.cdx-nested-list').classList.add('main-nested-list');
-            let wrapperElement = self.querySelector(`${wrapperClass}`);
-            let innerLists = wrapperElement.querySelectorAll('ul, ol');
-            
-            for (let list = 0; list < innerLists.length; list++) {
-                let contextMenu = document.createElement('div');
-                contextMenu.classList.add('context_wrapper');
-                contextMenu.innerHTML = /* html */`
-                    <div class="ul">UL</div>
-                    <div class="ol">OL</div>
-                `;
-                innerLists[list].append(contextMenu);
-                let listTypes = innerLists[list].querySelectorAll('.context_wrapper div');
-                for (let type = 0; type < listTypes.length; type++) {
-                    listTypes[type].addEventListener('click', (e) => {
-                        console.log(`click on ${listTypes[type].className}`)
-                        let newList = document.createElement(listTypes[type].className);
-                        newList.setAttribute('class', `cdx-nested-list__item-children changed cdx-nested-list cdx-block cdx-nested-list--${listTypes[type].className == 'ol' ? 'ordered' : 'unordered'}`)
-                        newList.innerHTML = contextMenu.parentElement.innerHTML;
-                        innerLists[list].parentElement.append(newList);
-                        innerLists[list].remove();
-                    })
+            console.log(self)
+            console.log(self.querySelector('.cdx-nested-list'))
+            if (self.querySelector('.cdx-nested-list')) {
+                self.querySelector('.cdx-nested-list').classList.add('main-nested-list');
+                let wrapperElement = self.querySelector(`${wrapperClass}`);
+                let innerLists = wrapperElement.querySelectorAll('ul, ol');
+                
+                for (let list = 0; list < innerLists.length; list++) {
+                    let contextMenu = document.createElement('div');
+                    contextMenu.classList.add('context_wrapper');
+                    contextMenu.innerHTML = /* html */`
+                        <div class="ul">UL</div>
+                        <div class="ol">OL</div>
+                    `;
+                    innerLists[list].append(contextMenu);
+                    let listTypes = innerLists[list].querySelectorAll('.context_wrapper div');
+                    for (let type = 0; type < listTypes.length; type++) {
+                        listTypes[type].addEventListener('click', (e) => {
+                            let newList = document.createElement(listTypes[type].className);
+                            newList.setAttribute('class', `cdx-nested-list__item-children changed cdx-nested-list cdx-block cdx-nested-list--${listTypes[type].className == 'ol' ? 'ordered' : 'unordered'}`)
+                            newList.innerHTML = contextMenu.parentElement.innerHTML;
+                            innerLists[list].parentElement.append(newList);
+                            innerLists[list].remove();
+                        })
+                    }
                 }
-            }
 
-            let editMenu = document.createElement('div');
-            editMenu.classList.add('editMenu');
-            editMenu.innerHTML = /* html */ `
-                <div class="config">Config</div>
-                <div class="close">Close</div>
-            `;
-            wrapperElement.append(editMenu);
-            let config = editMenu.querySelector('.config');
-            let close = editMenu.querySelector('.close');
-            close.addEventListener('click', (e) => {
-                console.log('click on close')
-                for (let list = 0; list < innerLists.length; list++) {
-                    innerLists[list].classList.contains('border') ? innerLists[list].classList.remove('border') : '';
-                    innerLists[list].classList.contains('hover') ? innerLists[list].classList.remove('hover') : '';
-                }
-            })
-            config.addEventListener('click', (e) => {
-                console.log('click on config')
-                let currentList;
-                for (let list = 0; list < innerLists.length; list++) {
-                    innerLists[list].classList.add('border');
-               
-                    innerLists[list].addEventListener('click', (ev) => {
-                        console.log('click on list')
-                        currentList = innerLists[list];
-                        currentList.classList.contains('hover') ? currentList.classList.remove('hover') : currentList.classList.add('hover');
-                        for (let removeClass = 0; removeClass < innerLists.length; removeClass++) {
-                            if (removeClass != list) {
-                                innerLists[removeClass].classList.contains('hover') ? innerLists[removeClass].classList.remove('hover') : ''
+                let editMenu = document.createElement('div');
+                editMenu.classList.add('editMenu');
+                editMenu.innerHTML = /* html */ `
+                    <div class="config">Config</div>
+                    <div class="close">Close</div>
+                `;
+                wrapperElement.append(editMenu);
+                let config = editMenu.querySelector('.config');
+                let close = editMenu.querySelector('.close');
+                close.addEventListener('click', (e) => {
+                    console.log('click on close')
+                    for (let list = 0; list < innerLists.length; list++) {
+                        innerLists[list].classList.contains('border') ? innerLists[list].classList.remove('border') : '';
+                        innerLists[list].classList.contains('hover') ? innerLists[list].classList.remove('hover') : '';
+                    }
+                })
+                config.addEventListener('click', (e) => {
+                    console.log('click on config')
+                    let currentList;
+                    for (let list = 0; list < innerLists.length; list++) {
+                        innerLists[list].classList.add('border');
+                
+                        innerLists[list].addEventListener('click', (ev) => {
+                            console.log('click on list')
+                            currentList = innerLists[list];
+                            currentList.classList.contains('hover') ? currentList.classList.remove('hover') : currentList.classList.add('hover');
+                            for (let removeClass = 0; removeClass < innerLists.length; removeClass++) {
+                                if (removeClass != list) {
+                                    innerLists[removeClass].classList.contains('hover') ? innerLists[removeClass].classList.remove('hover') : ''
+                                }
                             }
-                        }
-                    })
-                }
-            })
+                        })
+                    }
+                })
+            }
         }
     }
+
     // save(blockContent) {
     //     console.log(blockContent)
     //     console.log(this)
@@ -88,36 +94,14 @@ export default class List extends NestedList  {
     //         items: this.nodes.wrapper
     //     }
     // }
-    save(blockContent) {
-        console.log(blockContent)
-        /**
-         * The method for recursive collecting of the child items
-         *
-         * @param {Element} parent - where to find items
-         * @returns {ListItem[]}
-         */
-        const getItems = (parent) => {
-       
-          const children = Array.from(parent.querySelectorAll(`:scope > .${this.CSS.item} , .changed`));
-    
-          return children.map(el => {
-            const subItemsWrapper = el.querySelector(`.${this.CSS.itemChildren}`);
-            const content = this.getItemContent(el);
-            const subItems = subItemsWrapper ? getItems(subItemsWrapper) : [];
-    
-            return {
-              content,
-              items: subItems,
-            };
-          });
-        };
-        console.log(getItems(this.nodes.wrapper))
-        console.log(this.data.style,)
-        return {
-          style: this.data.style,
-          items: getItems(this.nodes.wrapper),
-        };
-      }
+    // async save(blockContent) {
+    //     console.log(this)
+    //     const caption = this.nodes.wrapper;
+        
+    //     this._data = caption.innerHTML;
+    //     let data = this._data
+    //     return this.data;
+    //   }
     //   getItemContent(item) {
     //     const contentNode = item.querySelector(`.${this.CSS.itemContent}`);
     
@@ -127,4 +111,12 @@ export default class List extends NestedList  {
     
     //     return contentNode.innerHTML;
     //   }
+    save () {
+        console.log(this)
+        const caption = this.nodes.wrapper;
+        
+        this._data = caption.innerHTML;
+        let data = this._data
+        return this.data;
+    }
 }
