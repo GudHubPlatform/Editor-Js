@@ -94,10 +94,6 @@ class EditorJS extends HTMLElement {
       linkTool: {
         class: LinkTool,
       },
-      nestedList: {
-        class: NestedList,
-        inlineToolbar: true
-      },
       multiLevelList: {
         class: MultiLevelList,
         inlineToolbar: true
@@ -174,13 +170,6 @@ class EditorJS extends HTMLElement {
         inlineToolbar: true,
         data: {
           "withHeadings": true
-        }
-      },
-      list: {
-        class: List,
-        inlineToolbar: true,
-        config: {
-          defaultStyle: 'unordered'
         }
       },
       checklist: {
