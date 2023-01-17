@@ -1,6 +1,6 @@
 import editorjs from '@editorjs/editorjs';
 import Header from '@editorjs/header';
-import Table from '@editorjs/table';
+// import Table from '@editorjs/table';
 import List from '@editorjs/list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
@@ -13,6 +13,7 @@ import HTMLViewer from './editorjs-htmlViewer.js';
 import LinkTool from './editorjs-inlineToolLink.js';
 import SetTextColor from './editorjs-inlineToolColor.js';
 import ProsCons from './editorjs-prosCons.js';
+import Table from './editorjs-table.js';
 import 'codemirror/theme/dracula.css';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
