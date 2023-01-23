@@ -15,7 +15,15 @@ export default class List extends NestedList  {
     }
 
     rendered () {
-        let allEditorBlocks = document.querySelectorAll('.ce-block');
+        let allEditorBlocks = [];
+        let allCeBlocks = document.querySelectorAll('.ce-block');
+        if (allCeBlocks) {
+            for (let all = 0; all < allCeBlocks.length; all++) {
+                if (allCeBlocks[all].querySelector('.cdx-nested-list')) {
+                    allEditorBlocks.push(allCeBlocks[all]);
+                }
+            }
+        }
         if (allEditorBlocks) {
             for (let block = 0; block < allEditorBlocks.length; block++) {
                 let self = allEditorBlocks[block];
