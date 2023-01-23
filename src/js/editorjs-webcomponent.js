@@ -1,8 +1,8 @@
 import editorjs from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Table from '@editorjs/table';
-import List from '@editorjs/list';
-import NestedList from '@editorjs/nested-list';
+// import List from '@editorjs/list';
+// import NestedList from '@editorjs/nested-list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
@@ -11,7 +11,7 @@ import HowTo from './editorjs-howto.js';
 import CustomImage from './editorjs-image.js';
 import EditorJsColumns from '@calumk/editorjs-columns';
 import HTMLViewer from './editorjs-htmlViewer.js';
-import MultiLevelList from './editorjs-list.js';
+import CustomNestedList from './editorjs-list.js';
 import LinkTool from './editorjs-inlineToolLink.js';
 import SetTextColor from './editorjs-inlineToolColor.js';
 import ProsCons from './editorjs-prosCons.js';
@@ -94,8 +94,8 @@ class EditorJS extends HTMLElement {
       linkTool: {
         class: LinkTool,
       },
-      multiLevelList: {
-        class: MultiLevelList,
+      customNestedList: {
+        class: CustomNestedList,
         inlineToolbar: true
       },
       setTextColor: {

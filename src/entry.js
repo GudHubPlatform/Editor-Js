@@ -9,7 +9,7 @@ import {parseHTMLViewer} from  './js/parserExtenders.js';
 import {parseCodeMirror} from  './js/parserExtenders.js';
 import {parseProsCons} from  './js/parserExtenders.js';
 import {checklist} from  './js/parserExtenders.js';
-import {parseMultiLevelList} from  './js/parserExtenders.js';
+import {parseCustomNestedList} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
 
@@ -86,7 +86,7 @@ export default class EditorjsData {
           code: parseCodeMirror,
           prosCons: parseProsCons,
           checklist: checklist,
-          multiLevelList: parseMultiLevelList,
+          customNestedlist: parseCustomNestedList,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));

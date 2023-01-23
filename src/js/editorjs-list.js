@@ -1,5 +1,5 @@
-import NestedList from '@editorjs/nested-list';
-export default class List extends NestedList  { 
+import CustomNestedList from '@editorjs/nested-list';
+export default class List extends CustomNestedList  { 
     constructor(data, api) {
         super(data, api);
         this.savedData = data;
