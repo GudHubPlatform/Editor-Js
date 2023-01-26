@@ -1,5 +1,5 @@
-import CustomNestedList from '@editorjs/nested-list';
-export default class List extends CustomNestedList  { 
+import NestedList from '@editorjs/nested-list';
+export default class CustomNestedList extends NestedList  { 
     constructor(data, api) {
         super(data, api);
         this.savedData = data;
@@ -15,38 +15,76 @@ export default class List extends CustomNestedList  {
     }
 
     rendered () {
-        let allEditorBlocks = document.querySelectorAll('.ce-block');
-        if (allEditorBlocks) {
-            for (let block = 0; block < allEditorBlocks.length; block++) {
-                let self = allEditorBlocks[block];
-                if (self.querySelector('.cdx-nested-list')) {
-                    const uniqClass = this.generateUniqClass();
-                    self.querySelector('.cdx-nested-list').classList.add('main-nested-list');
-                    if (self.querySelector('.cdx-nested-list')) {
-                        self.querySelector('.cdx-nested-list').classList.add(`u-${uniqClass}`);
-                        self.querySelector('.cdx-nested-list').setAttribute('data-uniq-id', `u${uniqClass}`);
-                    }
-                    if (this.data.html) {
-                        let keys = Object.keys(this.data.html);
-                        if (this.data.html[keys[block]]) {
-                            self.querySelector(`.cdx-nested-list`).innerHTML = this.data.html[keys[block]].replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&#47;', '/');
-                            let menus = self.querySelector('.cdx-nested-list').querySelectorAll('.editMenu');
-                            for (let menu = 0; menu < menus.length; menu++) {
-                                menus[menu].remove();
-                            }
-                            let borders = self.querySelectorAll('.border');
-                            for (let border = 0; border < borders.length; border++) {
-                                borders[border].classList.remove('border');
-                            }
-                        }
-                    }
-                    this.createWrapper(`.u-${uniqClass}`);
-                    this.addContext()
+        let list = document.createElement('div');
+        if (this.data.html) {
+            let savedData = this.data.html.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&#47;', '/');
+            let listItems = document.querySelectorAll('.cdx-nested-list');
+            for (let item = 0; item < listItems.length; item++){
+                // if (!listItems[item].hasAttribute('data-uniq-id')) {
+                    listItems[item].parentElement.append(list);
+                    
+                    list.setAttribute('data-uniq-id', this.data.id)
+                    list.classList.add('custom-list');
+                    let editBlock = document.createElement('div');
+                    console.log('editBlock', editBlock)
+                    console.log('savedData', savedData)
+                    editBlock.innerHTML = savedData;
+                    console.log('asd')
+                    console.log("editBlock.querySelector('ul, ol')", editBlock.querySelector('ul, ol'))
+                    console.log("editBlock.querySelector('ul, ol').innerHTML", editBlock.querySelector('ul, ol').innerHTML)
+                    console.log("listItems[item]", listItems[item])
+                    console.log("listItems[item].innerHTML", listItems[item].innerHTML)
+                    listItems[item].innerHTML = editBlock.querySelector('ul, ol').innerHTML;
+                    
+                    // console.log(listItems[item])
+                    // }
+                    list.setAttribute('data-uniq-id', this.data.id);
+                    list.classList.add('main-list');
                 }
-            }
+                let allLists = document.querySelectorAll('.cdx-nested-list.main-list')
+                for (let i = 0; i < allLists.length; i++) {
+                    if (!allLists[i].hasAttribute('data-uniq-id') || !allLists[i].closest('.main-list')) {
+                        allLists[i].remove()
+                    }
+                }
+
         }
-        
-        this.listener()
+        // console.log(this)
+        // let allEditorBlocks = document.querySelectorAll('.ce-block');
+        // if (allEditorBlocks) {
+        //     for (let block = 0; block < allEditorBlocks.length; block++) {
+        //         let self = allEditorBlocks[block];
+        //         if (self.querySelector('.cdx-nested-list')) {
+        //             const uniqClass = this.generateUniqClass();
+        //             self.querySelector('.cdx-nested-list').classList.add('main-nested-list');
+        //             if (self.querySelector('.cdx-nested-list')) {
+        //                 self.querySelector('.cdx-nested-list').classList.add(`u-${uniqClass}`);
+        //                 self.querySelector('.cdx-nested-list').setAttribute('data-uniq-id', `u${uniqClass}`);
+        //             }
+        //             if (this.data.html) {
+        //                 if (self.querySelector('.cdx-nested-list').hasAttribute('data-uniq-id')) {
+        //                     console.log(this.data.id)
+        //                     console.log(self.querySelector('.cdx-nested-list').getAttribute('data-uniq-id'))
+        //                     if (self.querySelector('.cdx-nested-list').getAttribute('data-uniq-id') == this.data.id) {
+        //                         console.log('123123123+123123123')
+        //                         self.querySelector(`.cdx-nested-list`).outerHTML = this.data.html.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&#47;', '/');
+        //                         let menus = self.querySelector('.cdx-nested-list').querySelectorAll('.editMenu');
+        //                         for (let menu = 0; menu < menus.length; menu++) {
+        //                             menus[menu].remove();
+        //                         }
+        //                         let borders = self.querySelectorAll('.border');
+        //                         for (let border = 0; border < borders.length; border++) {
+        //                             borders[border].classList.remove('border');
+        //                         }
+        //                     }
+        //                 }
+        //             }
+                    // this.createWrapper(`.u-${uniqClass}`);
+                    // this.addContext()
+        //         }
+        //     }
+        // }
+        // this.listener()
     }
     generateUniqClass() {
         return Math.random().toString(36).slice(2);
@@ -141,32 +179,14 @@ export default class List extends CustomNestedList  {
         }
     }
 
-    save () {
-        if (this.nodes.wrapper.closest('editor-js')) {
-            let editor = this.nodes.wrapper.closest('editor-js');
-            let caption = editor.querySelectorAll('.cdx-nested-list') ;
-            if (!this.data.count || this.data.count == 'end') {
-                this.data.count = 0
-                this.data.html = {}
-            }
-            let onlyMainLists= []
-            for (let list = 0; list < caption.length; list++) {
-                if (caption[list].hasAttribute('data-uniq-id')) {
-                    onlyMainLists.push(caption[list])
-                }
-            }
-            if (onlyMainLists.length > 0) {
-                for (let mainList = 0; mainList < onlyMainLists.length; mainList++) {
-                    let uniqId = onlyMainLists[mainList].getAttribute('data-uniq-id');
-                    this.data.count = onlyMainLists.length;
-                    this.data.html[`u${uniqId}`] = onlyMainLists[mainList].innerHTML.replaceAll('<', '&lt;').replaceAll('>','&gt;').replaceAll('/', '&#47;');
-                    this.data.wrapperTag = onlyMainLists[mainList].tagName.toLowerCase();
-                    if (mainList == this.data.count - 1) {
-                        this.data.count = 'end';
-                    }
-                }
-            }
+    save (blockContent) {
+        console.log(blockContent)
+        if (blockContent != undefined) {
+            this.data.html = blockContent.outerHTML.replaceAll('>', '&gt;').replaceAll('<', '&lt;').replaceAll('/', '&#47;');
+            const uniqClass = this.generateUniqClass();
+            this.data.id = uniqClass;
         }
+        console.log('list', this.data)
         return this.data;
     }
 }

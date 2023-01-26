@@ -94,7 +94,7 @@ class EditorJS extends HTMLElement {
       linkTool: {
         class: LinkTool,
       },
-      customNestedList: {
+      nestedList: {
         class: CustomNestedList,
         inlineToolbar: true
       },
@@ -261,6 +261,7 @@ class EditorJS extends HTMLElement {
     await this.checkIfImageDeleted();
 
     let data = await this.editor.save();
+    console.log('globalSave',data)
     let document = await gudhub.createDocument({
       app_id: this.appId,
       item_id: this.itemId,

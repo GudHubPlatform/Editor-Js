@@ -86,7 +86,7 @@ export default class EditorjsData {
           code: parseCodeMirror,
           prosCons: parseProsCons,
           checklist: checklist,
-          customNestedlist: parseCustomNestedList,
+          nestedList: parseCustomNestedList,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));

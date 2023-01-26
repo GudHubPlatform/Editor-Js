@@ -234,12 +234,10 @@ export const parseHTMLViewer = (block) => {
 export const parseCustomNestedList = (block) => {
     console.log(block.data.html)
     let data = block.data.html;
-    let wrapperElement = block.data.wrapperTag;
-    for(let list in data) {
-        let newCode = document.createElement(wrapperElement);
-        newCode.innerHTML = data[list].replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll('&#47;', '/')
-        return newCode.outerHTML;
-    }
+    let newCode = document.createElement('div');
+    newCode.outerHTML = data[list].replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll('&#47;', '/');
+    
+    return newCode.outerHTML;
 }
 export const parseCodeMirror = (block) => {
     let codeDataType = block.data.name;

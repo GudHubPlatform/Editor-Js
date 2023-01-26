@@ -101,6 +101,7 @@ export default class CustomImage extends Image  {
             const urlElement = rightBlock.querySelector('.image_url');
             this._data.url = urlElement.innerText;
         }
+        console.log(this.data)
         return this.data;
       }
 }
