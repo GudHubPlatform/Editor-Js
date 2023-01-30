@@ -232,16 +232,14 @@ export const parseHTMLViewer = (block) => {
     return newCode;
 }
 export const parseMultiLevelList = (block) => {
-    console.log(block)
     let data = block.data.items;
     let wrapperElement = block.data.style == 'ordered' ? 'ol' : 'ul';
     let newCode = document.createElement(wrapperElement);
     for(let li = 0; li < data.length; li++) {
         let liEl = document.createElement('li');
-        liEl.innerText = data[li]
+        liEl.innerHTML = data[li]
         newCode.append(liEl)
     }
-    // newCode.innerHTML = data.replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll('&#47;', '/')
     return newCode.outerHTML;
 }
 export const parseCodeMirror = (block) => {
