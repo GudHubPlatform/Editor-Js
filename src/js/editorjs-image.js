@@ -13,7 +13,6 @@ export default class CustomImage extends Image  {
     }
 
     rendered(){
-        console.log(this)
         /* Create block for input title value */
         let showProperties = this.savedData.config.imageProperties;
         if (showProperties == '1') {
