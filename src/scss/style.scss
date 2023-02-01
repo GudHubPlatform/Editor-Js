@@ -108,6 +108,7 @@ editor-js {
     padding-bottom: 50px;
     .ce-toolbar__actions{
         bottom: -45px;
+        right: calc(100% + 50px);
     }
     .ce-block__content{
         margin: 0;
