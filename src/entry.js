@@ -9,6 +9,7 @@ import {parseHTMLViewer} from  './js/parserExtenders.js';
 import {parseCodeMirror} from  './js/parserExtenders.js';
 import {parseProsCons} from  './js/parserExtenders.js';
 import {checklist} from  './js/parserExtenders.js';
+import {parseMultiLevelList} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
 
@@ -32,6 +33,7 @@ export default class EditorjsData {
         'data_type': 'editorjs',
         'file_name': '',
         data_model: {
+          is_show_image_properties: false,
           images_field_id: '',
           interpretation: [{
             src: 'form',
@@ -65,7 +67,7 @@ export default class EditorjsData {
       id: 'default',
       name: 'Default',
       content: () =>
-        '<editor-js app-id="{{appId}}" item-id="{{itemId}}" field-id="{{field_model.field_id}}" field-value="{{field_model.field_value}}"></editor-js>'
+        '<editor-js app-id="{{appId}}" item-id="{{itemId}}" field-id="{{field_model.field_id}}" field-value="{{field_model.field_value}}" image-properties="{{field_model.data_model.is_show_image_properties}}"></editor-js>'
     }, {
       id: 'html',
       name: 'Html',
@@ -85,6 +87,7 @@ export default class EditorjsData {
           code: parseCodeMirror,
           prosCons: parseProsCons,
           checklist: checklist,
+          list: parseMultiLevelList,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));
@@ -129,7 +132,19 @@ export default class EditorjsData {
       type: 'general_setting',
       icon: 'menu',
       columns_list: [
-        []]
+        [
+          {
+            type: 'ghElement',
+            property: 'data_model.is_show_image_properties',
+            data_model: function () {
+              return {
+                field_name: 'Show Image Properties',
+                name_space: 'show_image_properties',
+                data_type: 'boolean'
+              };
+            }
+          }
+        ]]
     }];
 
     return settingTemplate;

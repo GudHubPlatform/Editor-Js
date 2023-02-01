@@ -2,6 +2,7 @@ import editorjs from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 // import Table from '@editorjs/table';
 import List from '@editorjs/list';
+// import NestedList from '@editorjs/nested-list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
@@ -10,6 +11,7 @@ import HowTo from './editorjs-howto.js';
 import CustomImage from './editorjs-image.js';
 import EditorJsColumns from '@calumk/editorjs-columns';
 import HTMLViewer from './editorjs-htmlViewer.js';
+// import MultiLevelList from './editorjs-list.js';
 import LinkTool from './editorjs-inlineToolLink.js';
 import SetTextColor from './editorjs-inlineToolColor.js';
 import ProsCons from './editorjs-prosCons.js';
@@ -29,6 +31,7 @@ class EditorJS extends HTMLElement {
     this.previousBlocksCount = 0;
     this.uploadedImages = [];
     this.countEd = 0;
+    this.imageProperties;
   }
 
   /********************* GET ATTRIBUTES *********************/
@@ -39,6 +42,7 @@ class EditorJS extends HTMLElement {
     this.itemId = this.getAttribute('item-id');
     this.fieldId = this.getAttribute('field-id');
     this.fieldValue = this.getAttribute('field-value');
+    this.imageProperties = this.getAttribute('image-properties');
   }
 
   /********************* OBSERVED ATTRIBUTES *********************/
@@ -88,10 +92,13 @@ class EditorJS extends HTMLElement {
     if(this.appId && this.itemId && this.fieldId) {
       savedData = await this.load();
     }
-
     const allTools = {
       linkTool: {
         class: LinkTool,
+      },
+      list: {
+        class: List,
+        inlineToolbar: true
       },
       setTextColor: {
         class: SetTextColor,
@@ -131,6 +138,7 @@ class EditorJS extends HTMLElement {
         class: CustomImage,
         config: {
           captionPlaceholder: 'Alt',
+          imageProperties: self.imageProperties,
           uploader: {
 
             /* CUSTOM IMAGE LOADER */
@@ -165,13 +173,6 @@ class EditorJS extends HTMLElement {
         inlineToolbar: true,
         data: {
           "withHeadings": true
-        }
-      },
-      list: {
-        class: List,
-        inlineToolbar: true,
-        config: {
-          defaultStyle: 'unordered'
         }
       },
       checklist: {
@@ -263,7 +264,6 @@ class EditorJS extends HTMLElement {
     await this.checkIfImageDeleted();
 
     let data = await this.editor.save();
-
     let document = await gudhub.createDocument({
       app_id: this.appId,
       item_id: this.itemId,

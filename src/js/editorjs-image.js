@@ -13,39 +13,49 @@ export default class CustomImage extends Image  {
     }
 
     rendered(){
+        console.log(this)
         /* Create block for input title value */
-        
-        let block = document.createElement('div');
-        block.setAttribute('contenteditable', true);
-        block.setAttribute('placeholder', "Title");
-        block.style.color = '#707684';
-        block.style.fontWeight = '400';
-        block.classList.add('image_title');
-        
-        let blockUrl = document.createElement('div');
-        blockUrl.setAttribute('contenteditable', true);
-        blockUrl.setAttribute('placeholder', "URL");
-        blockUrl.style.color = '#707684';
-        blockUrl.style.fontWeight = '400';
-        blockUrl.classList.add('image_url');
-        
-        /* Check if we have in saved data element "title" if yes paste this value, if no paste placeholder "Title" */
-        let imageItems = document.querySelectorAll('.image-tool');
-        
-        for (let item = 0; item < imageItems.length; item++){
+        let showProperties = this.savedData.config.imageProperties;
+        if (showProperties == '1') {
+            let block = document.createElement('div');
+            block.setAttribute('contenteditable', true);
+            block.setAttribute('placeholder', "Title");
+            block.style.color = '#707684';
+            block.style.fontWeight = '400';
+            block.classList.add('image_title');
             
-            imageItems[item].classList.add('custom-image');
-            if(!imageItems[item].querySelector('.image_title')){
-                imageItems[item].appendChild(blockUrl)
-                imageItems[item].appendChild(block)
+            let blockUrl = document.createElement('div');
+            blockUrl.setAttribute('contenteditable', true);
+            blockUrl.setAttribute('placeholder', "URL");
+            blockUrl.style.color = '#707684';
+            blockUrl.style.fontWeight = '400';
+            blockUrl.classList.add('image_url');
+
+            /* Check if we have in saved data element "title" if yes paste this value, if no paste placeholder "Title" */
+            let imageItems = document.querySelectorAll('.image-tool');
+            
+            for (let item = 0; item < imageItems.length; item++){
+                
+                imageItems[item].classList.add('custom-image');
+                if(!imageItems[item].querySelector('.image_title')){
+                    imageItems[item].appendChild(blockUrl)
+                    imageItems[item].appendChild(block)
+                }
+                let titleText = this.savedData.data.title ? this.savedData.data.title : "Title"
+                let urlText = this.savedData.data.url ? this.savedData.data.url : "URL"
+                block.innerText = titleText;
+                blockUrl.innerText = urlText;
             }
-            let titleText = this.savedData.data.title ? this.savedData.data.title : "Title"
-            let urlText = this.savedData.data.url ? this.savedData.data.url : "URL"
-            block.innerText = titleText;
-            blockUrl.innerText = urlText;
+            this.focus(block);
+            this.focus(blockUrl);
+        } else {
+            let captions = document.querySelectorAll('.image-tool__caption');
+            for (let caption = 0; caption < captions.length; caption++) {
+                captions[caption].style.display = 'none';
+            }
         }
-        this.focus(block);
-        this.focus(blockUrl);
+        
+        
     }
 
     focus(field) {

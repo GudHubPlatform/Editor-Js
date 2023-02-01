@@ -231,6 +231,17 @@ export const parseHTMLViewer = (block) => {
     let newCode = block.data.template.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', '');
     return newCode;
 }
+export const parseMultiLevelList = (block) => {
+    let data = block.data.items;
+    let wrapperElement = block.data.style == 'ordered' ? 'ol' : 'ul';
+    let newCode = document.createElement(wrapperElement);
+    for(let li = 0; li < data.length; li++) {
+        let liEl = document.createElement('li');
+        liEl.innerHTML = data[li]
+        newCode.append(liEl)
+    }
+    return newCode.outerHTML;
+}
 export const parseCodeMirror = (block) => {
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;
