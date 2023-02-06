@@ -694,3 +694,9 @@ table.editorjs_parse_table{
         }
     }
 }
+
+@media screen and (max-width: 650px) {
+    .editorjs .ce-toolbar__actions {
+        bottom: 0 !important;
+    }
+}

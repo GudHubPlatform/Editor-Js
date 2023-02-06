@@ -32,9 +32,16 @@ export default class CustomImage extends Image  {
 
             /* Check if we have in saved data element "title" if yes paste this value, if no paste placeholder "Title" */
             let imageItems = document.querySelectorAll('.image-tool');
-            
+            let blockTune = document.querySelector('.ce-toolbar__actions');
+            let blocks = document.querySelectorAll('.ce-block');
             for (let item = 0; item < imageItems.length; item++){
-                
+                if (window.innerWidth > 650) {
+                    imageItems[item].addEventListener('mousemove', (e) => {
+                        let fromTopToImage = imageItems[item].getBoundingClientRect().top;
+                        blockTune.style.bottom = 'auto';
+                        blockTune.style.top = `${e.clientY - fromTopToImage - window.scrollY - 15}px`;
+                    })
+                }
                 imageItems[item].classList.add('custom-image');
                 if(!imageItems[item].querySelector('.image_title')){
                     imageItems[item].appendChild(blockUrl)

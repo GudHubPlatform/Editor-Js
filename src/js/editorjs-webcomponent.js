@@ -209,8 +209,20 @@ class EditorJS extends HTMLElement {
             tools : allTools
           }
         },
-      },
+      }
     });
+    this.addEventListener('mouseover', (e) => {
+      if (window.innerWidth > 650) {
+        let blocks = document.querySelectorAll('.ce-block');
+        let blockTune = document.querySelector('.ce-toolbar__actions');
+        for (let block = 0; block < blocks.length; block++) {
+          if (e.target.classList.contains('cdx-block') && !e.target.querySelector('.image-tool')){
+            blockTune.style.bottom = `-${e.target.offsetHeight - 10}px`;
+            blockTune.style.top = 'auto';
+          }
+        }
+      }
+    })
     this.addEventListener('paste', function(e) {
       e.preventDefault();
       let formattingText = e.target.innerText.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
