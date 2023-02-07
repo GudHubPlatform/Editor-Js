@@ -1,4 +1,5 @@
 import editorjs from '@editorjs/editorjs';
+import DragDrop from 'editorjs-drag-drop';
 import Header from '@editorjs/header';
 // import Table from '@editorjs/table';
 import List from '@editorjs/list';
@@ -194,6 +195,9 @@ class EditorJS extends HTMLElement {
     }
 
     this.editor = new editorjs({
+      onReady: () => {
+        new DragDrop(this.editor);
+      },
       holder: `editorjs${id}`,
       logLevel: 'ERROR',
       autofocus: false,

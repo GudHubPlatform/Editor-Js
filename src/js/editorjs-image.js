@@ -12,10 +12,8 @@ export default class CustomImage extends Image  {
         };
     }
     static get pasteConfig() {
-        return {
-          
-        }
-      }
+        return {}
+    }
 
     rendered(){
         /* Create block for input title value */
