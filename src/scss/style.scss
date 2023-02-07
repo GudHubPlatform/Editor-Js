@@ -698,5 +698,12 @@ table.editorjs_parse_table{
 @media screen and (max-width: 650px) {
     .editorjs .ce-toolbar__actions {
         bottom: 0 !important;
+        right: calc(100% + 33px);
+    }
+}
+
+@media (min-width: 651px) {
+    .codex-editor--narrow .ce-toolbox .ce-popover {
+        right: -144px;
     }
 }
