@@ -6,6 +6,8 @@ import List from '@editorjs/list';
 // import NestedList from '@editorjs/nested-list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
+import SimpleVideo from 'simple-video-editorjs';
+import VideoTool from '@weekwood/editorjs-video';
 import CodeMirror from 'editorjs-codemirror';
 import Faq from './editorjs-faq.js';
 import HowTo from './editorjs-howto.js';
@@ -31,8 +33,10 @@ class EditorJS extends HTMLElement {
     this.fieldValue;
     this.previousBlocksCount = 0;
     this.uploadedImages = [];
+    this.uploadedVideos = [];
     this.countEd = 0;
     this.imageProperties;
+    this.videoProperties;
   }
 
   /********************* GET ATTRIBUTES *********************/
@@ -44,6 +48,7 @@ class EditorJS extends HTMLElement {
     this.fieldId = this.getAttribute('field-id');
     this.fieldValue = this.getAttribute('field-value');
     this.imageProperties = this.getAttribute('image-properties');
+    this.videoProperties = this.getAttribute('video-properties');
   }
 
   /********************* OBSERVED ATTRIBUTES *********************/
@@ -134,6 +139,48 @@ class EditorJS extends HTMLElement {
         class: HowTo,
         inlineToolbar: true
       },
+      video: {
+        class: VideoTool,
+        config: {
+          uploader: {
+
+            /* CUSTOM VIDEO LOADER */
+            
+            uploadByFile: async (file) => {
+              console.log(1)
+              const toBase64 = file => new Promise((resolve, reject) => {
+                  console.log(2)
+                  const reader = new FileReader();
+                  reader.readAsDataURL(file);
+                  reader.onload = () => resolve(reader.result);
+                  reader.onerror = error => reject(error);
+                });
+                console.log(3)
+                let fileBase64 = await toBase64(file);
+                console.log(4)
+                console.log(fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length))
+                // let uploaded = await gudhub.uploadFileFromString({
+                //   source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
+                //   format: 'base64',
+                //   file_name: file.name,
+                //   extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
+                //   app_id: self.appId,
+                //   item_id: self.itemId,
+                //   field_id: self.fieldId
+                // });
+                // console.log(5)
+                // console.log(uploaded)
+                // self.uploadedVideos.push(uploaded.file_id);
+                console.log(6)
+                return { success: 1, file: 'uploaded' };
+              }
+          },
+          player: {
+            controls: true,
+            autoplay: false
+          }
+        }
+      },
       
       image: {
         class: CustomImage,
@@ -162,6 +209,7 @@ class EditorJS extends HTMLElement {
                   item_id: self.itemId,
                   field_id: self.fieldId
                 });
+                console.log('image', uploaded)
                 self.uploadedImages.push(uploaded.file_id);
                 resolve({ success: 1, file: uploaded });
               });
@@ -265,6 +313,7 @@ class EditorJS extends HTMLElement {
       // Saving count of image blocks
       
       this.uploadedImages = JSON.parse(file.data).blocks.map(block => block.type === 'image' ? block.data.file.file_id : false).filter(block => block !== false);
+      this.uploadedVideos = JSON.parse(file.data).blocks.map(block => block.type === 'video' ? block.data.file.file_id : false).filter(block => block !== false);
       return JSON.parse(file.data);
     } else {
       return '';
@@ -278,6 +327,7 @@ class EditorJS extends HTMLElement {
     this.toggleSavingPopup();
 
     await this.checkIfImageDeleted();
+    await this.checkIfVideoDeleted();
 
     let data = await this.editor.save();
     let document = await gudhub.createDocument({
@@ -350,6 +400,38 @@ class EditorJS extends HTMLElement {
           let isFileExist = await gudhub.getFile(self.appId, image);
           if( isFileExist ){
             await gudhub.deleteFile(self.appId, image);
+          }
+          resolve(true);
+        }));
+      });
+
+      if (promises.length > 0) {
+        Promise.all(promises).then(() => {
+          resolve(true);
+        });
+      } else {
+        resolve(true);
+      }
+    });
+  }
+  /********************* CHECK IF VIDEO DELETED *********************/
+  // Need to check if video block was deleted from edtior, and then send request to server to delete video file, than was deleted fro editor
+
+  checkIfVideoDeleted() {
+    return new Promise(async (resolve) => {
+      const self = this;
+      let data = await this.editor.save();
+      let currentUploadedVideos = data.blocks.map(block => block.type === 'video' ? block.data.file.file_id : false).filter(block => block !== false);
+      console.log(this)
+      let deletedVideos = this.uploadedVideos.filter(id => !currentUploadedVideos.includes(id));
+
+      let promises = [];
+
+      deletedVideos.forEach(video => {
+        promises.push(new Promise(async (resolve) => {
+          let isFileExist = await gudhub.getFile(self.appId, video);
+          if( isFileExist ){
+            await gudhub.deleteFile(self.appId, video);
           }
           resolve(true);
         }));
