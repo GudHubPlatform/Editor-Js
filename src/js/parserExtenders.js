@@ -277,7 +277,11 @@ export const parseCodeMirror = (block) => {
 
     let output = highlighting;
     /* Insert our output data in a wrapper. because we need to link style white-space:pre-wrap to this block */
-    return `<div class="codemirror-wrapper"><pre>${output}</pre></div>`;
+    return `<div class="codemirror-wrapper ${codeDataType.toLowerCase()}">
+                <pre>
+                    <code>${output}</code>
+                </pre>
+            </div>`;
 }
 
 export const parseProsCons = (block) => {
