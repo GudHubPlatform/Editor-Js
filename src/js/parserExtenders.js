@@ -254,8 +254,8 @@ export const parseCodeMirror = (block) => {
     let type = '';
     let res = '';
     /* Check language and do right parsing, highlighting */
-    switch (codeDataType) {
-        case 'HTML':
+    switch (codeDataType.toLowerCase()) {
+        case 'html':
             type = 'html';
             /* In case HTML no "hljs.registerLanguage('html', html)" because html it`s a default language in highlight.js */
             res = `\n${div.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`;
@@ -265,7 +265,7 @@ export const parseCodeMirror = (block) => {
             hljs.registerLanguage('javascript', javascript);
             res = `\n${div.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
             break;
-        case 'CSS':
+        case 'css':
             type = 'css';
             hljs.registerLanguage('css', css);
             res = `\n${div.innerHTML.replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
@@ -277,7 +277,7 @@ export const parseCodeMirror = (block) => {
 
     let output = highlighting;
     /* Insert our output data in a wrapper. because we need to link style white-space:pre-wrap to this block */
-    return `<div class="codemirror-wrapper">${output}</div>`;
+    return `<div class="codemirror-wrapper"><pre>${output}</pre></div>`;
 }
 
 export const parseProsCons = (block) => {
