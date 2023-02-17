@@ -8,6 +8,7 @@ import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
 import Faq from './editorjs-faq.js';
+import Blockquote from './editorjs-blockquote.js';
 import HowTo from './editorjs-howto.js';
 import CustomImage from './editorjs-image.js';
 import EditorJsColumns from '@calumk/editorjs-columns';
@@ -119,6 +120,10 @@ class EditorJS extends HTMLElement {
         config: {
           placeholder: 'Enter a question'
         }
+      },
+      blockquote: {
+        class: Blockquote,
+        inlineToolbar: true,
       },
       prosCons: {
         class: ProsCons,

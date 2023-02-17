@@ -699,6 +699,29 @@ table.editorjs_parse_table{
     content: none !important;
 }
 
+.blockquote_block {
+    margin: 15px 0;
+    .blockquote_element {
+        font-weight: 500;
+        font-size: 16px;
+        font-style: italic;
+        line-height: 18px;
+        padding-left: 15px;
+        position: relative;
+        margin-bottom: 8px;
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background-color: #d5d5d5;
+        }
+    }
+}
+
+
 @media screen and (max-width: 650px) {
     .editorjs .ce-toolbar__actions {
         bottom: 0 !important;
