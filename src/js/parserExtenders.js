@@ -338,12 +338,14 @@ export const parseProsCons = (block) => {
 export const parseBlockquotes = (block) => {
     let template = '';
     template = /* html */`
-        <blockquote itemprop="hasCitation" itemscope="" itemtype="http://schema.org/Citation">
-            <p itemprop="citeText">${block.data.saved_quote}</p>
-        </blockquote>
-        <div itemprop="author">
-            <div itemprop="name">${block.data.saved_author}</div>
-        </div> 
+        <div class="blockqoute_block">
+            <blockquote itemprop="hasCitation" itemscope="" itemtype="http://schema.org/Citation">
+                <p itemprop="citeText">${block.data.saved_quote}</p>
+            </blockquote>
+            <div itemprop="author">
+                <div itemprop="name">${block.data.saved_author}</div>
+            </div> 
+        </div>
     `;
     return template;
 } 
