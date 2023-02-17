@@ -6,9 +6,10 @@ import List from '@editorjs/list';
 // import NestedList from '@editorjs/nested-list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
-import SimpleVideo from 'simple-video-editorjs';
-import VideoTool from '@weekwood/editorjs-video';
+// import SimpleVideo from 'simple-video-editorjs';
+// import VideoTool from '@weekwood/editorjs-video';
 import CodeMirror from 'editorjs-codemirror';
+import VideoTool from './editorjs-video.js';
 import Faq from './editorjs-faq.js';
 import HowTo from './editorjs-howto.js';
 import CustomImage from './editorjs-image.js';
@@ -159,20 +160,20 @@ class EditorJS extends HTMLElement {
                 let fileBase64 = await toBase64(file);
                 console.log(4)
                 console.log(fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length))
-                // let uploaded = await gudhub.uploadFileFromString({
-                //   source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
-                //   format: 'base64',
-                //   file_name: file.name,
-                //   extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
-                //   app_id: self.appId,
-                //   item_id: self.itemId,
-                //   field_id: self.fieldId
-                // });
-                // console.log(5)
-                // console.log(uploaded)
-                // self.uploadedVideos.push(uploaded.file_id);
+                let uploaded = await gudhub.uploadFileFromString({
+                  source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
+                  format: 'base64',
+                  file_name: file.name,
+                  extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
+                  app_id: self.appId,
+                  item_id: self.itemId,
+                  field_id: self.fieldId
+                });
+                console.log(5)
+                console.log(uploaded)
+                self.uploadedVideos.push(uploaded.file_id);
                 console.log(6)
-                return { success: 1, file: 'uploaded' };
+                return { success: 1, file: uploaded };
               }
           },
           player: {
