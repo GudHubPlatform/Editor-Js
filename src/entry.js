@@ -10,6 +10,7 @@ import {parseCodeMirror} from  './js/parserExtenders.js';
 import {parseProsCons} from  './js/parserExtenders.js';
 import {checklist} from  './js/parserExtenders.js';
 import {parseMultiLevelList} from  './js/parserExtenders.js';
+import {parseBlockquotes} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
 
@@ -88,6 +89,7 @@ export default class EditorjsData {
           prosCons: parseProsCons,
           checklist: checklist,
           list: parseMultiLevelList,
+          blockquote: parseBlockquotes,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));
