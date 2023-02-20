@@ -150,36 +150,37 @@ class EditorJS extends HTMLElement {
         config: {
           uploader: {
 
-            /* CUSTOM VIDEO LOADER */
+          //   /* CUSTOM VIDEO LOADER */
             
             uploadByFile: async (file) => {
+              console.log(file)
               console.log(1)
               const toBase64 = file => new Promise((resolve, reject) => {
-                  console.log(2)
-                  const reader = new FileReader();
-                  reader.readAsDataURL(file);
-                  reader.onload = () => resolve(reader.result);
-                  reader.onerror = error => reject(error);
-                });
-                console.log(3)
-                let fileBase64 = await toBase64(file);
-                console.log(4)
-                console.log(fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length))
-                let uploaded = await gudhub.uploadFileFromString({
-                  source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
-                  format: 'base64',
-                  file_name: file.name,
-                  extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
-                  app_id: self.appId,
-                  item_id: self.itemId,
-                  field_id: self.fieldId
-                });
-                console.log(5)
-                console.log(uploaded)
-                self.uploadedVideos.push(uploaded.file_id);
-                console.log(6)
-                return { success: 1, file: uploaded };
-              }
+                console.log(2)
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+              });
+              console.log(3)
+              let fileBase64 = await toBase64(file);
+              console.log(fileBase64)
+              console.log(fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length))
+              let uploaded = await gudhub.uploadFileFromString({
+                source: fileBase64.substring(fileBase64.indexOf(',') + 1, fileBase64.length),
+                format: 'base64',
+                file_name: file.name,
+                extension: fileBase64.substring(fileBase64.indexOf('/') + 1, fileBase64.indexOf(';')),
+                app_id: self.appId,
+                item_id: self.itemId,
+                field_id: self.fieldId
+              });
+              console.log(5)
+              console.log(uploaded)
+              self.uploadedVideos.push(uploaded.file_id);
+              console.log(6)
+              return { success: 1, file: uploaded };
+            }
           },
           player: {
             controls: true,
@@ -187,7 +188,6 @@ class EditorJS extends HTMLElement {
           }
         }
       },
-      
       image: {
         class: CustomImage,
         config: {
