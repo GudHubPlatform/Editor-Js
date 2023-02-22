@@ -68,7 +68,7 @@ export default class EditorjsData {
       id: 'default',
       name: 'Default',
       content: () =>
-        '<editor-js app-id="{{appId}}" item-id="{{itemId}}" field-id="{{field_model.field_id}}" field-value="{{field_model.field_value}}" image-properties="{{field_model.data_model.is_show_image_properties}}"></editor-js>'
+        '<editor-js app-id="{{appId}}" field-model="{{field_model}}" item-id="{{itemId}}" field-id="{{field_model.field_id}}" field-value="{{field_model.field_value}}" image-properties="{{field_model.data_model.is_show_image_properties}}"></editor-js>'
     }, {
       id: 'html',
       name: 'Html',

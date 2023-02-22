@@ -44,6 +44,7 @@ class EditorJS extends HTMLElement {
     this.itemId = this.getAttribute('item-id');
     this.fieldId = this.getAttribute('field-id');
     this.fieldValue = this.getAttribute('field-value');
+    this.fieldModel = this.getAttribute('field-model');
     this.imageProperties = this.getAttribute('image-properties');
   }
 
@@ -279,26 +280,27 @@ class EditorJS extends HTMLElement {
   /********************* SAVE *********************/
 
   async save() {
-
-    this.toggleSavingPopup();
-
-    await this.checkIfImageDeleted();
-
-    let data = await this.editor.save();
-    let document = await gudhub.createDocument({
-      app_id: this.appId,
-      item_id: this.itemId,
-      element_id: this.fieldId,
-      data: JSON.stringify(data)
-    });
-
-    if(!this.fieldValue) {
-      await gudhub.setFieldValue(this.appId, this.itemId, this.fieldId, document._id);
-      this.fieldValue = document._id;
+    const dataModel = JSON.parse(this.fieldModel);
+    if (dataModel.settings.editable) {
+      this.toggleSavingPopup();
+      
+      await this.checkIfImageDeleted();
+      
+      let data = await this.editor.save();
+      let document = await gudhub.createDocument({
+        app_id: this.appId,
+        item_id: this.itemId,
+        element_id: this.fieldId,
+        data: JSON.stringify(data)
+      });
+      
+      if(!this.fieldValue) {
+        await gudhub.setFieldValue(this.appId, this.itemId, this.fieldId, document._id);
+        this.fieldValue = document._id;
+      }
+      
+      this.toggleSavingPopup(); 
     }
-
-    this.toggleSavingPopup();
-
   }
 
   /********************* INIT PIPE SERVICE *********************/
