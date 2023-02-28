@@ -360,15 +360,15 @@ export default class Hyperlink {
         this.nodes.selectTarget = document.createElement('input');
         this.nodes.selectTarget.setAttribute('type', 'checkbox')
         this.nodes.selectTarget.classList.add(this.CSS.selectTarget);
-        const uniq = (new Date().getTime()).toString(36);
-        this.nodes.selectTarget.setAttribute('name', `ch${uniq}`)
-        this.nodes.selectTarget.setAttribute('id', `ch${uniq}`)
+
+        this.nodes.selectTarget.setAttribute('name', 'target')
+        this.nodes.selectTarget.setAttribute('id', 'target')
         this.nodes.selectTarget.checked = false;
         
         this.nodes.selectTargetLabel = document.createElement('label');
-        this.nodes.selectTargetLabel.setAttribute('for', `ch${uniq}`);
+        this.nodes.selectTargetLabel.setAttribute('for', 'target');
         this.nodes.selectTargetLabel.innerHTML = '_blank';
-
+        
         let targetWrapper = document.createElement('div');
         targetWrapper.classList.add('targetWrapper');
         targetWrapper.appendChild(this.nodes.selectTarget);
@@ -407,14 +407,15 @@ export default class Hyperlink {
             self.nodes[`${select}${values[value]}`] = document.createElement('input');
             self.nodes[`${select}${values[value]}`].setAttribute('type', 'checkbox');
             self.nodes[`${select}${values[value]}`].classList.add(self.CSS[`${select}`]);
-            const uniq = (new Date().getTime()).toString(36);
-            self.nodes[`${select}${values[value]}`].setAttribute('name', `ch${uniq}`)
-            self.nodes[`${select}${values[value]}`].setAttribute('id', `ch${uniq}`)
+            
+            self.nodes[`${select}${values[value]}`].setAttribute('name', `${select}${values[value]}`)
+            self.nodes[`${select}${values[value]}`].setAttribute('id', `${select}${values[value]}`)
             self.nodes[`${select}${values[value]}`].classList.add(values[value])
             self.nodes[`${select}${values[value]}`].checked = false;
             
             self.nodes[`${select}${values[value]}Label`] = document.createElement('label');
-            self.nodes[`${select}${values[value]}Label`].setAttribute('for', `ch${uniq}`);
+            
+            self.nodes[`${select}${values[value]}Label`].setAttribute('for', `${select}${values[value]}`);
             self.nodes[`${select}${values[value]}Label`].innerHTML = values[value];
 
             let boxWrapper = document.createElement('div');

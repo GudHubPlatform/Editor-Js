@@ -339,7 +339,7 @@ class EditorJS extends HTMLElement {
     }
     
     this.addEventListener('click', (e) => {
-        if (e.target.hasAttribute('href')) {
+        if (e.target.hasAttribute('href') || e.target.closest('a')) {
           if (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) {
             window.open(e.target.getAttribute('href') || e.target.closest('a').getAttribute('href'), '_blank').focus();
           }
