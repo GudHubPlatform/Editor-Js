@@ -335,8 +335,9 @@ export default class Hyperlink {
         this.nodes.button = document.createElement('button');
         this.nodes.button.type = 'button';
         this.nodes.button.classList.add(this.CSS.button, this.CSS.buttonModifier);
-        this.nodes.button.appendChild(this.iconSvg('link', 14, 10));
-        this.nodes.button.appendChild(this.iconSvg('unlink', 15, 11));
+        this.nodes.button.innerHTML = /* html */`
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M7.69998 12.6L7.67896 12.62C6.53993 13.7048 6.52012 15.5155 7.63516 16.625V16.625C8.72293 17.7073 10.4799 17.7102 11.5712 16.6314L13.0263 15.193C14.0703 14.1609 14.2141 12.525 13.3662 11.3266L13.22 11.12"></path><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M16.22 11.12L16.3564 10.9805C17.2895 10.0265 17.3478 8.5207 16.4914 7.49733V7.49733C15.5691 6.39509 13.9269 6.25143 12.8271 7.17675L11.3901 8.38588C10.0935 9.47674 9.95706 11.4241 11.0888 12.6852L11.12 12.72"></path></svg>
+        `;
         return this.nodes.button;
     }
 
@@ -653,15 +654,6 @@ export default class Hyperlink {
 
     unlink() {
         document.execCommand(this.commandUnlink);
-    }
-
-    iconSvg(name, width = 14, height = 14) {
-        const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        icon.classList.add('icon', 'icon--' + name);
-        icon.setAttribute('width', width + 'px');
-        icon.setAttribute('height', height + 'px');
-        icon.innerHTML = `<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${name}"></use>`;
-        return icon;
     }
 
     addOption(element, text, value=null) {
