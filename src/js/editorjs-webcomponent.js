@@ -14,7 +14,7 @@ import CustomImage from './editorjs-image.js';
 import EditorJsColumns from '@calumk/editorjs-columns';
 import HTMLViewer from './editorjs-htmlViewer.js';
 // import MultiLevelList from './editorjs-list.js';
-import LinkTool from './editorjs-inlineToolLink.js';
+import Hyperlink from './editorjs-inlineToolLink.js';
 import SetTextColor from './editorjs-inlineToolColor.js';
 import ProsCons from './editorjs-prosCons.js';
 import Table from './editorjs-table.js';
@@ -97,7 +97,7 @@ class EditorJS extends HTMLElement {
     }
     const allTools = {
       linkTool: {
-        class: LinkTool,
+        class: Hyperlink,
       },
       list: {
         class: List,
@@ -339,7 +339,7 @@ class EditorJS extends HTMLElement {
     }
     
     this.addEventListener('click', (e) => {
-        if (e.target.hasAttribute('href') || e.target.closest('a').hasAttribute('href')) {
+        if (e.target.hasAttribute('href')) {
           if (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) {
             window.open(e.target.getAttribute('href') || e.target.closest('a').getAttribute('href'), '_blank').focus();
           }

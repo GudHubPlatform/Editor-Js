@@ -1,262 +1,659 @@
-export default class LinkTool {
+import css from "./../scss/Hyperlink.css";
+class SelectionUtils {
 
-    /* Init this component like inline tool */
+    constructor() {
+        this.selection = null;
+        this.savedSelectionRange = null;
+        this.isFakeBackgroundEnabled = false;
+        this.commandBackground = 'backColor';
+        this.commandRemoveFormat = 'removeFormat';
+    }
+
+
+    isElement(node) {
+        return node && typeof node === 'object' && node.nodeType && node.nodeType === Node.ELEMENT_NODE;
+    }
+
+    isContentEditable(element) {
+        return element.contentEditable === 'true';
+    }
+
+    isNativeInput(target) {
+        const nativeInputs = [
+            'INPUT',
+            'TEXTAREA',
+        ];
+        return target && target.tagName ? nativeInputs.includes(target.tagName) : false;
+    }
+
+    canSetCaret(target) {
+        let result = true;
+        if (this.isNativeInput(target)) {
+            switch (target.type) {
+                case 'file':
+                case 'checkbox':
+                case 'radio':
+                case 'hidden':
+                case 'submit':
+                case 'button':
+                case 'image':
+                case 'reset':
+                    result = false;
+                    break;
+                default:
+            }
+        } else {
+            result = this.isContentEditable(target);
+        }
+
+        return result;
+    }
+
+    CSS() {
+        return {
+            editorWrapper: 'codex-editor',
+            editorZone: 'codex-editor__redactor',
+        };
+    }
+
+    anchorNode() {
+        const selection = window.getSelection();
+        return selection ? selection.anchorNode : null;
+    }
+
+    anchorElement() {
+        const selection = window.getSelection();
+
+        if (!selection) {
+            return null;
+        }
+
+        const anchorNode = selection.anchorNode;
+
+        if (!anchorNode) {
+            return null;
+        }
+
+        if (!this.isElement(anchorNode)) {
+            return anchorNode.parentElement;
+        } else {
+            return anchorNode;
+        }
+    }
+
+    anchorOffset() {
+        const selection = window.getSelection();
+        return selection ? selection.anchorOffset : null;
+    }
+
+    isCollapsed() {
+        const selection = window.getSelection();
+        return selection ? selection.isCollapsed : null;
+    }
+
+    isAtEditor() {
+        const selection = SelectionUtils.get();
+        let selectedNode = (selection.anchorNode || selection.focusNode);
+
+        if (selectedNode && selectedNode.nodeType === Node.TEXT_NODE) {
+            selectedNode = selectedNode.parentNode;
+        }
+
+        let editorZone = null;
+
+        if (selectedNode) {
+            editorZone = selectedNode.closest(`.${SelectionUtils.CSS.editorZone}`);
+        }
+        return editorZone && editorZone.nodeType === Node.ELEMENT_NODE;
+    }
+
+    isSelectionExists() {
+        const selection = SelectionUtils.get();
+        return !!selection.anchorNode;
+    }
+
+    static get range() {
+        const selection = window.getSelection();
+        return selection && selection.rangeCount ? selection.getRangeAt(0) : null;
+    }
+
+    static get rect() {
+        let sel = document.selection, range;
+
+        let rect = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+        };
+
+        if (sel && sel.type !== 'Control') {
+            range = sel.createRange();
+            rect.x = range.boundingLeft;
+            rect.y = range.boundingTop;
+            rect.width = range.boundingWidth;
+            rect.height = range.boundingHeight;
+            return rect;
+        }
+
+        if (!window.getSelection) {
+            return rect;
+        }
+
+        sel = window.getSelection();
+
+        if (sel.rangeCount === null || isNaN(sel.rangeCount)) {
+            return rect;
+        }
+
+        if (sel.rangeCount === 0) {
+            return rect;
+        }
+
+        range = sel.getRangeAt(0).cloneRange();
+
+        if (range.getBoundingClientRect) {
+            rect = range.getBoundingClientRect();
+        }
+
+        if (rect.x === 0 && rect.y === 0) {
+            const span = document.createElement('span');
+
+            if (span.getBoundingClientRect) {
+                span.appendChild(document.createTextNode('\u200b'));
+                range.insertNode(span);
+                rect = span.getBoundingClientRect();
+                const spanParent = span.parentNode;
+                spanParent.removeChild(span);
+                spanParent.normalize();
+            }
+        }
+
+        return rect;
+    }
+
+    static get text() {
+        return window.getSelection ? window.getSelection().toString() : '';
+    }
+
+    get() {
+        return window.getSelection();
+    }
+
+    setCursor(element, offset = 0) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+
+        if (this.isNativeInput(element)) {
+            if (!this.canSetCaret(element)) {
+                return;
+            }
+
+            element.focus();
+            element.selectionStart = element.selectionEnd = offset;
+
+            return element.getBoundingClientRect();
+        }
+
+        range.setStart(element, offset);
+        range.setEnd(element, offset);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        return range.getBoundingClientRect();
+    }
+
+    removeFakeBackground() {
+        if (!this.isFakeBackgroundEnabled) {
+            return;
+        }
+        this.isFakeBackgroundEnabled = false;
+        document.execCommand(this.commandRemoveFormat);
+    }
+
+    setFakeBackground() {
+        document.execCommand(this.commandBackground, false, '#a8d6ff');
+        this.isFakeBackgroundEnabled = true;
+    }
+
+    save() {
+        this.savedSelectionRange = SelectionUtils.range;
+    }
+
+    restore() {
+        if (!this.savedSelectionRange) {
+            return;
+        }
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(this.savedSelectionRange);
+    }
+
+    clearSaved() {
+        this.savedSelectionRange = null;
+    }
+
+    collapseToEnd() {
+        const sel = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(sel.focusNode);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
+    findParentTag(tagName, className = null, searchDepth = 10) {
+        const selection = window.getSelection();
+        let parentTag = null;
+        if (!selection || !selection.anchorNode || !selection.focusNode) {
+            return null;
+        }
+        const boundNodes = [
+            selection.anchorNode,
+            selection.focusNode,
+        ];
+
+        boundNodes.forEach((parent) => {
+            let searchDepthIterable = searchDepth;
+            while (searchDepthIterable > 0 && parent.parentNode) {
+                if (parent.tagName === tagName) {
+                    parentTag = parent;
+                    if (className && parent.classList && !parent.classList.contains(className)) {
+                        parentTag = null;
+                    }
+                    if (parentTag) {
+                        break;
+                    }
+                }
+                parent = parent.parentNode;
+                searchDepthIterable--;
+            }
+        });
+        return parentTag;
+    }
+
+    expandToTag(element) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        selection.addRange(range);
+    }
+}
+
+export default class Hyperlink {
+
+    constructor({ data, config, api, readOnly }) {
+        this.toolbar = api.toolbar;
+        this.inlineToolbar = api.inlineToolbar;
+        this.tooltip = api.tooltip;
+        this.i18n = api.i18n;
+        this.config = config;
+        this.selection = new SelectionUtils();
+
+        this.commandLink = 'createLink';
+        this.commandUnlink = 'unlink';
+
+        this.CSS = {
+            wrapper: 'ce-inline-tool-hyperlink-wrapper',
+            wrapperShowed: 'ce-inline-tool-hyperlink-wrapper--showed',
+            button: 'ce-inline-tool',
+            buttonActive: 'ce-inline-tool--active',
+            buttonModifier: 'ce-inline-tool--link',
+            buttonUnlink: 'ce-inline-tool--unlink',
+            input: 'ce-inline-tool-hyperlink--input',
+            selectTarget: 'ce-inline-tool-hyperlink--select-target',
+            selectRel: 'ce-inline-tool-hyperlink--select-rel',
+            buttonSave: 'ce-inline-tool-hyperlink--button',
+        };
+
+        this.targetAttribute = this.config.availableTargets || [
+            '_blank',   // Opens the linked document in a new window or tab
+        ];
+
+        this.relAttributes = this.config.availableRels || [
+            'nofollow',     //Links to an unendorsed document, like a paid link. ("nofollow" is used by Google, to specify that the Google search spider should not follow that link)
+            'noreferrer',   //Requires that the browser should not send an HTTP referer header if the user follows the hyperlink
+            'noopener',     //Requires that any browsing context created by following the hyperlink must not have an opener browsing context
+        ];
+
+        this.nodes = {
+            button: null,
+            wrapper: null,
+            input: null,
+            selectTarget: null,
+            selectTargetLabel: null,
+            selectRel: null,
+            buttonSave: null,
+        };
+
+        this.inputOpened = false;
+    }
+
+    render() {
+        this.nodes.button = document.createElement('button');
+        this.nodes.button.type = 'button';
+        this.nodes.button.classList.add(this.CSS.button, this.CSS.buttonModifier);
+        this.nodes.button.appendChild(this.iconSvg('link', 14, 10));
+        this.nodes.button.appendChild(this.iconSvg('unlink', 15, 11));
+        return this.nodes.button;
+    }
+
+    renderActions() {
+        this.nodes.wrapper = document.createElement('div');
+        this.nodes.wrapper.classList.add(this.CSS.wrapper);
+
+        // Input
+        this.nodes.input = document.createElement('input');
+        this.nodes.input.placeholder = 'https://...';
+        this.nodes.input.classList.add(this.CSS.input);
+
+        let i;
+
+        // Target
+        this.nodes.selectTarget = document.createElement('input');
+        this.nodes.selectTarget.setAttribute('type', 'checkbox')
+        this.nodes.selectTarget.classList.add(this.CSS.selectTarget);
+        const uniq = (new Date().getTime()).toString(36);
+        this.nodes.selectTarget.setAttribute('name', `ch${uniq}`)
+        this.nodes.selectTarget.setAttribute('id', `ch${uniq}`)
+        this.nodes.selectTarget.checked = false;
+        
+        this.nodes.selectTargetLabel = document.createElement('label');
+        this.nodes.selectTargetLabel.setAttribute('for', `ch${uniq}`);
+        this.nodes.selectTargetLabel.innerHTML = '_blank';
+
+        this.nodes.wrapper.appendChild(this.nodes.selectTarget);
+        this.nodes.wrapper.appendChild(this.nodes.selectTargetLabel);
+        
+        // Rel
+        let valuesRel = this.relAttributes;
+        let self = this;
+        this.creatingCheckbox(self, 'selectRel', valuesRel);
+
+        // Button
+        this.nodes.buttonSave = document.createElement('button');
+        this.nodes.buttonSave.type = 'button';
+        this.nodes.buttonSave.classList.add(this.CSS.buttonSave);
+        this.nodes.buttonSave.innerHTML = this.i18n.t('Save');
+        this.nodes.buttonSave.addEventListener('click', (event) => {
+            this.savePressed(event);
+        });
+
+        this.nodes.wrapper.appendChild(this.nodes.input);
+
+        this.nodes.wrapper.appendChild(this.nodes.buttonSave);
+
+        return this.nodes.wrapper;
+    }
+
+    creatingCheckbox (self, select, values) {
+        for (let value = 0; value < values.length; value++) {
+
+            self.nodes[`${select}${values[value]}`] = document.createElement('input');
+            self.nodes[`${select}${values[value]}`].setAttribute('type', 'checkbox');
+            self.nodes[`${select}${values[value]}`].classList.add(self.CSS[`${select}`]);
+            const uniq = (new Date().getTime()).toString(36);
+            self.nodes[`${select}${values[value]}`].setAttribute('name', `ch${uniq}`)
+            self.nodes[`${select}${values[value]}`].setAttribute('id', `ch${uniq}`)
+            self.nodes[`${select}${values[value]}`].classList.add(values[value])
+            self.nodes[`${select}${values[value]}`].checked = false;
+            
+            self.nodes[`${select}${values[value]}Label`] = document.createElement('label');
+            self.nodes[`${select}${values[value]}Label`].setAttribute('for', `ch${uniq}`);
+            self.nodes[`${select}${values[value]}Label`].innerHTML = values[value];
+
+            self.nodes.wrapper.appendChild(self.nodes[`${select}${values[value]}`]);
+            self.nodes.wrapper.appendChild(self.nodes[`${select}${values[value]}Label`]);
+        }
+    }
+
+    surround(range) {
+        if (range) {
+            if (!this.inputOpened) {
+                this.selection.setFakeBackground();
+                this.selection.save();
+            } else {
+                this.selection.restore();
+                this.selection.removeFakeBackground();
+            }
+            const parentAnchor = this.selection.findParentTag('A');
+            if (parentAnchor) {
+                this.selection.expandToTag(parentAnchor);
+                this.unlink();
+                this.closeActions();
+                this.checkState();
+                this.toolbar.close();
+                return;
+            }
+        }
+        this.toggleActions();
+    }
+
+    get shortcut() {
+        return this.config.shortcut || 'CMD+L';
+    }
+
+    get title() {
+        return 'Hyperlink';
+    }
+
     static get isInline() {
         return true;
     }
-    /* Allow attributes for link (href, target and rel), bacause in default configure attribute rel is remove while saving */
-    static get sanitize(){
+
+    static get sanitize() {
         return {
             a: {
                 href: true,
                 target: true,
-                rel: true
-            }
-        }
-    }
-    get state() {
-        return this._state;
-    }
-
-    
-    set state(state) {
-        this._state = state;
-    
-        this.button.classList.toggle(this.api.styles.inlineToolButtonActive, state);
-    }
-    
-    constructor({api}) {
-        this.api = api;
-        this.button = null;
-        this._state = false;
-        
-        this.checkbox = document.createElement('input');
-        this.noreferrer = document.createElement('input');
-        this.noopener = document.createElement('input');
-        this.nofollow = document.createElement('input');
-        this.href = document.createElement('input');
-
-        this.tag = 'A';
-        this.class = 'cdx-link';
-       
-        this.listOfRel = [];
-    }
-    
-    render() {
-        this.button = document.createElement('button');
-        this.button.type = 'button';
-        this.button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="15px" viewBox="0 0 12 12" version="1.1"><g id="surface1"><path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 6.054688 7.695312 L 4.113281 9.636719 C 3.625 10.105469 2.851562 10.105469 2.363281 9.636719 C 2.132812 9.402344 2 9.089844 2 8.761719 C 2 8.429688 2.132812 8.117188 2.363281 7.886719 L 4.304688 5.945312 C 4.5 5.75 4.5 5.429688 4.304688 5.234375 C 4.109375 5.039062 3.792969 5.039062 3.59375 5.234375 L 1.65625 7.179688 C 0.84375 8.0625 0.871094 9.429688 1.71875 10.28125 C 2.570312 11.128906 3.9375 11.15625 4.820312 10.34375 L 6.765625 8.40625 C 6.960938 8.207031 6.960938 7.890625 6.765625 7.695312 C 6.570312 7.5 6.25 7.5 6.054688 7.695312 Z M 10.34375 1.65625 C 9.46875 0.785156 8.054688 0.785156 7.179688 1.65625 L 5.234375 3.59375 C 5.039062 3.792969 5.039062 4.109375 5.234375 4.304688 C 5.429688 4.5 5.75 4.5 5.945312 4.304688 L 7.886719 2.363281 C 8.375 1.894531 9.148438 1.894531 9.636719 2.363281 C 9.867188 2.597656 10 2.910156 10 3.238281 C 10 3.570312 9.867188 3.882812 9.636719 4.113281 L 7.695312 6.054688 C 7.601562 6.148438 7.546875 6.277344 7.546875 6.410156 C 7.546875 6.542969 7.601562 6.671875 7.695312 6.765625 C 7.789062 6.859375 7.917969 6.914062 8.050781 6.914062 C 8.183594 6.914062 8.3125 6.859375 8.40625 6.765625 L 10.34375 4.820312 C 11.214844 3.945312 11.214844 2.53125 10.34375 1.65625 Z M 4.414062 7.585938 C 4.507812 7.679688 4.636719 7.730469 4.769531 7.730469 C 4.902344 7.730469 5.03125 7.679688 5.125 7.585938 L 7.585938 5.125 C 7.78125 4.929688 7.78125 4.609375 7.585938 4.414062 C 7.390625 4.21875 7.070312 4.21875 6.875 4.414062 L 4.414062 6.875 C 4.320312 6.96875 4.265625 7.097656 4.265625 7.230469 C 4.265625 7.363281 4.320312 7.492188 4.414062 7.585938 Z M 4.414062 7.585938 "></path></g></svg>';
-        this.button.classList.add(this.api.styles.inlineToolButton);
-
-        return this.button;
-    }
-    
-    surround(range) {
-        if (this.state) {
-            this.unwrap(range);
-            return;
-        }
-    
-        this.wrap(range);
-    }
-    
-    /* Method for create link */
-    wrap(range) {
-        const selectedText = range.extractContents();
-        const aLink = document.createElement(this.tag);
-        aLink.classList.add(this.class);
-        aLink.appendChild(selectedText);
-        range.insertNode(aLink);
-        
-        this.api.selection.expandToTag(aLink);
-    }
-    
-    /* Method for remove link */
-    unwrap(range) {
-        const aLink = this.api.selection.findParentTag(this.tag);
-        const text = range.extractContents();
-        
-        aLink ? aLink.removeAttribute('target') : null;
-        aLink ? aLink.removeAttribute('rel') : null;
-        aLink ? aLink.removeAttribute('href') : null;
-        
-        aLink ? aLink.remove() : null;
-        
-        range.insertNode(text);
-    }
-    
-    
-    checkState() {
-        const aLink = this.api.selection.findParentTag(this.tag);
-        this.state = !!aLink;
-      
-        if (this.state) {
-            this.showActions(aLink);
-        } else {
-            this.hideActions();
-        }
-    }
-    
-    renderActions() {
-        /* Create inline tool elements */
-        this.linkWrapper = document.createElement('input');
-        this.linkWrapper = document.createElement('div');
-
-        this.href.setAttribute('name','href');
-        this.href.setAttribute('placeholder','Add a link');
-        this.href.classList.add('hrefInput');
-        
-        this.blank = document.createElement('div');
-        this.blank.innerText = "Target";
-
-        this.targetCheckbox = document.createElement('div');
-        this.targetCheckboxLabel = document.createElement('div');
-        this.targetCheckboxLabel.innerText = 'blank';
-        this.checkbox.setAttribute('type','checkbox');
-        this.checkbox.setAttribute('name','blank');
-        this.targetCheckbox.appendChild(this.targetCheckboxLabel);
-        this.targetCheckbox.appendChild(this.checkbox);
-        this.blank.appendChild(this.targetCheckbox);
-
-        this.rel = document.createElement('div');
-        this.rel.innerText = 'Rel';
-
-        this.ref = document.createElement('div');
-        this.ref.innerText = "noreferrer";
-        this.noreferrer.setAttribute('type','checkbox');
-        this.noreferrer.setAttribute('name','noreferrer');
-        this.ref.appendChild(this.noreferrer);
-        
-        this.open = document.createElement('div');
-        this.open.innerText = "noopener";
-        this.noopener.setAttribute('type','checkbox');
-        this.noopener.setAttribute('name','noopener');
-        this.open.appendChild(this.noopener);
-        
-        this.fol = document.createElement('div');
-        this.fol.innerText = "nofollow";
-        this.nofollow.setAttribute('type','checkbox');
-        this.nofollow.setAttribute('name','nofollow');
-        this.fol.appendChild(this.nofollow);
-
-        this.rel.appendChild(this.ref);
-        this.rel.appendChild(this.open);
-        this.rel.appendChild(this.fol);
-        
-        this.linkWrapper.appendChild(this.href);
-
-        this.checkboxesWrapper = document.createElement('div');
-        this.checkboxesWrapper.classList.add('checkboxesWrapper');
-        this.checkboxesWrapper.appendChild(this.blank);
-        this.checkboxesWrapper.appendChild(this.rel);
-        
-        this.linkWrapper.appendChild(this.checkboxesWrapper);
-        
-        this.linkWrapper.classList.add('linkWrapper');
-        this.linkWrapper.hidden = true;
-    
-        return this.linkWrapper;
-    }
-    
-    showActions(aLink) {
-        /* Check if we have saved attribute href in our link. If yes - insert it into input in inline tool. If no - make input in inline tool is empty */
-        aLink.getAttribute('href') ? this.href.value = aLink.getAttribute('href') : null;
-        
-        /* Check if we have saved attribute target in our link. If yes - make checkbox checked in inline tool. If no - make chackbox not checked in inline tool is empty */
-        aLink.getAttribute('target') ? this.checkbox.setAttribute('checked','') : null;
-        /* Check if we have saved attribute rel in our link */
-        if(aLink.getAttribute('rel')){
-            /* If this rel contain some value we make current checkbox checked */
-            aLink.getAttribute('rel').includes('noreferrer') ? this.noreferrer.setAttribute('checked','') : null;
-            aLink.getAttribute('rel').includes('noopener') ? this.noopener.setAttribute('checked','') : null;
-            aLink.getAttribute('rel').includes('nofollow') ? this.nofollow.setAttribute('checked','') : null;
-        }
-        
-        
-        this.linkWrapper.onchange = (event) => {
-            let attr = event.target.attributes.name.value;
-            let href = event.target.classList.contains('hrefInput') ? event.target.value : aLink.getAttribute('href');
-
-            let res = this.addAttributes(aLink, attr, href);
-            return res
-          
+                rel: true,
+            },
         };
-        let linkInput = this.linkWrapper.querySelector('.hrefInput');
+    }
+
+    checkState(selection=null) {
+        const anchorTag = this.selection.findParentTag('A');
+        if (anchorTag) {
+            this.nodes.button.classList.add(this.CSS.buttonUnlink);
+            this.nodes.button.classList.add(this.CSS.buttonActive);
+            this.openActions();
+            const hrefAttr = anchorTag.getAttribute('href');
+            if (anchorTag.hasAttribute('target')) {
+                anchorTag.getAttribute('target') == '' ? this.nodes.selectTarget.checked = false : this.nodes.selectTarget.checked = true;
+            }
+            const relAttr = anchorTag.getAttribute('rel');
+            this.nodes.input.value = !!hrefAttr ? hrefAttr : '';
+            
+            if (anchorTag.hasAttribute('rel')) {
+                let linkRel = anchorTag.getAttribute('rel');
+                linkRel.includes('nofollow') ? this.nodes.selectRelnofollow.checked = true : this.nodes.selectRelnofollow.checked = false;
+                linkRel.includes('noopener') ? this.nodes.selectRelnoopener.checked = true : this.nodes.selectRelnoopener.checked = false;
+                linkRel.includes('noreferrer') ? this.nodes.selectRelnoreferrer.checked = true : this.nodes.selectRelnoreferrer.checked = false;
+            }
+            this.selection.save();
+        } else {
+            this.nodes.button.classList.remove(this.CSS.buttonUnlink);
+            this.nodes.button.classList.remove(this.CSS.buttonActive);
+        }
+        return !!anchorTag;
+    }
+
+    clear() {
+        this.closeActions();
+    }
+
+    toggleActions() {
+        if (!this.inputOpened) {
+            this.openActions(true);
+        } else {
+            this.closeActions(false);
+        }
+    }
+
+    openActions(needFocus = false) {
+        this.nodes.wrapper.classList.add(this.CSS.wrapperShowed);
+        if (needFocus) {
+            this.nodes.input.focus();
+        }
+        this.inputOpened = true;
 
         let allow = true;
-        linkInput.addEventListener('focus', () => {
-            linkInput.addEventListener('keydown', (e) => {
-                if ( (navigator.userAgentData.platform == "macOS" ? e.metaKey : e.ctrlKey) && e.code == 'KeyV') {
-                    if ( allow ) {
-                        allow = false
-                        navigator.clipboard
-                        .readText()
-                        .then(
-                            (clipText) => {
-                                linkInput.value = linkInput.value.substr(0, e.target.selectionStart) + clipText + linkInput.value.substr(e.target.selectionStart);
-                                this.addAttributes(aLink, false, e.target.value)
-                                setTimeout(() => {
-                                    allow = true
-                                }, 500);
-                            }
-                        );
-                    }
+        
+        this.nodes.input.addEventListener('keydown', (e) => {
+            if ( (navigator.userAgentData.platform == "macOS" ? e.metaKey : e.ctrlKey) && e.code == 'KeyV') {
+                if ( allow ) {
+                    allow = false
+                    navigator.clipboard
+                    .readText()
+                    .then(
+                        cliptext => {
+                            this.nodes.input.value = this.nodes.input.value.substr(0, e.target.selectionStart) + cliptext + this.nodes.input.value.substr(e.target.selectionStart);
+                            setTimeout(() => {
+                                allow = true
+                            }, 500);
+                        },
+                        err => console.log(err)
+                    );  
                 }
-            })
+            }
         })
-        this.linkWrapper.hidden = false;
     }
-    
-    hideActions() {
-        this.linkWrapper.onchange = null;
-        this.linkWrapper.hidden = true;
-    }
-    addAttributes(aLink, attr, href){
-        if (href){
-            if (href.includes('http://') || href.includes('https://')){
-            aLink.setAttribute('href', href);
-            }else{
-                aLink.setAttribute('href', `https://${href}`);
-            }
+
+    closeActions(clearSavedSelection = true) {
+        if (this.selection.isFakeBackgroundEnabled) {
+            const currentSelection = new SelectionUtils();
+            currentSelection.save();
+            this.selection.restore();
+            this.selection.removeFakeBackground();
+            currentSelection.restore();
         }
-        if (attr) {
-            switch(attr){
-                case "blank":
-                    if(aLink.getAttribute('target') == '_blank'){
-                        aLink.removeAttribute('target');
-                    }else{
-                        aLink.setAttribute('target', '_blank')
-                    }
-                    break
-                /* Make a right queue in array of rel values */
-                case "noreferrer":
-                    this.listOfRel.find((listItem) => listItem === attr) ? this.listOfRel.splice(this.listOfRel.indexOf(attr), 1) : this.listOfRel.splice(0, 0, attr);
-                    break
-                case "noopener":
-                    if(this.listOfRel.find((listItem) => listItem === attr)){
-                        this.listOfRel.splice(this.listOfRel.indexOf(attr), 1)
-                    }else{
-                        if(this.listOfRel.length == 1 && this.listOfRel[0] == 'nofollow') {
-                            this.listOfRel.splice(0, 0, attr);
-                        }else{
-                            this.listOfRel.splice(1, 0, attr);
-                        }
-                    }
-                    break
-                case "nofollow":
-                    this.listOfRel.find((listItem) => listItem === attr) ? this.listOfRel.splice(this.listOfRel.indexOf(attr), 1) : this.listOfRel.splice(2, 0, attr);
-                    break
-            }
-            let relStr = '';
-            this.listOfRel.forEach(item => {
-                relStr += item + ' '
-            });
-            aLink.setAttribute('rel', relStr.slice(0, -1))
-            if (aLink.getAttribute('rel') == ''){
-                aLink.removeAttribute('rel')
-            }
+        this.nodes.wrapper.classList.remove(this.CSS.wrapperShowed);
+        this.nodes.input.value = '';
+        this.nodes.selectTarget.value = '';
+        this.nodes.selectRelnofollow.checked = false;
+        this.nodes.selectRelnoopener.checked = false;
+        this.nodes.selectRelnoreferrer.checked = false;
+
+        if (clearSavedSelection) {
+            this.selection.clearSaved();
+        }
+        this.inputOpened = false;
+    }
+
+    savePressed(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        let value = this.nodes.input.value || '';
+        let target = this.nodes.selectTarget.checked ? '_blank' : '';
+        let rel = [this.nodes.selectRelnofollow.checked ? 'nofollow' : '', this.nodes.selectRelnoopener.checked ? 'noopener' : '', this.nodes.selectRelnoreferrer.checked ? 'noreferrer' : ''];
+        if (!value.trim()) {
+            this.selection.restore();
+            this.unlink();
+            event.preventDefault();
+            this.closeActions();
         }
 
-        return aLink
+        if (!!this.config.validate && !!this.config.validate === true && !this.validateURL(value)) {
+            this.tooltip.show(this.nodes.input, 'The URL is not valid.', {
+                placement: 'top',
+            });
+            setTimeout(() => {
+                this.tooltip.hide();
+            }, 1000);
+            return;
+        }
+
+        value = this.prepareLink(value);
+
+        this.selection.restore();
+        this.selection.removeFakeBackground();
+
+        this.insertLink(value, target, rel);
+
+        this.selection.collapseToEnd();
+        this.inlineToolbar.close();
+    }
+
+    validateURL(str) {
+        const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        return !!pattern.test(str);
+    }
+
+    prepareLink(link) {
+        link = link.trim();
+        link = this.addProtocol(link);
+        return link;
+    }
+
+    addProtocol(link) {
+        if (/^(\w+):(\/\/)?/.test(link)) {
+            return link;
+        }
+
+        const isInternal = /^\/[^/\s]?/.test(link),
+            isAnchor = link.substring(0, 1) === '#',
+            isProtocolRelative = /^\/\/[^/\s]/.test(link);
+
+        if (!isInternal && !isAnchor && !isProtocolRelative) {
+            link = 'http://' + link;
+        }
+
+        return link;
+    }
+
+    insertLink(link, target='', rel='') {
+        let anchorTag = this.selection.findParentTag('A');
+        if (anchorTag) {
+            console.log('1')
+            console.log(anchorTag)
+            this.selection.expandToTag(anchorTag);
+            anchorTag.setAttribute('href', link)
+        }else{
+            console.log('2')
+            document.execCommand(this.commandLink, false, link);
+            anchorTag = this.selection.findParentTag('A');
+            console.log(anchorTag)
+        }
+        if(anchorTag) {
+            if(!!target) {
+                anchorTag['target'] = target;
+            }else{
+                anchorTag.removeAttribute('target');
+            }
+            if(!!rel) {
+                anchorTag['rel'] = rel;
+                anchorTag['rel'] = anchorTag['rel'].replaceAll(',', ' ');
+            }else{
+                anchorTag.removeAttribute('rel');
+            }
+        }
+    }
+
+    unlink() {
+        document.execCommand(this.commandUnlink);
+    }
+
+    iconSvg(name, width = 14, height = 14) {
+        const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        icon.classList.add('icon', 'icon--' + name);
+        icon.setAttribute('width', width + 'px');
+        icon.setAttribute('height', height + 'px');
+        icon.innerHTML = `<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${name}"></use>`;
+        return icon;
+    }
+
+    addOption(element, text, value=null) {
+        let option = document.createElement('option');
+        option.text = text;
+        option.value = value;
+        element.add(option);
     }
 }
