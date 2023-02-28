@@ -12,6 +12,26 @@
     font-weight: 500;
     border-top: 1px solid rgba(201,201,204,.48);
 }
+.ce-inline-tool-hyperlink-wrapper label {
+    margin-left: 4px;
+}
+.ce-inline-tool-hyperlink-wrapper .checkbox_wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.ce-inline-tool-hyperlink-wrapper .targetWrapper {
+    align-items: flex-start;
+}
+.ce-inline-tool-hyperlink-wrapper .relWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.ce-inline-tool-hyperlink-wrapper .targetWrapper, .ce-inline-tool-hyperlink-wrapper .boxWrapper {
+    display: flex;
+}
 
 .ce-inline-tool-hyperlink-wrapper.ce-inline-tool-hyperlink-wrapper--showed {
     display: block;

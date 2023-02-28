@@ -351,6 +351,11 @@ export default class Hyperlink {
 
         let i;
 
+        this.nodes.wrapper.appendChild(this.nodes.input);
+
+        let checkboxWrapper = document.createElement('div');
+        checkboxWrapper.classList.add('checkbox_wrapper');
+
         // Target
         this.nodes.selectTarget = document.createElement('input');
         this.nodes.selectTarget.setAttribute('type', 'checkbox')
@@ -364,13 +369,22 @@ export default class Hyperlink {
         this.nodes.selectTargetLabel.setAttribute('for', `ch${uniq}`);
         this.nodes.selectTargetLabel.innerHTML = '_blank';
 
-        this.nodes.wrapper.appendChild(this.nodes.selectTarget);
-        this.nodes.wrapper.appendChild(this.nodes.selectTargetLabel);
+        let targetWrapper = document.createElement('div');
+        targetWrapper.classList.add('targetWrapper');
+        targetWrapper.appendChild(this.nodes.selectTarget);
+        targetWrapper.appendChild(this.nodes.selectTargetLabel);
         
+        checkboxWrapper.append(targetWrapper);
+
+        this.nodes.wrapper.appendChild(checkboxWrapper);
+        
+        let relWrapper = document.createElement('div');
+        relWrapper.classList.add('relWrapper');
+        checkboxWrapper.append(relWrapper);
         // Rel
         let valuesRel = this.relAttributes;
         let self = this;
-        this.creatingCheckbox(self, 'selectRel', valuesRel);
+        this.creatingCheckbox(self, 'selectRel', valuesRel, relWrapper);
 
         // Button
         this.nodes.buttonSave = document.createElement('button');
@@ -381,14 +395,13 @@ export default class Hyperlink {
             this.savePressed(event);
         });
 
-        this.nodes.wrapper.appendChild(this.nodes.input);
 
         this.nodes.wrapper.appendChild(this.nodes.buttonSave);
 
         return this.nodes.wrapper;
     }
 
-    creatingCheckbox (self, select, values) {
+    creatingCheckbox (self, select, values, relWrapper) {
         for (let value = 0; value < values.length; value++) {
 
             self.nodes[`${select}${values[value]}`] = document.createElement('input');
@@ -404,9 +417,13 @@ export default class Hyperlink {
             self.nodes[`${select}${values[value]}Label`].setAttribute('for', `ch${uniq}`);
             self.nodes[`${select}${values[value]}Label`].innerHTML = values[value];
 
-            self.nodes.wrapper.appendChild(self.nodes[`${select}${values[value]}`]);
-            self.nodes.wrapper.appendChild(self.nodes[`${select}${values[value]}Label`]);
+            let boxWrapper = document.createElement('div');
+            boxWrapper.classList.add('boxWrapper');
+            boxWrapper.append(self.nodes[`${select}${values[value]}`])
+            boxWrapper.append(self.nodes[`${select}${values[value]}Label`])
+            relWrapper.appendChild(boxWrapper);
         }
+        // self.nodes.wrapper.appendChild(relWrapper);
     }
 
     surround(range) {
@@ -612,15 +629,11 @@ export default class Hyperlink {
     insertLink(link, target='', rel='') {
         let anchorTag = this.selection.findParentTag('A');
         if (anchorTag) {
-            console.log('1')
-            console.log(anchorTag)
             this.selection.expandToTag(anchorTag);
             anchorTag.setAttribute('href', link)
         }else{
-            console.log('2')
             document.execCommand(this.commandLink, false, link);
             anchorTag = this.selection.findParentTag('A');
-            console.log(anchorTag)
         }
         if(anchorTag) {
             if(!!target) {
