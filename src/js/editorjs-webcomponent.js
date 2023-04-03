@@ -27,6 +27,7 @@ class EditorJS extends HTMLElement {
     super();
     this.editor;
     this.appId;
+    this.active = true;
     this.itemId;
     this.fieldId;
     this.fieldValue;
@@ -307,19 +308,23 @@ class EditorJS extends HTMLElement {
   // On pipe service emit we download new data and render it in editor.js
 
   initPipeService() {
-    // gudhub.on('gh_document_insert_one', { app_id: this.appId, item_id: this.itemId, element_id: this.fieldId }, async () => {
-    //   this.toggleSavingPopup();
-
-    //   let file = await gudhub.getDocument({
-    //     app_id: this.appId,
-    //     item_id: this.itemId,
-    //     element_id: this.fieldId
-    //   });
-
-    //   this.editor.render(JSON.parse(file.data));
-
-    //   this.toggleSavingPopup();
-    // })
+    gudhub.on('gh_document_insert_one', { app_id: this.appId, item_id: this.itemId, element_id: this.fieldId }, async () => {
+        if (!this.active) {
+          setTimeout(async() => {
+            this.toggleSavingPopup();
+    
+          let file = await gudhub.getDocument({
+            app_id: this.appId,
+            item_id: this.itemId,
+            element_id: this.fieldId
+          });
+    
+          this.editor.render(JSON.parse(file.data));
+    
+          this.toggleSavingPopup();
+          }, 0);
+        }
+      })
   }
 
   /********************* ADD LISTENERS *********************/
@@ -334,7 +339,10 @@ class EditorJS extends HTMLElement {
       let path = e.composedPath();
       if(!path.find(item => item == this)) {
         window.removeEventListener('click', listener, false);
+        this.active = false;
         this.save();
+      } else {
+        this.active = true;
       }
     }
     
