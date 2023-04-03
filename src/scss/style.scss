@@ -96,6 +96,35 @@ editor-js {
     width: 100%;
     position: relative;
     margin-top: 25px;
+    .restore_button {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border-radius: 4px;
+        border: 1px solid #000;
+        z-index: 2;
+        cursor: pointer;
+        opacity: .5;
+        transition: all .2s ease;
+        pointer-events: none;
+        &.active {
+            pointer-events: all;
+            opacity: 1;
+            &:hover {
+                transform: scale(1.05)
+            }
+        }
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    }
 }
 
 .editorjs {

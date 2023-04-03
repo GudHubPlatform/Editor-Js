@@ -20,6 +20,8 @@ import ProsCons from './editorjs-prosCons.js';
 import Table from './editorjs-table.js';
 import 'codemirror/theme/dracula.css';
 
+import Undo from 'editorjs-undo';
+
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 
 class EditorJS extends HTMLElement {
@@ -34,6 +36,8 @@ class EditorJS extends HTMLElement {
     this.uploadedImages = [];
     this.countEd = 0;
     this.imageProperties;
+    this.removedBlock;
+    this.removedBlockIndex;
   }
 
   /********************* GET ATTRIBUTES *********************/
@@ -199,10 +203,25 @@ class EditorJS extends HTMLElement {
         }
       }
     }
-
     this.editor = new editorjs({
       onReady: () => {
+        // const editorUndo = this.editor;
+        new Undo( {editor: this.editor} );
         new DragDrop(this.editor);
+        
+      },
+      onChange: (api, e) => {
+        console.log('CHANGE');
+        console.log(api);
+        console.log(e);
+        const blockType = e.detail.target.name;
+        if (e.type === 'block-removed') {
+          this.save();
+          this.createUndoButton(api, blockType);
+          this.removedBlock = e.detail.target.holder.innerHTML;
+          this.removedBlockIndex = e.detail.index;
+          this.querySelector('.restore_button').classList.add('active');
+        }
       },
       holder: `editorjs${id}`,
       logLevel: 'ERROR',
@@ -276,6 +295,32 @@ class EditorJS extends HTMLElement {
       return '';
     }
   }
+
+/********************* CREATE UNDO BUTTON *********************/
+createUndoButton(api, blockType) {
+  let button = document.createElement('div');
+  button.classList.add('restore_button');
+  button.innerHTML = /* html */ `
+    <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 24 24" fill="none"> <path d="M9 17H15C17.2091 17 19 15.2091 19 13V13C19 10.7909 17.2091 9 15 9H5M5 9L7 11M5 9L7 7" stroke="#000" stroke-linecap="round" stroke-linejoin="round"/> </svg>
+  `;
+  button.addEventListener('click', () => {
+    this.restoreBlock(api, blockType);
+  })
+  this.append(button)
+}
+
+  /********************* RESTORE LAST REMOVED BLOCK *********************/
+  async restoreBlock (api, blockType) {
+    let newBlock = document.createElement('div')
+    newBlock.classList.add('ce-block');
+    newBlock.innerHTML = this.removedBlock;
+    let data = await api.saver.save();
+    console.log(data)
+    api.blocks.insert(blockType)
+  }
+
+
+
 
   /********************* SAVE *********************/
 
