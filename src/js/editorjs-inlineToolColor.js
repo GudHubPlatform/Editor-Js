@@ -4,6 +4,9 @@ export default class SetTextColor {
     static get isInline() {
       return true;
     }
+    static get isReadOnlySupported() {
+      return true;
+    }
     /* Allow attribute style for span, bacause in default configure attribute style is remove while saving */
     static get sanitize(){
         return {
@@ -23,22 +26,24 @@ export default class SetTextColor {
       this.button.classList.toggle(this.api.styles.inlineToolButtonActive, state);
     }
   
-    constructor({api}) {
+    constructor({api, readOnly}) {
       this.api = api;
       this.button = null;
       this._state = false;
-  
+      this.readOnly = readOnly;
       this.tag = 'SPAN';
       this.class = 'cdx-marker';
     }
   
     render() {
-      this.button = document.createElement('button');
-      this.button.type = 'button';
-      this.button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="15px" viewBox="0 0 12 12" version="1.1"><g id="surface1"><path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity: 1;" d="M 0 10 L 12 10 L 12 12 L 0 12 Z M 0 10 "/><path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 2.75 8.5 L 3.875 8.5 L 4.433594 7 L 7.558594 7 L 8.121094 8.5 L 9.246094 8.5 L 6.5 1.5 L 5.5 1.5 Z M 7.191406 6 L 4.808594 6 L 6 2.835938 Z M 7.191406 6 "/></g></svg>';
-      this.button.classList.add(this.api.styles.inlineToolButton);
-  
-      return this.button;
+      if (!this.readOnly) {
+        this.button = document.createElement('button');
+        this.button.type = 'button';
+        this.button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="15px" viewBox="0 0 12 12" version="1.1"><g id="surface1"><path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity: 1;" d="M 0 10 L 12 10 L 12 12 L 0 12 Z M 0 10 "/><path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 2.75 8.5 L 3.875 8.5 L 4.433594 7 L 7.558594 7 L 8.121094 8.5 L 9.246094 8.5 L 6.5 1.5 L 5.5 1.5 Z M 7.191406 6 L 4.808594 6 L 6 2.835938 Z M 7.191406 6 "/></g></svg>';
+        this.button.classList.add(this.api.styles.inlineToolButton);
+        
+        return this.button;
+      }
     }
   
     surround(range) {

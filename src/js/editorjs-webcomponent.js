@@ -7,6 +7,7 @@ import List from '@editorjs/list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
+import ExtCodeMirror from './editorjs-codeMirror.js';
 import Faq from './editorjs-faq.js';
 import Blockquote from './editorjs-blockquote.js';
 import HowTo from './editorjs-howto.js';
@@ -96,6 +97,7 @@ class EditorJS extends HTMLElement {
     if(this.appId && this.itemId && this.fieldId) {
       savedData = await this.load();
     }
+    let readOnlySettings = JSON.parse(this.fieldModel).settings.editable == 1 ? false : true;
     const allTools = {
       linkTool: {
         class: Hyperlink,
@@ -145,6 +147,7 @@ class EditorJS extends HTMLElement {
       image: {
         class: CustomImage,
         config: {
+          readOnly: readOnlySettings,
           captionPlaceholder: 'Alt',
           imageProperties: self.imageProperties,
           uploader: {
@@ -191,16 +194,16 @@ class EditorJS extends HTMLElement {
         class: Embed
       },
       code: {
-        class: CodeMirror,
+        class: ExtCodeMirror,
         config: {
           codeMirrorConfig: {
+              readOnly: readOnlySettings,
               line: true,
               theme: 'dracula'
           }
         }
       }
     }
-
     this.editor = new editorjs({
       onReady: () => {
         new DragDrop(this.editor);
@@ -209,7 +212,7 @@ class EditorJS extends HTMLElement {
       logLevel: 'ERROR',
       autofocus: false,
       data: savedData,
-      readOnly: false,
+      readOnly: readOnlySettings,
       autofocus: true,
       inlineToolbar: ['bold', 'italic', 'linkTool', 'setTextColor'],
       tools: {
@@ -222,38 +225,41 @@ class EditorJS extends HTMLElement {
         },
       }
     });
-    this.addEventListener('mouseover', (e) => {
-      if (window.innerWidth > 650) {
-        let blocks = document.querySelectorAll('.ce-block');
-        let blockTune = document.querySelector('.ce-toolbar__actions');
-        for (let block = 0; block < blocks.length; block++) {
-          if (e.target.classList.contains('cdx-block') && !e.target.querySelector('.image-tool')){
-            blockTune.style.bottom = `-${e.target.offsetHeight - 10}px`;
-            blockTune.style.top = 'auto';
+    if (!readOnlySettings) {
+      this.addEventListener('mouseover', (e) => {
+        if (window.innerWidth > 650) {
+          let blocks = document.querySelectorAll('.ce-block');
+          let blockTune = document.querySelector('.ce-toolbar__actions');
+          for (let block = 0; block < blocks.length; block++) {
+            if (e.target.classList.contains('cdx-block') && !e.target.querySelector('.image-tool')){
+              blockTune.style.bottom = `-${e.target.offsetHeight - 10}px`;
+              blockTune.style.top = 'auto';
+            }
           }
         }
-      }
-    })
-    this.addEventListener('paste', function(e) {
-      e.preventDefault();
-      let formattingText = e.target.innerText.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-      e.target.innerHTML = formattingText;
-    });
-    // Adding listeners on Ctrl + S and on Enter to save the editor content
-
-    this.addEventListener('keydown', async (e) => {
-      if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+      })
+      this.addEventListener('paste', function(e) {
         e.preventDefault();
-        this.save();
-      }
-      if(e.key === 'Enter') {
-        this.save();
-      }
-    }, false);
+        let formattingText = e.target.innerText.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        e.target.innerHTML = formattingText;
+      });
 
-    // Adding listeners to save editor content on click outside
-
-    this.addListeners();
+      // Adding listeners on Ctrl + S and on Enter to save the editor content
+  
+      this.addEventListener('keydown', async (e) => {
+        if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+          e.preventDefault();
+          this.save();
+        }
+        if(e.key === 'Enter') {
+          this.save();
+        }
+      }, false);
+  
+      // Adding listeners to save editor content on click outside
+  
+      this.addListeners();
+    }
   }
 
   /********************* LOAD *********************/

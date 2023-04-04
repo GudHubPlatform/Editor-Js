@@ -1,9 +1,10 @@
 import Image from '@editorjs/image';
 export default class CustomImage extends Image  { 
-    constructor(data, api) {
-        super(data, api);
+    constructor(data, api, readOnly) {
+        super(data, api, readOnly);
         this.savedData = data;
         this.saveCount = 0;
+        this.readOnly = this.api.readOnly.isEnabled;
     }
     static get toolbox() {
         return {
@@ -14,25 +15,30 @@ export default class CustomImage extends Image  {
     static get pasteConfig() {
         return {}
     }
+    static get isReadOnlySupported() {
+        return true;
+    }
 
     rendered(){
         /* Create block for input title value */
         let showProperties = this.savedData.config.imageProperties;
-        if (showProperties == '1') {
+        if (showProperties == '1' ) {
             let block = document.createElement('div');
-            block.setAttribute('contenteditable', true);
             block.setAttribute('placeholder', "Title");
             block.style.color = '#707684';
             block.style.fontWeight = '400';
             block.classList.add('image_title');
             
             let blockUrl = document.createElement('div');
-            blockUrl.setAttribute('contenteditable', true);
             blockUrl.setAttribute('placeholder', "URL");
             blockUrl.style.color = '#707684';
             blockUrl.style.fontWeight = '400';
             blockUrl.classList.add('image_url');
-
+            
+            if ( !this.readOnly ) {
+                block.setAttribute('contenteditable', true);
+                blockUrl.setAttribute('contenteditable', true);
+            }
             /* Check if we have in saved data element "title" if yes paste this value, if no paste placeholder "Title" */
             let imageItems = document.querySelectorAll('.image-tool');
             for (let item = 0; item < imageItems.length; item++){
@@ -54,15 +60,17 @@ export default class CustomImage extends Image  {
                 captions[caption].style.display = 'none';
             }
         }
-        let blockTune = document.querySelector('.ce-toolbar__actions');
-        let imageItems = document.querySelectorAll('.image-tool');
-        for (let item = 0; item < imageItems.length; item++){
-            if (window.innerWidth > 650) {
-                imageItems[item].addEventListener('mousemove', (e) => {
-                    let fromTopToImage = imageItems[item].getBoundingClientRect().top;
-                    blockTune.style.bottom = 'auto';
-                    blockTune.style.top = `${e.clientY - fromTopToImage - window.scrollY - 15}px`;
-                })
+        if ( !this.readOnly ) {
+            let blockTune = document.querySelector('.ce-toolbar__actions');
+            let imageItems = document.querySelectorAll('.image-tool');
+            for (let item = 0; item < imageItems.length; item++){
+                if (window.innerWidth > 650) {
+                    imageItems[item].addEventListener('mousemove', (e) => {
+                        let fromTopToImage = imageItems[item].getBoundingClientRect().top;
+                        blockTune.style.bottom = 'auto';
+                        blockTune.style.top = `${e.clientY - fromTopToImage - window.scrollY - 15}px`;
+                    })
+                }
             }
         }
     }

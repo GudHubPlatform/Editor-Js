@@ -8,7 +8,9 @@ class SelectionUtils {
         this.commandBackground = 'backColor';
         this.commandRemoveFormat = 'removeFormat';
     }
-
+    static get isReadOnlySupported() {
+        return true;
+    }
 
     isElement(node) {
         return node && typeof node === 'object' && node.nodeType && node.nodeType === Node.ELEMENT_NODE;
@@ -283,7 +285,9 @@ class SelectionUtils {
 }
 
 export default class Hyperlink {
-
+    static get isReadOnlySupported() {
+        return true;
+    }
     constructor({ data, config, api, readOnly }) {
         this.toolbar = api.toolbar;
         this.inlineToolbar = api.inlineToolbar;

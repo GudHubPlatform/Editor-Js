@@ -1,6 +1,10 @@
 export default class Blockquote {
-    constructor({ data }) {
+    constructor({ data, readOnly }) {
         this.data = data;
+        this.readOnly = readOnly;
+    }
+    static get isReadOnlySupported() {
+        return true;
     }
     static get toolbox() {
         return {
@@ -9,7 +13,6 @@ export default class Blockquote {
         };
     }
     render() {
-
         let blockquoteBlock = document.createElement('div');
         blockquoteBlock.classList.add('blockquote_block');
 
@@ -44,9 +47,10 @@ export default class Blockquote {
 
         blockquoteBlock.appendChild(newQuote);
         blockquoteBlock.appendChild(newAuthor);
-
-        this.focus(newQuote);
-        this.focus(newAuthor);
+        if (!this.readOnly) {
+            this.focus(newQuote);
+            this.focus(newAuthor);
+        }
 
         return blockquoteBlock;
     }
