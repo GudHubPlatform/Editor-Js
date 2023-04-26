@@ -81,7 +81,7 @@ class EditorJS extends HTMLElement {
       setTimeout(() => {
         this.getAttributes();
         this.init(uniq);
-        this.initPipeService();
+        // this.initPipeService();
       }, 0);
     }
   }
