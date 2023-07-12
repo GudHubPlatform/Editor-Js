@@ -176,6 +176,14 @@ export const parseEditorJsColumns = (block) => {
                     template = checklist(blocks[item])
                     break;
 
+                case 'code':
+                    template = parseCodeMirror(blocks[item])
+                    break;
+
+                case 'htmlViewer':
+                    template = parseHTMLViewer(blocks[item])
+                    break;
+
                 default:
                     console.log('Unsupported data type')
             }
