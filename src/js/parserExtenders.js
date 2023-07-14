@@ -236,8 +236,8 @@ export const checklist = (block) => {
 }
 
 export const parseHTMLViewer = (block) => {
-    let newCode = block.data.template.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', '');
-    return newCode;
+    // let newCode = block.data.template.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', '');
+    return block.data.template;
 }
 export const parseMultiLevelList = (block) => {
     let data = block.data.items;
