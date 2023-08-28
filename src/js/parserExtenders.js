@@ -236,8 +236,49 @@ export const checklist = (block) => {
 }
 
 export const parseHTMLViewer = (block) => {
-    // let newCode = block.data.template.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', '');
-    return block.data.template;
+    console.log('block')
+    console.log(block)
+    // let newCode = block.data.text.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
+    let div = document.createElement('div');
+    // div.innerHTML = newCode;
+    // console.log(div.querySelector('script'))
+    // let script = document.createElement('script');
+    // script.innerHTML = div.querySelector('script').innerHTML;
+    // div.querySelector('script').remove();
+    
+    let script = document.createElement('script');
+    script.innerHTML = block.data.text
+    div.append(script)
+    // return div.innerHTML.replaceAll('&amp;lt;', '&lt;').replaceAll('&amp;gt;', '&gt;').replaceAll('&nbsp;', ' ');
+    function nodeScriptReplace(node) {
+        if ( nodeScriptIs(node) === true ) {
+                node.parentNode.replaceChild( nodeScriptClone(node) , node );
+        }
+        else {
+                var i = -1, children = node.childNodes;
+                while ( ++i < children.length ) {
+                      nodeScriptReplace( children[i] );
+                }
+        }
+
+        return node;
+    }
+    function nodeScriptClone(node){
+            var script  = document.createElement("script");
+            script.text = node.innerHTML;
+
+            var i = -1, attrs = node.attributes, attr;
+            while ( ++i < attrs.length ) {                                    
+                script.setAttribute( (attr = attrs[i]).name, attr.value );
+            }
+            return script;
+    }
+
+    function nodeScriptIs(node) {
+            return node.tagName === 'SCRIPT';
+    }
+    nodeScriptReplace(script);
+    return script.outerHTML;
 }
 export const parseMultiLevelList = (block) => {
     let data = block.data.items;
@@ -251,6 +292,7 @@ export const parseMultiLevelList = (block) => {
     return newCode.outerHTML;
 }
 export const parseCodeMirror = (block) => {
+    console.log(block)
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;
 

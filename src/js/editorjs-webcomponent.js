@@ -1,9 +1,7 @@
 import editorjs from '@editorjs/editorjs';
 import DragDrop from 'editorjs-drag-drop';
 import Header from '@editorjs/header';
-// import Table from '@editorjs/table';
 import List from '@editorjs/list';
-// import NestedList from '@editorjs/nested-list';
 import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
@@ -14,12 +12,15 @@ import HowTo from './editorjs-howto.js';
 import CustomImage from './editorjs-image.js';
 import EditorJsColumns from '@calumk/editorjs-columns';
 import HTMLViewer from './editorjs-htmlViewer.js';
-// import MultiLevelList from './editorjs-list.js';
 import Hyperlink from './editorjs-inlineToolLink.js';
 import SetTextColor from './editorjs-inlineToolColor.js';
 import ProsCons from './editorjs-prosCons.js';
 import Table from './editorjs-table.js';
 import 'codemirror/theme/dracula.css';
+
+import 'highlight.js/styles/github.css';
+import javascript from 'highlight.js/lib/languages/javascript';
+import css from 'highlight.js/lib/languages/css';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 

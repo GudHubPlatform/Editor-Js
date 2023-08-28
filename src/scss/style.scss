@@ -354,6 +354,14 @@ table.editorjs_parse_table{
     background-color: #303030;
     color:#fff;
     font-family: Arial, Helvetica, sans-serif;
+    pre, code {
+        display: block;
+        height: 300px;
+    }
+    #html-editor {
+        display: block;
+        height: 100%;
+    }
 }
 .editorWrap #aceEditor{
     position: absolute;
