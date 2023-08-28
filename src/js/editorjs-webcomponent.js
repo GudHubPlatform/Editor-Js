@@ -6,6 +6,7 @@ import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
 import ExtCodeMirror from './editorjs-codeMirror.js';
+import LiveCodeEditor from './editorjs-liveCodeEditor.js';
 import Faq from './editorjs-faq.js';
 import Blockquote from './editorjs-blockquote.js';
 import HowTo from './editorjs-howto.js';
@@ -125,6 +126,9 @@ class EditorJS extends HTMLElement {
         config: {
           placeholder: 'Enter a question'
         }
+      },
+      liveCodeEditor: {
+        class: LiveCodeEditor,
       },
       blockquote: {
         class: Blockquote,

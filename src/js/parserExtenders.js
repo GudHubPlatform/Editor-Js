@@ -236,24 +236,15 @@ export const checklist = (block) => {
 }
 
 export const parseHTMLViewer = (block) => {
+    // let newCode = block.data.template.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', '');
+    return block.data.template;
+}
+export const parseLiveCodeEditor = (block) => {
     console.log('block')
     console.log(block)
-    // let newCode = block.data.text.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
-    let div = document.createElement('div');
-    // div.innerHTML = newCode;
-    // console.log(div.querySelector('script'))
-    // let script = document.createElement('script');
-    // script.innerHTML = div.querySelector('script').innerHTML;
-    // div.querySelector('script').remove();
-    
-    let script = document.createElement('script');
-    let a = document.createElement('div')
-    a.innerHTML = block.data.text
-    script.innerHTML = a.querySelector('script')
-    div.append(script)
-    // return div.innerHTML.replaceAll('&amp;lt;', '&lt;').replaceAll('&amp;gt;', '&gt;').replaceAll('&nbsp;', ' ');
-   
-    return div.outerHTML;
+    let newCode = block.data.text.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
+  
+    return newCode.replaceAll('&amp;lt;', '&lt;').replaceAll('&amp;gt;', '&gt;').replaceAll('&nbsp;', ' ');
 }
 export const parseMultiLevelList = (block) => {
     let data = block.data.items;

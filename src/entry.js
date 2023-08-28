@@ -1,16 +1,17 @@
 import './js/editorjs-webcomponent.js';
 import edjsHTML from 'editorjs-html';
-// import {parseFaq} from  './js/parserExtenders.js';
-// import {parseHowTo} from  './js/parserExtenders.js';
-// import {parseCustomImage} from  './js/parserExtenders.js';
-// import {parseEditorJsColumns} from  './js/parserExtenders.js';
-// import {parseTable} from  './js/parserExtenders.js';
+import {parseFaq} from  './js/parserExtenders.js';
+import {parseHowTo} from  './js/parserExtenders.js';
+import {parseCustomImage} from  './js/parserExtenders.js';
+import {parseEditorJsColumns} from  './js/parserExtenders.js';
+import {parseTable} from  './js/parserExtenders.js';
 import {parseHTMLViewer} from  './js/parserExtenders.js';
-// import {parseCodeMirror} from  './js/parserExtenders.js';
-// import {parseProsCons} from  './js/parserExtenders.js';
-// import {checklist} from  './js/parserExtenders.js';
-// import {parseMultiLevelList} from  './js/parserExtenders.js';
-// import {parseBlockquotes} from  './js/parserExtenders.js';
+import {parseCodeMirror} from  './js/parserExtenders.js';
+import {parseProsCons} from  './js/parserExtenders.js';
+import {checklist} from  './js/parserExtenders.js';
+import {parseMultiLevelList} from  './js/parserExtenders.js';
+import {parseBlockquotes} from  './js/parserExtenders.js';
+import {parseLiveCodeEditor} from  './js/parserExtenders.js';
 
 import './scss/style.scss';
 
@@ -80,16 +81,17 @@ export default class EditorjsData {
         });
         const edjsParser = edjsHTML({
           htmlViewer: parseHTMLViewer,
-          // faq: parseFaq, 
-          // howTo: parseHowTo,
-          // image: parseCustomImage,
-          // editorJsColumns: parseEditorJsColumns,
-          // table: parseTable,
-          // code: parseCodeMirror,
-          // prosCons: parseProsCons,
-          // checklist: checklist,
-          // list: parseMultiLevelList,
-          // blockquote: parseBlockquotes,
+          faq: parseFaq, 
+          howTo: parseHowTo,
+          image: parseCustomImage,
+          editorJsColumns: parseEditorJsColumns,
+          table: parseTable,
+          code: parseCodeMirror,
+          prosCons: parseProsCons,
+          checklist: checklist,
+          list: parseMultiLevelList,
+          blockquote: parseBlockquotes,
+          liveCodeEditor: parseLiveCodeEditor,
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));
