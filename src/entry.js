@@ -90,8 +90,7 @@ export default class EditorjsData {
           prosCons: parseProsCons,
           checklist: checklist,
           list: parseMultiLevelList,
-          blockquote: parseBlockquotes,
-          liveCodeEditor: parseLiveCodeEditor,
+          blockquote: parseBlockquotes
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));

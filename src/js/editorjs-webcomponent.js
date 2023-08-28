@@ -127,9 +127,6 @@ class EditorJS extends HTMLElement {
           placeholder: 'Enter a question'
         }
       },
-      liveCodeEditor: {
-        class: LiveCodeEditor,
-      },
       blockquote: {
         class: Blockquote,
         inlineToolbar: true,
