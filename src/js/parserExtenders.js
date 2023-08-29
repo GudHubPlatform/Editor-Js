@@ -243,7 +243,7 @@ export const parseLiveCodeEditor = (block) => {
     
     let newCode = block.data.text.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
   
-    return newCode.replaceAll('&amp;lt;', '&lt;').replaceAll('&amp;gt;', '&gt;').replaceAll('&nbsp;', ' ');
+    return newCode.replaceAll('&amp;lt;', '&lt;').replaceAll('&amp;gt;', '&gt;').replaceAll('&nbsp;', ' ').replaceAll('&amp;gt;', '"');
 }
 export const parseMultiLevelList = (block) => {
     let data = block.data.items;
