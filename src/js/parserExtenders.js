@@ -1,7 +1,4 @@
-import hljs from 'highlight.js';
-import 'highlight.js/styles/github.css';
-import javascript from 'highlight.js/lib/languages/javascript';
-import css from 'highlight.js/lib/languages/css';
+import Prism from 'prismjs';
 
 export const parseFaq = (block) => {
     let html_template = '';
@@ -266,29 +263,11 @@ export const parseCodeMirror = (block) => {
 
     let div = document.createElement('div');
     div.innerText = newC
-    let type = '';
-    let res = '';
+
+    let res = `\n${div.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
     /* Check language and do right parsing, highlighting */
-    switch (codeDataType.toLowerCase()) {
-        case 'html':
-            type = 'html';
-            /* In case HTML no "hljs.registerLanguage('html', html)" because html it`s a default language in highlight.js */
-            res = `\n${div.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n')}\n`;
-            break;
-        case 'javascript':
-            type = 'javascript';
-            hljs.registerLanguage('javascript', javascript);
-            res = `\n${div.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
-            break;
-        case 'css':
-            type = 'css';
-            hljs.registerLanguage('css', css);
-            res = `\n${div.innerHTML.replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
-            break;
 
-    }
-
-    let highlighting = hljs.highlightAuto(res).value;
+    let highlighting = Prism.highlight(res, Prism.languages.html, 'html');
 
     let output = highlighting;
     /* Insert our output data in a wrapper. because we need to link style white-space:pre-wrap to this block */

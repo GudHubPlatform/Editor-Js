@@ -3,9 +3,8 @@ import edjsHTML from 'editorjs-html';
 import {parseFaq} from  './js/parserExtenders.js';
 import {parseHowTo} from  './js/parserExtenders.js';
 import {parseCustomImage} from  './js/parserExtenders.js';
-import {parseEditorJsColumns} from  './js/parserExtenders.js';
+// import {parseEditorJsColumns} from  './js/parserExtenders.js';
 import {parseTable} from  './js/parserExtenders.js';
-import {parseHTMLViewer} from  './js/parserExtenders.js';
 import {parseCodeMirror} from  './js/parserExtenders.js';
 import {parseProsCons} from  './js/parserExtenders.js';
 import {checklist} from  './js/parserExtenders.js';
@@ -84,7 +83,7 @@ export default class EditorjsData {
           faq: parseFaq, 
           howTo: parseHowTo,
           image: parseCustomImage,
-          editorJsColumns: parseEditorJsColumns,
+          // editorJsColumns: parseEditorJsColumns,
           table: parseTable,
           code: parseCodeMirror,
           prosCons: parseProsCons,
