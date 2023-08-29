@@ -181,7 +181,7 @@ export const parseEditorJsColumns = (block) => {
                     break;
 
                 case 'htmlViewer':
-                    template = parseHTMLViewer(blocks[item])
+                    template = parseLiveCodeEditor(blocks[item])
                     break;
 
                 default:
