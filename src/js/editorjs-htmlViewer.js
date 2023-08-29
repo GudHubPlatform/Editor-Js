@@ -6,7 +6,7 @@ export default class LiveCodeEditor extends CodeMirror  {
         this.api = this.savedData.api;
         this.data = {
             language: this.savedData.data.language || 'HTML',
-            text: this.savedData.data.template || this.savedData.data.text?.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&nbsp;', ' ') || ''
+            text: this.savedData.data.template || this.savedData.data.text?.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&nbsp;', ' ').replaceAll('&#39;', "'") || ''
         }
     }
     static get toolbox() {
