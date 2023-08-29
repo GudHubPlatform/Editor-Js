@@ -6,7 +6,6 @@ import Checklist from '@editorjs/checklist';
 import Embed from '@editorjs/embed';
 import CodeMirror from 'editorjs-codemirror';
 import ExtCodeMirror from './editorjs-codeMirror.js';
-import LiveCodeEditor from './editorjs-liveCodeEditor.js';
 import Faq from './editorjs-faq.js';
 import Blockquote from './editorjs-blockquote.js';
 import HowTo from './editorjs-howto.js';
@@ -18,10 +17,6 @@ import SetTextColor from './editorjs-inlineToolColor.js';
 import ProsCons from './editorjs-prosCons.js';
 import Table from './editorjs-table.js';
 import 'codemirror/theme/dracula.css';
-
-import 'highlight.js/styles/github.css';
-import javascript from 'highlight.js/lib/languages/javascript';
-import css from 'highlight.js/lib/languages/css';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
 

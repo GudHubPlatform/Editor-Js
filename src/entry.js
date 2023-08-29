@@ -80,7 +80,7 @@ export default class EditorjsData {
           element_id: field_model.field_id
         });
         const edjsParser = edjsHTML({
-          htmlViewer: parseHTMLViewer,
+          htmlViewer: parseLiveCodeEditor,
           faq: parseFaq, 
           howTo: parseHowTo,
           image: parseCustomImage,
