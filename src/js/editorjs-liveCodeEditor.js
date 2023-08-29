@@ -4,6 +4,11 @@ export default class LiveCodeEditor extends CodeMirror  {
         super(data, readOnly, api);
         this.savedData = data;
         this.api = this.savedData.api;
+        this.data = {
+            language: data.language || 'Python',
+            text: data.text || ''
+        }
+        console.log(this.data)
     }
     static get toolbox() {
         return {

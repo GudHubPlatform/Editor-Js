@@ -1,14 +1,14 @@
-import * as Ace from "ace-builds";
-import "ace-builds/webpack-resolver.js";
-import monokai from "ace-builds/src-min-noconflict/theme-monokai.js";
-import "ace-builds/src-noconflict/mode-html.js";
-
-
-export default class HTMLViewer {
-    constructor({ data, readOnly }) {
-        this.data = data;
-        this.editorAce = '';
-        this.readOnly = readOnly;
+import CodeMirror from 'editorjs-codemirror';
+export default class LiveCodeEditor extends CodeMirror  { 
+    constructor(data, readOnly, api) {
+        super(data, readOnly, api);
+        this.savedData = data;
+        this.api = this.savedData.api;
+        this.data = {
+            language: data.language || 'HTML',
+            text: this.savedData.data.template || ''
+        }
+        console.log(this.data)
     }
     static get toolbox() {
         return {
@@ -19,41 +19,5 @@ export default class HTMLViewer {
     static get isReadOnlySupported() {
         return true;
     }
-    render() {
-        /* Create a wrapper for code editor */
-        let editorWrap = document.createElement('div');
-        editorWrap.classList.add('editorWrap');
-
-        let editor = document.createElement('div');
-        editor.id = 'aceEditor';
-        if (!this.readOnly) {
-            editor.setAttribute('contenteditable', 'true');
-        } else {
-            editor.setAttribute('contenteditable', 'false');
-        }
-
-        editorWrap.appendChild(editor);
-        /* Init a code editor and configure it */
-        this.editorAce = Ace.edit(editor);
-        this.editorAce.setOptions({useWorker: false, readOnly: this.readOnly })
-
-        this.editorAce.setTheme(monokai);
-        this.editorAce.session.setMode("ace/mode/html");
-
-        /* Check if we have a saved data. If have input in our code editor. setValue() it`s a method from ace-code-editor */
-        if(this.data.template){
-            this.editorAce.session.setValue(this.data.template)
-        }
-        
-        
-        return editorWrap;
-    }
     
-    save(blockContent) {
-       /* Save data. getValue() it`s a method from ace-code-editor */
-        let template = this.editorAce.session.getValue();
-        return {
-            template
-        }
-    }
 }

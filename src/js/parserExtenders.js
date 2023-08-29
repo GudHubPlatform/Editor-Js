@@ -240,8 +240,7 @@ export const parseHTMLViewer = (block) => {
     return block.data.template;
 }
 export const parseLiveCodeEditor = (block) => {
-    console.log('block')
-    console.log(block)
+    
     let newCode = block.data.text.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
   
     return newCode.replaceAll('&amp;lt;', '&lt;').replaceAll('&amp;gt;', '&gt;').replaceAll('&nbsp;', ' ');
@@ -258,7 +257,7 @@ export const parseMultiLevelList = (block) => {
     return newCode.outerHTML;
 }
 export const parseCodeMirror = (block) => {
-    console.log(block)
+    
     let codeDataType = block.data.name;
     let codeDataText = block.data.text;
 
