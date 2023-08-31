@@ -95,6 +95,7 @@ class EditorJS extends HTMLElement {
       savedData = await this.load();
     }
     let readOnlySettings = JSON.parse(this.fieldModel).settings.editable == 1 ? false : true;
+
     const allTools = {
       linkTool: {
         class: Hyperlink,
@@ -215,9 +216,10 @@ class EditorJS extends HTMLElement {
       tools: {
         ...allTools,
         editorJsColumns: {
-          class: EditorJsColumns,
-          config:{
-            tools : allTools
+          class : EditorJsColumns,
+          config : {
+            EditorJsLibrary : editorjs,
+            tools : allTools,
           }
         },
       }
