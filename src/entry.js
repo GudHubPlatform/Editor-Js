@@ -93,7 +93,6 @@ export default class EditorjsData {
         });
 
         let html = edjsParser.parse(JSON.parse(document.data));
-        console.log(html)
         /* Variable html return array. This reduce remove commas, by transforming array to the string.  */
         return html.reduce((prev, current) => {
           return prev + current
