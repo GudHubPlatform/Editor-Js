@@ -14,6 +14,7 @@ import EditorJsColumns from '@calumk/editorjs-columns';
 import HTMLViewer from './editorjs-htmlViewer.js';
 import Hyperlink from './editorjs-inlineToolLink.js';
 import SetTextColor from './editorjs-inlineToolColor.js';
+import SetTextCode from './editorjs-inlineToolCode.js';
 import ProsCons from './editorjs-prosCons.js';
 import Table from './editorjs-table.js';
 import 'codemirror/theme/dracula.css';
@@ -106,6 +107,9 @@ class EditorJS extends HTMLElement {
       },
       setTextColor: {
         class: SetTextColor,
+      },
+      setTextCode: {
+        class: SetTextCode,
       },
       header: {
         class: Header,
@@ -212,7 +216,7 @@ class EditorJS extends HTMLElement {
       data: savedData,
       readOnly: readOnlySettings,
       autofocus: true,
-      inlineToolbar: ['bold', 'italic', 'linkTool', 'setTextColor'],
+      inlineToolbar: ['bold', 'italic', 'linkTool', 'setTextColor', 'setTextCode'],
       tools: {
         ...allTools,
         editorJsColumns: {
@@ -299,7 +303,7 @@ class EditorJS extends HTMLElement {
         element_id: this.fieldId,
         data: JSON.stringify(data)
       });
-      
+      console.log(this.fieldValue)
       if(!this.fieldValue) {
         await gudhub.setFieldValue(this.appId, this.itemId, this.fieldId, document._id);
         this.fieldValue = document._id;

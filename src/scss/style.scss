@@ -355,6 +355,11 @@ table.editorjs_parse_table{
     caret-color: rgb(255, 145, 0);
 }
 
+.code_in_text {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    padding: 2px;
+}
 
 .codemirror-wrapper{
     white-space: pre-wrap;
