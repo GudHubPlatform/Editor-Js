@@ -345,29 +345,6 @@ table.editorjs_parse_table{
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.editorWrap{
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-width: 300px;
-    min-height: 300px;
-    background-color: #303030;
-    color:#fff;
-    font-family: Arial, Helvetica, sans-serif;
-    pre, code {
-        display: block;
-        height: 300px;
-    }
-    #html-editor {
-        display: block;
-        height: 100%;
-    }
-}
-.editorWrap #aceEditor{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
 
 #textarea{
     position: absolute;
@@ -381,6 +358,39 @@ table.editorjs_parse_table{
 
 .codemirror-wrapper{
     white-space: pre-wrap;
+    .token {
+        &.property, 
+        &.tag, 
+        &.boolean, 
+        &.number, 
+        &.constant, 
+        &.symbol, 
+        &.deleted{
+            color: #905;
+        }
+        &.attr-name, &.selector {
+            color: #690;
+        }
+        &.attr-value, &.keyword, &.atrule {
+            color: #07a;
+        }
+        &.punctuation {
+            color: #999
+        }
+        &.comment {
+            color: slategray;
+            font-weight: 300;
+        }
+        &.operator, &.entity, &.url, .language-css &.string, .style &.string {
+            color: #9a6e3a;
+        }
+        &.function, &.class-name {
+            color: #DD4A68;
+        }
+        &.regex, &.important, &.variable {
+            color: #e90;
+        }
+    }
 }
 
 .ce-inline-toolbar__actions .linkWrapper{
@@ -636,9 +646,6 @@ table.editorjs_parse_table{
         cursor: pointer;
         transition: all .2s ease;
         background-color: #fff;
-        // &:not(.border > div > .cdx-nested-list__item-children:hover)  {
-        //     background-color: #747474;
-        // }
         &.mouseover {
             background-color: #88bdd6;
         }

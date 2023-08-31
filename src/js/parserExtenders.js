@@ -267,7 +267,7 @@ export const parseCodeMirror = (block) => {
     let res = `\n${div.innerHTML.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&nbsp;', ' ').replaceAll('&quot;', '"').replaceAll('<br>', '\n').replaceAll('&amp;#39;', "'")}\n`;
     /* Check language and do right parsing, highlighting */
 
-    let highlighting = Prism.highlight(res, Prism.languages.html, 'html');
+    let highlighting = Prism.highlight(res, Prism.languages[codeDataType.toLowerCase()], codeDataType.toLowerCase());
 
     let output = highlighting;
     /* Insert our output data in a wrapper. because we need to link style white-space:pre-wrap to this block */
