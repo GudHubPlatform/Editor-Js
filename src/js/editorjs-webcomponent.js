@@ -381,7 +381,7 @@ class EditorJS extends HTMLElement {
         promises.push(new Promise(async (resolve) => {
           let isFileExist = await gudhub.getFile(self.appId, image);
           if( isFileExist ){
-            await gudhub.deleteFile(self.appId, image);
+            await gudhub.deleteFile(image, self.appId);
           }
           resolve(true);
         }));
