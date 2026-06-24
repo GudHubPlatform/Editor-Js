@@ -78,7 +78,61 @@ export const parseHowTo = (block) => {
     </div>`;
 }
 
+export const parseTableV2 = (block) => {
+    let html_template = '';
+
+    const headings = block.data.withHeadings;
+    const dataTable = block.data.content;
+
+    let startRow = headings ? 1 : 0;
+
+    // Header
+    if (headings && dataTable.length > 0) {
+        let headRow = '';
+
+        for (let td = 0; td < dataTable[0].length; td++) {
+            const cell = dataTable[0][td];
+
+            const text =
+                typeof cell === "object"
+                    ? (cell.text || "")
+                    : String(cell ?? "");
+
+            headRow += `<th style="white-space: pre-wrap;">${text}</th>`;
+        }
+
+        html_template += `<tr class="head_row row">${headRow}</tr>`;
+    }
+
+    // Body
+    for (let tr = startRow; tr < dataTable.length; tr++) {
+
+        let row = '';
+
+        for (let td = 0; td < dataTable[tr].length; td++) {
+
+            const cell = dataTable[tr][td];
+
+            const text =
+                typeof cell === "object"
+                    ? (cell.text || "")
+                    : String(cell ?? "");
+
+            row += `<td style="white-space: pre-wrap;">${text}</td>`;
+        }
+
+        html_template += `<tr class="row">${row}</tr>`;
+    }
+
+    return `
+        <table class="editorjs_parse_table">
+            ${html_template}
+        </table>
+    `;
+};
+
 export const parseTable = (block) => {
+    console.log("BLOCK:", block);
 
     let html_template = '';
     let template = '';
@@ -167,6 +221,10 @@ export const parseEditorJsColumns = (block) => {
                     break;
                 case 'table':
                     template = parseTable(blocks[item])
+                    break;
+
+                case 'tablev2':
+                    template = parseTableV2(blocks[item])
                     break;
 
                 case 'checklist':

@@ -5,6 +5,7 @@ import {parseHowTo} from  './js/parserExtenders.js';
 import {parseCustomImage} from  './js/parserExtenders.js';
 import {parseEditorJsColumns} from  './js/parserExtenders.js';
 import {parseTable} from  './js/parserExtenders.js';
+import {parseTableV2} from './js/parserExtenders.js';
 import {parseCodeMirror} from  './js/parserExtenders.js';
 import {parseProsCons} from  './js/parserExtenders.js';
 import {checklist} from  './js/parserExtenders.js';
@@ -85,6 +86,7 @@ export default class EditorjsData {
           image: parseCustomImage,
           editorJsColumns: parseEditorJsColumns,
           table: parseTable,
+          tablev2: parseTableV2,
           code: parseCodeMirror,
           prosCons: parseProsCons,
           checklist: checklist,

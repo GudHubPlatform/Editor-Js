@@ -17,6 +17,7 @@ import SetTextColor from './editorjs-inlineToolColor.js';
 import SetTextCode from './editorjs-inlineToolCode.js';
 import ProsCons from './editorjs-prosCons.js';
 import Table from './editorjs-table.js';
+import TableV2 from './editorjs-tablev2.js';
 import 'codemirror/theme/dracula.css';
 
 /********************* EDITOR JS WEB COMPONENT CREATING *********************/
@@ -183,6 +184,13 @@ class EditorJS extends HTMLElement {
       },
       table: {
         class: Table,
+        inlineToolbar: true,
+        data: {
+          "withHeadings": true
+        }
+      },
+      tablev2: {
+        class: TableV2,
         inlineToolbar: true,
         data: {
           "withHeadings": true
